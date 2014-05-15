@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html> 
 <head> 
-<title>My first Three.js app</title> 
+<title>Extrusion and Revolution Solids - A Dildo Generator</title> 
 <meta charset="UTF-8">
+<meta name="description" content="A bleeding edge HTML5/WebGL/THREE.js dildo generator for 3D printing.">
+<meta name="author" content="Ikaros Kappler">
+<meta name="keywords" content="dildo, generator, three.js, webgl, html5, bleeding edge, dildo generator, javascript">
 <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="moo_tools_drop_down_menu/css/dropdown.css" />
+
+<style type="text/css" media="screen">
+  body {
+  background-color: #f8f8f8;
+  }
+</style>
 
 </head> 
 
@@ -12,10 +21,9 @@
 
 
 
-<script language="Javascript" src="version.js"></script>
+<script src="version.js"></script>
 <div id="version_tag">
-  <script language="Javascript">
-    // v0.2.6 built 20131030#1
+  <script>
     document.write( VERSION_STRING );
   </script>
 </div>
@@ -29,8 +37,11 @@
   <img src="img/by.large.32.png" alt="Creative Commons" width="32" height="32" />
   <img src="img/nc.large.32.png" alt="Creative Commons" width="32" height="32" />
   <img src="img/sa.large.32.png" alt="Creative Commons" width="32" height="32" /><br/>
+  Creative Commons / BY-NC-SA<br/>
   Please send bug reports to <a href="mailto:ikaros@polygon-berlin.de">ikaros@polygon-berlin.de</a><br/>
-  Clone at <a href="https://github.com/IkarosKappler/extrusiongen.git">https://github.com/IkarosKappler/extrusiongen.git</a><br/>
+  (See <a href="https://github.com/IkarosKappler/extrusiongen/issues" target="_blank">Known Bugs</a> before)<br/>
+  Clone at <a href="https://github.com/IkarosKappler/extrusiongen.git" target="_blank">https://github.com/IkarosKappler/extrusiongen.git</a><br/>
+  <br/>
 </div>
 
 <canvas 
@@ -56,8 +67,8 @@
   title="Double click onto the curve to add new control points. Press the [DEL] key to delete selected points."
   class="tooltip"
   id="bezier_canvas" 
-  width="512px" 
-  height="768px">
+  width="512" 
+  height="768">
 </canvas>
 
 <div style="position: absolute; left: 532px; top: 818px; width: 256px;">
@@ -77,16 +88,19 @@
   </form>
   </div>
 
-  <div style="position: absolute; top: 0px; left: 256px; width: 256px; text-align: right;">
-    Zoom
-    <button onclick="bezierCanvasHandler.decreaseZoomFactor(true);">-</button>
-    <button onclick="bezierCanvasHandler.increaseZoomFactor(true);">+</button>
-    <br/>
-    Scale
-    <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button>
-    <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button>
-  <br/>
-
+  <div style="position: absolute; top: 0px; left: 356px; width: 256px; text-align: right;">
+    <table style="border: 0;">
+      <tr>
+	<td>Zoom</td>
+	<td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);">-</button></td>
+	<td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);">+</button></td>
+      </tr>
+      <tr>
+	<td>Size</td>
+	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
+	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
+      </tr>
+    </table>
   </div>
 </div>
 
@@ -95,39 +109,13 @@
 <div class="register_card" id="mesh_controls">
 <h3>Mesh controls</h3>
 <form name="mesh_form">
-<table border="0">
+<table style="border: 0;">
+
 
 <tr>
-  <td valign="top">Segments:</td>
+  <td style="vertical-align: top;">Bend (<span id="preview_bend_display">0</span>°):</td>
   <td>
-    <table border="0" style="padding: 0px; spacing: 0px;" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." size="4" style="width: 35px;" />
-	  <label for="shape_segments">Shape</label>
-	</td>
-
-	<td align="center" valign="top">
-	  <input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." size="4" style="width: 35px;" />
-	  <label for="path_segments">Path</label>
-	</td>
-	
-	<td valign="top">
-	  <input type="button" onclick="increase_mesh_details()" value="+" />
-	</td>
-	<td valign="top">
-	  <input type="button" onclick="decrease_mesh_details()" value="-" />
-	</td>
-      </tr>
-    </table>
-	
-  </td>
-</tr>
-
-<tr>
-  <td valign="top">Bend (<span id="preview_bend_display">0</span>°):</td>
-  <td>
-					     <script language="Javascript">
+					     <script>
 					     preview_bend_mousedown = false;
                                              </script>
 					     <br/>
@@ -142,6 +130,37 @@
 </tr>
 
 <tr>
+  <th colspan="2">For Printing</th>
+</tr>
+
+<tr>
+  <td style="vertical-align: top;">Segments:</td>
+  <td>
+    <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
+      <tr>
+	<td style="align: left; vertical-align: top;">
+	  <input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." style="width: 35px;" />
+	  <label for="shape_segments">Shape</label>
+	</td>
+
+	<td style="align: center; vertical-align: top;">
+	  <input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." style="width: 35px;" />
+	  <label for="path_segments">Path</label>
+	</td>
+	
+	<td style="vertical-align: top;">
+	  <input type="button" onclick="increase_mesh_details()" value="+" />
+	</td>
+	<td style="vertical-align: top;">
+	  <input type="button" onclick="decrease_mesh_details()" value="-" />
+	</td>
+      </tr>
+    </table>
+	
+  </td>
+</tr>
+
+<tr>
   <td></td>
   <td>
         <input type="checkbox" id="build_negative_mesh" name="build_negative_mesh" class="tooltip" title="Set this value if you want to have a hollow shape to be generated. The strength of the hollow hull is specified by the 'Mesh Hull Strength' setting." onchange="document.getElementById('mesh_hull_strength').disabled=(document.getElementById('build_negative_mesh').checked?'':'disabled'); preview_rebuild_model();"/>
@@ -153,8 +172,8 @@
   <td> <label for="mesh_hull_strength">Mesh&nbsp;Hull&nbsp;Strength:</label><br/>
 					     (only if hollow)
   </td>
-  <td valign="top">
-        <input type="number" id="mesh_hull_strength" name="mesh_hull_strength" value="6" class="tooltip" title="..." onchange="bezierCanvasHandler.redraw();" onkeyup="bezierCanvasHandler.redraw();preview_rebuild_model();" size="4" style="width: 35px;" onchange="preview_rebuild_model();" disabled="disabled" />mm
+  <td style="vertical-align: top;">
+        <input type="number" id="mesh_hull_strength" name="mesh_hull_strength" value="6" class="tooltip" title="..." onkeyup="bezierCanvasHandler.redraw();preview_rebuild_model();" style="width: 35px;" onchange="preview_rebuild_model();" disabled="disabled" />mm
          
   </td>
 </tr>
@@ -162,12 +181,12 @@
 <tr>
   <td>Close path at </td>
   <td>
-    <table border="0" style="padding: 0px; spacing: 0px;" width="100%">
-      <tr><td align="left">
+    <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
+      <tr><td style="align: left;">
         <input type="checkbox" id="mesh_close_path_begin" name="mesh_close_path_begin" onchange="preview_rebuild_model();" class="tooltip" title="The path begin is the top of the mesh. In some cases the top bezier point is not located at the right bound. The top shape can be closed with this option then." />
           <label for="mesh_close_path_begin">begin</label>
 	  </td>
-          <td align="right">
+          <td style="align: right;">
 	  <input type="checkbox" id="mesh_close_path_end" name="mesh_close_path_end" onchange="preview_rebuild_model();" class="tooltip" title="The path end is the bottom of the mesh." checked="checked" />
           <label for="mesh_close_path_end">end</label>
 	  </td></tr>
@@ -207,7 +226,7 @@
 <tr>
   <td>Parts:</td>
   <td>
-    <table border="0">
+    <table style="border: 0;">
       <tr>
 	<td>
 	  <input type="radio" id="parts_both" name="parts" onchange="preview_rebuild_model();" value="both" checked="checked" disabled="disabled" />
@@ -238,7 +257,7 @@
 <tr>
   <td>Directions:</td>
   <td>
-    <table border="0">
+    <table style="border: 0;">
       <tr>
 	<td>
 	  <input type="radio" id="directions_xyz" name="directions" onchange="preview_rebuild_model();" value="xyz" checked="checked" disabled="disabled" />
@@ -246,7 +265,7 @@
 	</td>
 	<td>
 	  <input type="radio" id="directions_yxz" name="directions" onchange="preview_rebuild_model();" value="zxy" disabled="disabled" />
-          <label for="directions_zxy">(-z,x,-y)</label>
+          <label for="directions_yxz">(-z,x,-y)</label>
 	</td>
       </tr>
     </table>
@@ -257,15 +276,15 @@
   <td>Base type: </td> 
   <td>
     <input type="radio" name="mesh_hull_type" id="mesh_hull_perpendicular" value="perpendicular" checked="checked" disabled="disabled" onchange="preview_rebuild_model();" />
-    <label for="mesh_base_perpendicular">Perpendicular</label>
+    <label for="mesh_hull_perpendicular">Perpendicular</label>
 
-    <input type="radio" name="mesh_hull_type" id="mesh_hull_prism" value="prism" value="prism" disabled="disabled" onchange="preview_rebuild_model();" />
+    <input type="radio" name="mesh_hull_type" id="mesh_hull_prism" value="prism" disabled="disabled" onchange="preview_rebuild_model();" />
     <label for="mesh_hull_prism">Prism</label>
   </td>                                                                                                   
 </tr>  
 
 <tr>
-  <td></label></td>
+  <td></td>
   <td><input type="button" value="Rebuild" onclick="preview_rebuild_model();"></td>
 </tr>
 
@@ -277,11 +296,11 @@
 
 
 <div class="register_card" id="background_settings" style="display: none;">
-  <script language="Javascript">
+  <script>
   </script>
 <h3>Background Settings</h3>
 <form name="bezier_background_form">
-  <table border="0">
+  <table style="border: 0;">
     <tr>
       <td><input type="radio" name="bezier_background_type" id="bezier_background_default" value="default" onchange="changeBezierBackgroundType();" checked="checked" /></td>
       <td colspan="2"><label for="bezier_background_default">Default</label></td>
@@ -298,9 +317,9 @@
 
 
 <div id="register_head">
-<span onclick="show_register_card('mesh_controls');" id="mesh_controls" class="register_tab_selected">Mesh Controls</span>
-<span onclick="show_register_card('background_settings');" id="background_settings" class="register_tab">Background Settings</span>
-<span onclick="show_register_card('color_settings');" id="color_settings" class="register_tab">Color Settings</span>
+<span onclick="show_register_card('mesh_controls');" id="regh_mesh_controls" class="register_tab_selected">Mesh Controls</span>
+<span onclick="show_register_card('background_settings');" id="regh_background_settings" class="register_tab">Background Settings</span>
+<span onclick="show_register_card('color_settings');" id="regh_color_settings" class="register_tab">Color Settings</span>
 </div>
 
 
@@ -308,7 +327,7 @@
 
 
 <div class="register_card" id="color_settings" style="display: none;">
-  <script language="Javascript">
+  <script>
     function changeColor( c ) {
           document.forms["color_form"].elements["color"].value = c;
           //preview_rebuild_model();
@@ -324,7 +343,7 @@
   <form name="color_form">
     <input type="hidden" name="color" value="#151D28" />
   </form>
-  <table border="0">
+  <table style="border: 0;">
     <tr>
       <td class="color_cell"><div class="color_picker" style="background-color: #151D28;" onclick="changeColor('#151D28');">&nbsp;</div></td>
       <td class="color_cell"><div class="color_picker" style="background-color: #ff60d4;" onclick="changeColor('#ff60d4');">&nbsp;</div></td>
@@ -365,54 +384,54 @@
 <button style="position: absolute; left: 10px; top: 848px;" onclick="showLoadingBar( null );">Message Box</button><br/>
 
 
-<script language="Javascript" type="text/javascript" src="console_check.js"></script>
-<script language="Javascript" type="text/javascript" src="register_cards.js"></script>
-<script language="Javascript" type="text/javascript" src="form_utils.js"></script>
-<script language="Javascript" type="text/javascript" src="three.js"></script>
+<script type="text/javascript" src="console_check.js"></script>
+<script type="text/javascript" src="register_cards.js"></script>
+<script type="text/javascript" src="form_utils.js"></script>
+<script type="text/javascript" src="three.js"></script>
 
-<script language="Javascript" type="text/javascript" src="Blob.js"></script>
-<script language="Javascript" type="text/javascript" src="FileSaver.js"></script>
-<script language="Javascript" type="text/javascript" src="jszip.js"></script>
-<script language="Javascript" type="text/javascript" src="jszip-deflate.js"></script>
-<script language="Javascript" type="text/javascript" src="jszip-load.js"></script>
+<script type="text/javascript" src="Blob.js"></script>
+<script type="text/javascript" src="FileSaver.js"></script>
+<script type="text/javascript" src="jszip.js"></script>
+<script type="text/javascript" src="jszip-deflate.js"></script>
+<script type="text/javascript" src="jszip-load.js"></script>
 <!-- <script language="Javascript" type="text/javascript" src="STLBuilder.js"></script> -->
 <!-- <script language="Javascript" type="text/javascript" src="OBJBuilder.js"></script> -->
 
-<script language="Javascript" type="text/javascript" src="StringFileExporter.js"></script>
-<script language="Javascript" type="text/javascript" src="upload_bezier_json_file.js"></script>
-<script language="Javascript" type="text/javascript" src="base64-binary.js"></script>
-<script language="Javascript" type="text/javascript" src="ZipFileExporter.js"></script>
-<script language="Javascript" type="text/javascript" src="ZipFileImporter.js"></script>
-<script language="Javascript" type="text/javascript" src="ImageFileReader.js"></script>
+<script type="text/javascript" src="StringFileExporter.js"></script>
+<script type="text/javascript" src="upload_bezier_json_file.js"></script>
+<script type="text/javascript" src="base64-binary.js"></script>
+<script type="text/javascript" src="ZipFileExporter.js"></script>
+<script type="text/javascript" src="ZipFileImporter.js"></script>
+<script type="text/javascript" src="ImageFileReader.js"></script>
 
-<script language="Javascript" type="text/javascript" src="IKRS.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.Object.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.ShapedPathGeometry.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.PathDirectedExtrudeGeometry.js"></script>
+<script type="text/javascript" src="IKRS.js"></script>
+<script type="text/javascript" src="IKRS.Object.js"></script>
+<script type="text/javascript" src="IKRS.ShapedPathGeometry.js"></script>
+<script type="text/javascript" src="IKRS.PathDirectedExtrudeGeometry.js"></script>
 
-<script language="Javascript" type="text/javascript" src="IKRS.Utils.js"></script>
+<script type="text/javascript" src="IKRS.Utils.js"></script>
 
 <!-- These two classes should get a common super class -->
-<script language="Javascript" type="text/javascript" src="IKRS.DivisibleSTLBuilder.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.DivisibleOBJBuilder.js"></script>
+<script type="text/javascript" src="IKRS.DivisibleSTLBuilder.js"></script>
+<script type="text/javascript" src="IKRS.DivisibleOBJBuilder.js"></script>
 
 
-<script language="Javascript" type="text/javascript" src="IKRS.BoundingBox2.js"></script>
+<script type="text/javascript" src="IKRS.BoundingBox2.js"></script>
 <!-- <script language="Javascript" type="text/javascript" src="IKRS.BoundingBox3.js"></script> -->
-<script language="Javascript" type="text/javascript" src="IKRS.VectorFactory.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.CubicBezierCurve.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.BezierCanvasHandler.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.BezierPath.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.PreviewCanvasHandler.js"></script>
-<script language="Javascript" type="text/javascript" src="IKRS.UndoHistory.js"></script>
+<script type="text/javascript" src="IKRS.VectorFactory.js"></script>
+<script type="text/javascript" src="IKRS.CubicBezierCurve.js"></script>
+<script type="text/javascript" src="IKRS.BezierCanvasHandler.js"></script>
+<script type="text/javascript" src="IKRS.BezierPath.js"></script>
+<script type="text/javascript" src="IKRS.PreviewCanvasHandler.js"></script>
+<script type="text/javascript" src="IKRS.UndoHistory.js"></script>
 
-<script language="Javascript" type="text/javascript" src="IKRS.ProcessListener.js"></script>
+<script type="text/javascript" src="IKRS.ProcessListener.js"></script>
 
 
-<script language="Javascript" type="text/javascript" src="IKRS.MessageBox.js"></script>
+<script type="text/javascript" src="IKRS.MessageBox.js"></script>
 
 <!-- This is the main script -->
-<script language="Javascript" type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="main.js"></script>
 
 
 
@@ -425,7 +444,7 @@
 </script>
 
 
-<!--- BEGIN ----------- Menu bar structure ---------------------------- -->
+<!-- BEGIN - - - - - - Menu bar structure - - - - - - - - - - - - - - -->
 <div id="menu_bar" style="z-index: 1001">
     <div id="dropdown-holder">
       <ul id="nav" class="dropdown">
@@ -465,8 +484,9 @@
 	    </li>
 	  </ul>
 	</li>	
-	<li class="heading"><a href="#">Options</a>
+	<li class="heading"><a href="#">Help</a>
 	  <ul>
+	    <li><a href="#" onclick="open_faqs();">FAQ</a></li>
 	    <li><a href="#" onclick="about()">About</a></li> 
 	  </ul>
 	</li>

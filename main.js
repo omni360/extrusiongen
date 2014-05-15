@@ -760,3 +760,11 @@ function roundToDigits( number, digits, enforceInvisibleDigits ) {
     
     return result;
 };
+
+
+function open_faqs() {
+    window.open( "faq.html",
+		 "dildogenerator_faq",
+		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
+	       );
+}
