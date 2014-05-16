@@ -7,8 +7,15 @@
 
 
 // Will be initialised on initWebGL()
-this.bezierCanvasHandler  = null;
-this.previewCanvasHandler = null;
+this.bezierCanvasHandler   = null;
+this.previewCanvasHandler  = null;
+
+// Global constants (modifify when resizing the HTML5 canvas)
+var BEZIER_CANVAS_WIDTH    = 512;
+var BEZIER_CANVAS_HEIGHT   = 768;
+
+var PREVIEW_CANVAS_WIDTH   = 512;
+var PREVIEW_CANVAS_HEIGHT  = 768;
 
 
 /**
@@ -214,11 +221,10 @@ function initWebGL() {
 	this.bezierCanvasHandler = new IKRS.BezierCanvasHandler();
 	this.bezierCanvasHandler.addChangeListener( updateBezierStatistics );  // A function
 	this.previewCanvasHandler = new IKRS.PreviewCanvasHandler( this.bezierCanvasHandler,
-								   512, 
-								   768 
-							     );
+								   PREVIEW_CANVAS_WIDTH,     // 512, 
+								   PREVIEW_CANVAS_HEIGHT     // 768 
+								 );
     
-	//previewCanvasHandler.preview_rebuild_model();
 	// Indicate success.
 	return true;
     } catch( e ) {
@@ -264,37 +270,16 @@ function updateBezierStatistics( source, event ) {
     var weight_lowDensity          = roundToDigits((volume_cubeMillimeters/1000)*lowDensity,0);
     var weight_highDensity         = roundToDigits((volume_cubeMillimeters/1000)*highDensity,0);
     var tableData = [
-	[ "Diameter",     roundToDigits((bounds.getWidth()/10)*2*this.bezierCanvasHandler.getMillimeterPerUnit(),1,3), "cm"  ],
-	[ "Height",       roundToDigits((bounds.getHeight()/10)*this.bezierCanvasHandler.getMillimeterPerUnit(),1,3),    "cm"  ],
-	//[ "Bezier Area",  roundToDigits(areaSize_squareMillimeters,1,3), "mm<sup>2</sup>"  ],
-	[ "Bezier Area",             roundToDigits((areaSize_squareMillimeters/100.0),2,3), "cm<sup>2</sup>"  ],
-	//[ "Volume[Units]",       roundToDigits(volumeInUnits,2,3), " units"  ],
-	//[ "Volume[Units]_OLD",   roundToDigits(volumeInUnits_old,2,3), " units"  ],
-	[ "Volume",             roundToDigits((volume_cubeMillimeters/1000.0),1,3), "cm<sup>3</sup>"  ],
-	[ "",             roundToDigits((volume_cubeMilliLiters),1,3), "ml"  ],
-	[ "",             roundToDigits((volume_cubeMilliLiters/imperialCup),1,3), " Imperial Cups"  ],
-	[ "",             roundToDigits((volume_cubeMilliLiters/usCup),1,3), " US Cups"  ],
-	[ "Weight<br/>&nbsp;[low density silicone, " + lowDensity + "g/cm<sup>3</sup>]", roundToDigits(weight_lowDensity,0,3), "g"  ],
+	[ "Diameter",     roundToDigits((bounds.getWidth()/10)*2*this.bezierCanvasHandler.getMillimeterPerUnit(),1,3),            "cm"  ],
+	[ "Height",       roundToDigits((bounds.getHeight()/10)*this.bezierCanvasHandler.getMillimeterPerUnit(),1,3),             "cm"  ],
+	[ "Bezier Area",  roundToDigits((areaSize_squareMillimeters/100.0),2,3),                                                  "cm<sup>2</sup>"  ],
+	[ "Volume",       roundToDigits((volume_cubeMillimeters/1000.0),1,3),                                                     "cm<sup>3</sup> | ml"  ],
+	[ "",             roundToDigits((volume_cubeMilliLiters/imperialCup),1,3),                                                " Imperial Cups"  ],
+	[ "",             roundToDigits((volume_cubeMilliLiters/usCup),1,3),                                                      " US Cups"  ],
+	[ "Weight<br/>&nbsp;[low density silicone, " + lowDensity + "g/cm<sup>3</sup>]", roundToDigits(weight_lowDensity,0,3),    "g"  ],
 	[ "Weight<br/>&nbsp;[high density silicone, " + highDensity + "g/cm<sup>3</sup>]", roundToDigits(weight_highDensity,0,3), "g"  ]
     ];
     document.getElementById( "volume_and_weight" ).innerHTML = makeTable( tableData );
-
-    /*
-    document.getElementById( "volume_and_weight" ).innerHTML = 
-	//"Diameter[units]=" + roundToDigits((bounds.getWidth()*2),0) + "<br/>\n" +
-	//"Height[units]=" + roundToDigits(bounds.getHeight(),1) + "<br/>\n" +
-	"Diameter[cm]=" + roundToDigits((bounds.getWidth()*2*this.bezierCanvasHandler.getMillimeterPerUnit()),1) + "cm<br/>\n" +
-	"Height[cm]=" + roundToDigits(bounds.getHeight()*this.bezierCanvasHandler.getMillimeterPerUnit(),1) + "cm<br/>\n" +
-	//"Area[units 2]=" + roundToDigits(bezierAreaSize,1) + " units<sup>2</sup><br/>\n" +
-	"Area[mm 2]=" + roundToDigits(areaSize_squareMillimeters,1) + " mm<sup>2</sup><br/>\n" +
-	"Area[cm 2]=" + roundToDigits((areaSize_squareMillimeters/100.0),2) + " cm<sup>2</sup><br/>\n" +
-	//"Volume[units 3]=" + roundToDigits(volumeInUnits,2)  + " units<sup>3</sup><br/>\n" +
-	"Volume[mm 3]=" + roundToDigits(volume_cubeMillimeters,1) + "mm<sup>3</sup><br/>\n" +
-	"Volume[cm 3]=" + roundToDigits((volume_cubeMillimeters/1000.0),3) + "cm<sup>3</sup><br/>\n" +
-	"Volume[ml]=" + roundToDigits((volume_cubeMillimeters/1000.0),0) + "ml (amount in cups not available)<br/>\n" +
-	"Weight[low density silicone, " + lowDensity + "g/cm<sup>3</sup>]=" + weight_lowDensity + "g<br/>\n" +
-	"Weight[high density silicone, " + highDensity + "g/cm<sup>3</sup>]=" + weight_highDensity + "g<br/>\n";
-    */
 
     preview_rebuild_model();
 }
@@ -309,8 +294,8 @@ function makeTable( tableData ) {
 	result += "<tr>\n";
 	for( var c = 0; c < tableData[r].length; c++ ) {
 
-	    var valign = "top";
-	    var align  = "left";
+	    //var valign = "top";
+	    //var align  = "left";
 
 	    if( c == 1 )
 		result += "<td valign=\"bottom\" align=\"right\">" + tableData[r][c] + "&nbsp;</td>\n";
