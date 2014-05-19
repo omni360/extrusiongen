@@ -8,9 +8,6 @@
 
 IKRS.BezierPath = function( pathPoints ) {
 
-    //window.alert( "bezierCurves=" + bezierCurves );
-    //window.alert( "pathPoints=" + pathPoints );
-
     IKRS.Object.call( this );
 
     if( !pathPoints )
@@ -25,18 +22,15 @@ IKRS.BezierPath = function( pathPoints ) {
 				     pathPoints[i].y - pathPoints[i-1].y
 				   );
 
-	// window.alert( "pathSegment=(" + pathPoints[i-1].x + "," + pathPoints[i-1].y + ") to (" + pathPoints[i].x + "," + pathPoints[i].y + "); bounds=(" + bounds.max + ", " + bounds.min + ")" );
-
-
 	// Create a new Bezier curve inside the box
 	var bCurve =  new IKRS.CubicBezierCurve( pathPoints[i-1],
 						 pathPoints[i],
-						 new THREE.Vector2( pathPoints[i-1].x, // + bounds.max/2,
+						 new THREE.Vector2( pathPoints[i-1].x, 
 								    pathPoints[i-1].y - bounds.min/2
 								  ),
 						 // This control point will be auto-adjusted in the next step
 						 new THREE.Vector2( pathPoints[i].x + bounds.max/2,
-								    pathPoints[i].y // - bounds.min/2
+								    pathPoints[i].y 
 								  )
 					       );
 	this.bezierCurves.push( bCurve );
@@ -71,8 +65,6 @@ IKRS.BezierPath.prototype.computeVerticalAreaSize = function( deltaSize, useAbso
 
     var bounds    = this.computeBoundingBox();
     var relativeX = bounds.xMax;
-
-    //window.alert( "relativeX=" + relativeX );
 
     var size = 0.0;
     for( var i = 0; i < this.bezierCurves.length; i++ ) {

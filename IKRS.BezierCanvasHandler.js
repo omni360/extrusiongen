@@ -33,13 +33,13 @@ IKRS.BezierCanvasHandler = function() {
     var draggedCurveIndex      = -1;
     var draggedPointID         = -1;
 
-    var canvas_width           = 512;
-    var canvas_height          = 768;
+    //var canvas_width           = 512;
+    //var canvas_height          = 768;
 
     this.millimeterPerPixel    = 0.5
 
-    this.canvasWidth           = canvas_width;
-    this.canvasHeight          = canvas_height;
+    this.canvasWidth           = BEZIER_CANVAS_WIDTH;  // canvas_width;
+    this.canvasHeight          = BEZIER_CANVAS_HEIGHT; // canvas_height;
 
     this.canvas                = document.getElementById("bezier_canvas");
     this.context               = this.canvas.getContext( "2d" );
@@ -87,7 +87,7 @@ IKRS.BezierCanvasHandler = function() {
 			      true             // redraw when ready
 			    ); 
 
-}
+};
 
 
 IKRS.BezierCanvasHandler.POINT_ID_LEFT_UPPER_BOUND  = -1001;
@@ -217,62 +217,30 @@ IKRS.BezierCanvasHandler.prototype.loadCustomBackgroundImage = function( url, re
 	this.bezierCanvasHandler.setCustomBackgroundImage( this, redraw );
     };
     
-    bgImage.src = url; // this.backgroundImage; //"bg_bezier.png"; 
+    bgImage.src = url; 
 };
 
 IKRS.BezierCanvasHandler.prototype.setBackgroundImage = function( image, redraw ) {
     this.backgroundImage = image;
-    //window.alert( "image=" + image );
     if( redraw )
 	this.redraw();
 };
 
 IKRS.BezierCanvasHandler.prototype.setCustomBackgroundImage = function( image, redraw ) {
     this.customBackgroundImage = image;
-    //window.alert( "image=" + image );
     if( redraw )
 	this.redraw();
 };
 
 IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
 
-    var contextWidth  = this.canvasWidth; // 512;
+    var contextWidth  = this.canvasWidth;  // 512;
     var contextHeight = this.canvasHeight; // 768;
 
     // Clear screen!
     this.context.fillStyle = "#FFFFFF";
     this.context.fillRect( 0, 0, contextWidth, contextHeight );
-    
-
-    /*
-      var imageWidth  = this.backgroundImage.width;
-    var imageHeight = this.backgroundImage.height;
-
-    var widthRatio  = contextWidth  / imageWidth;
-    var heightRatio = contextHeight / imageHeight;
-    
-    var drawWidth, drawHeight;
-    if( widthRatio < heightRatio ) {
-	// normalize width
-	drawWidth = imageWidth * widthRatio;
-	drawHeight = imageHeight * widthRatio;
-    } else {
-	// normalize height
-	drawWidth = imageWidth * heightRatio;
-	drawHeight = imageHeight * heightRatio;
-    }	   
-    
-
-    this.context.drawImage( this.backgroundImage,
-			    (contextWidth - drawWidth)/2, 
-			    (contextHeight - drawHeight)/2, 
-			    drawWidth, // 512,
-			    drawHeight // 768
-			  );
-    this._drawWithoutBackgroundImages();
-
-*/
-    
+        
     if( this.customBackgroundImage != null )
 	this._drawAnonymousBackgroundImage( this.customBackgroundImage );
     this._drawAnonymousBackgroundImage( this.backgroundImage );
@@ -893,7 +861,7 @@ IKRS.BezierCanvasHandler.prototype.mouseDownHandler = function( e ) {
 
     var relativeP = this.bezierCanvasHandler.translateMouseEventToRelativePosition( this, e );
 
-    var clickTolerance = 10; // px
+    var clickTolerance = 10.0 / this.bezierCanvasHandler.zoomFactor; // px
     // Find a bezier curve and the respective point that was touched
     var pointTouched = false;
     for( var i = 0; i < this.bezierCanvasHandler.getBezierPath().getCurveCount() && !pointTouched; i++ ) {
@@ -1174,7 +1142,7 @@ IKRS.BezierCanvasHandler.prototype.doubleClickHandler = function( parent,
     var relativeP = this.translateMouseEventToRelativePosition( parent, e );
     var location = locateCachedBezierPointNearPosition = 
 	this.locateCachedBezierPointNearPosition( relativeP,  // point
-						  10.0        // tolerance
+						  10.0 / this.zoomFactor       // tolerance
 						);
     
     // Will return false if any index is out of (valid) bounds

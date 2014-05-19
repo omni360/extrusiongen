@@ -10,16 +10,10 @@ IKRS.CubicBezierCurve = function ( p_startPoint,        // THREE.Vector2
 				   p_endControlPoint    // THREE.Vector2
 				 ) {
     
-    //window.alert( "[IKRS.CubicBezierCurve] constructor called." );
     
     // Call super constructor
     IKRS.Object.call( this );
-        
-    // p0: start of the curve
-    // p3: end of the curve
     
-    // p1: help-point of p0
-    // p2: help-point of p3
     
     this.startPoint         = p_startPoint;
     this.startControlPoint  = p_startControlPoint;
@@ -227,7 +221,8 @@ IKRS.CubicBezierCurve.prototype._computeVerticalRevolutionVolumeSizeForSegment =
  
     var relativeA = relativeX - segmentA.x;
     var relativeB = relativeX - segmentB.x;
-    var averageX  = relativeB + (relativeA - relativeB) / 2.0;
+    //var averageX  = relativeB + (relativeA - relativeB) / 2.0;
+    var averageX  = (relativeA + relativeB) / 2.0;
 
     // Volume is PI * square(radius) * height
     var volume    = Math.PI * Math.pow(averageX,2) * segmentHeight;

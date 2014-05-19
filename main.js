@@ -262,6 +262,12 @@ function updateBezierStatistics( source, event ) {
 
     var areaSize_squareMillimeters = bezierAreaSize * Math.pow( this.bezierCanvasHandler.getMillimeterPerUnit(), 2.0 );
     var volume_cubeMillimeters     = volumeInUnits * Math.pow( this.bezierCanvasHandler.getMillimeterPerUnit(), 3.0 );
+
+    // There is a serious bug in the calculation:
+    //  The computed volume is about 25%-30& too high!
+    //  Didn't find the cause so far :(
+    volume_cubeMillimeters *= 0.75;
+
     var volume_cubeMilliLiters     = volume_cubeMillimeters / 1000.0;
     var lowDensity                 = 0.76;
     var highDensity                = 1.07;
@@ -445,7 +451,7 @@ function about() {
     messageBox.setSize( 300, 340 );
     messageBox.show( 
         "<br/><br/>Extrusion/Revolution Generator<br/>\n" +
-	    "<br/>\n" + 
+	    "(a.k.a. Dildo Generator)<br/>\n" + 
             "<br/>\n" +
 	    "extrusiongen<br/>\n" + 
 	    VERSION_STRING + "<br/>\n" + 
@@ -729,6 +735,51 @@ function stopLoadingAnimation() {
       loadingAnimationKey;
 }
 
+function order_print() {
+    var html = 
+	"<br/>\n" +
+	"<h2 style=\"color: #000000;\">Featured by YOUin3D.com</h2>\n" +
+	// "<img src=\"img/YOUin3D.com_A.png\" width=\"131\" height=\"118\" alt=\"Featured by YOUin3D.com\" /><br/>\n" +
+	"<img src=\"img/YOUin3D.com_B.png\" width=\"92\" height=\"79\" alt=\"Featured by YOUin3D.com\" /><br/>\n" +
+	"<br/>\n" +
+	"The 3D guys, girls and cyborgs at YOUin3D.com <br/>will print your designed dildo:<br/>\n" +
+	"<div style=\"text-align: left; margin-left: 65px;\">\n" +
+	"<ul>\n" +
+	"  <li>\n" +
+	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-gussform-3d-gedruckte-gussform-und-silikon-fuer-3d-druck-sexspielzeug/\">Order without silicone (just the mold)</a>\n" +
+	"    </a>\n" +
+	"  </li>\n" +
+	"  <li>\n" +
+	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-diy-kit-silikon-fuer-3d-druck-sexspielzeug-gussform/\">Order with silicone</a>\n" +
+	"  </li>\n" +
+	"</ul>\n" +
+	"</div>\n" +
+	"<span style=\"font-size: 9pt;\">By the way, thanks for all the help!</span><br/>\n" +
+	"<br/>\n"+
+	"<br/><button onclick=\"messageBox.hide();\">Close</button>" 
+
+    messageBox.show( html, 
+		     
+		     // Make this message box extra large
+		     IKRS.MessageBox.DEFAULT_WIDTH*2, 
+		     IKRS.MessageBox.DEFAULT_HEIGHT*2 
+		   );
+}
+
+function open_faqs() {
+    window.open( "faq.html",
+		 "dildogenerator_faq",
+		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
+	       );
+}
+
+function open_legal_notice() {
+    window.open( "legal_notice.html",
+		 "dildogenerator_legal_notice",
+		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
+	       );
+}
+
 function roundToDigits( number, digits, enforceInvisibleDigits ) {
     var magnitude = Math.pow( 10, digits ); // This could be LARGE :/
     number = Math.round( number * magnitude );
@@ -745,11 +796,3 @@ function roundToDigits( number, digits, enforceInvisibleDigits ) {
     
     return result;
 };
-
-
-function open_faqs() {
-    window.open( "faq.html",
-		 "dildogenerator_faq",
-		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
-	       );
-}

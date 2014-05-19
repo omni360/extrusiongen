@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dildogenerator FAQ</title>
+  <title>Dildo Generator - Freuently Asked Questions (FAQ)</title>
   <meta charset="UTF-8">
   <meta name="description" content="Frequently Asked Questions (FAQ) for the Dildo Generator.">
   <meta name="author" content="Ikaros Kappler">
@@ -11,19 +11,24 @@
 <body>
 <style>
     html {
-    background: url('img/Screenshot_20140502_B_4_brighter.png') no-repeat center center fixed;
+    margin:                  35px;
+    /* background:           url('img/Screenshot_20140502_B_4_brighter.png') no-repeat center center fixed; */
+    background:              url('faq_background.png') no-repeat center center fixed;
     -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    -moz-background-size:    cover;
+    -o-background-size:      cover;
+    background-size:         cover;
     }
   </style>
 
-Date: 2014-05-11<br/>
+Date: 2014-05-19<br/>
 <img src="img/Screenshot_20140425_overlapping_B_128x192.png" width="128" height="192" alt="Dildo Generator Image" align="right" />
-<h1 class="faq">Dildogenerator - Frequently Asked Questions</h1>
+<h1 class="faq">Dildo Generator - Frequently Asked Questions (FAQ)</h1>
 
-<h2 class="faq">Contents</h2>
+<!-- <h2 class="faq">Contents</h2> -->
+<br/>
+<br/>
+
 <h3 class="faq">Bezier Curves</h3>
 <ul class="faq">
   <li>
@@ -35,7 +40,7 @@ Date: 2014-05-11<br/>
 </ul>
 
 
-<h3>3D Printing</h3>
+<h3 class="faq">3D Printing</h3>
 <ul class="faq">
   <li>
     <a class="faq" href="#printing_order_service">Where can I order a 3D print?</a>
@@ -45,6 +50,20 @@ Date: 2014-05-11<br/>
   </li>
 </ul>
 
+<h3 class="faq">System Requirements</h3>
+<ul class="faq">
+  <li>
+    <a class="faq" href="#supporting_browsers">Which browsers are supported?</a>
+  </li>
+</ul>
+
+
+<h3 class="faq">Privacy &amp; Security</h3>
+<ul class="faq">
+  <li>
+    <a class="faq" href="#privacy">Is any of my private data shared?</a>
+  </li>
+</ul>
 
 <br/>
 <br/>
@@ -66,27 +85,88 @@ Click onto the bezier curve point you want to remove. It should be marked as sel
 Then just press the [DELETE] key and the point will be removed.<br/>
 Note that at least two points are required to define a bezier curve. The last two points cannot be removed!
 </div>
+<br/>
 
-<br/>
-<br/>
-<br/>
+
 
 
 <h2 class="faq">3D Printing</h3>
 <a name="printing_order_service"></a>
-<h3 class="faq">How do I add new points to the bezier curve?</h3>
+<h3 class="faq">Where can I order a 3D print?</h3>
 <div class="faq">
-If you are located in Germany the guys and girls from <a href="http://3d-druck-shop.youin3d.com/">http://3d-druck-shop.youin3d.com/</a> will do the 3D print for you.
+If you are located in Germany the guys and girls from <a href="http://3d-druck-shop.youin3d.com/" target="_blank">YOUin3D.com</a> will do the 3D print for you.
+There are two options:<br/>
+<ul>
+  <li>
+    <a href="http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-gussform-3d-gedruckte-gussform-und-silikon-fuer-3d-druck-sexspielzeug/" target="_blank">Order without silicone (just the mold)</a>
+  </li>
+  <li>
+    <a href="http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-diy-kit-silikon-fuer-3d-druck-sexspielzeug-gussform/" target="_blank">Order with silicone</a>
+  </li>
+</ul>
+
 </div>
 <br/>
 
 <a name="printing_order_howto"></a>
 <h3 class="faq">How do I order a 3D print?</h3>
 <div class="faq">
-Save your dildo using the <code>File &rarr; Save (*.zip)</code> menu bar option and sent us the file in an Email. We will print the mold and cast your silicone dildo.<br/>
+Save your dildo model using the <code>File &rarr; Save (*.zip)</code> menu bar option and sent us the file in an Email 
+to <a href="mailto:3D-Druck@YOUin3D.com">3D-Druck@YOUin3D.com</a>. They will print the mold for you.<br/>
 When finished the result is shipped to you. See <a href="http://3d-druck-shop.youin3d.com/">http://3d-druck-shop.youin3d.com/</a>.<br/>
+<br/>
+Please note that this (the software and the silicone casting) is still somewhat experimental. Results may vary.<br/>
 </div>
 <br/>
+
+
+
+
+
+<h2 class="faq">System Requirements</h3>
+<a name="supporting_browsers"></a>
+<h3 class="faq">Which browsers are supported?</h3>
+<div class="faq">
+The App uses <a href="http://www.khronos.org/webgl/" target="_blank">WebGL</a> and <a href="http://threejs.org/" target="_blank">THREE.js</a>.<br/>
+There is currently support for following browsers:
+<ul>
+  <li>Chrome/Chromium</li>
+  <li>Opera</li>
+  <li>Android Mobile Browser</li>
+  <li>Blackberry Mobile Browser</li>
+</ul>
+Partial WebGL support exists for these (worked in our tests too, after some configuration):
+<ul>
+  <li>Opera</li>
+  <li>Safari</li>
+  <li>Internext Explorer</li>
+</ul>
+Note that you need a properly configured system and the latest browser version. Often the correct graphics card drivers are required, too.<br/>
+If you have a supporting browser and WebGL does not work, you should check for hardware driver updates. Some browsers have WebGL deactivated by default, so
+you might have to activate it first in the advanced settings.<br/>
+</div>
+<br/>
+
+
+
+
+
+<h2 class="faq">Privacy &amp; Security</h3>
+<a name="privacy"></a>
+<h3 class="faq">Is any of my private data shared?</h3>
+<div class="faq">
+<b>No.</b><br/>
+The whole generator runs in Javascript and is nothing more than a browser app. No server scripts are included.<br/>
+Even the custom background images are loaded using the <a href="http://www.w3.org/TR/FileAPI/" target="_blank">File#FileReader API</a> which resides inside your browser. No data is sent to any server nor shared with any network.<br/>
+<br/>
+Try it out just by running the app from your local file system (no web server required).<br/>
+<br/>
+<br/>
+Besides, feel free to share your created models or screen shots with the web community.<br/>
+</div>
+<br/>
+
+
 
 <br/>
 <br/>
@@ -115,6 +195,8 @@ When finished the result is shipped to you. See <a href="http://3d-druck-shop.yo
 <br/>
 <br/>
 <br/>
+<hr/>
+<span style="font-size: 8pt;">License: CC BY-NC-SA <a href="http://www.dildo-generator.com">dildo-generator.com</a>, 2014 Ikaros Kappler</span>
 
 </body>
 </html>

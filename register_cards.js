@@ -26,14 +26,16 @@ function show_register_card( id ) {
 
 
     var spans = document.getElementsByTagName( "SPAN" );
+    var tabID = "regh_" + id;
     for( var i = 0; i < spans.length; i++ ) {
 
 	var entry = spans[i];
 	if( !entry.className || (entry.className != "register_tab" && entry.className != "register_tab_selected") )
 	    continue;
 
-	// window.alert( entry.className + ", id=" + entry.id + ", making visible: " + (entry.id == id) );
-	if( entry.id == id )
+	//window.alert( entry.className + ", id=" + entry.id + ", making visible: " + (entry.id == id) );
+	
+	if( entry.id == tabID )
 	    entry.className = "register_tab_selected";
 	else
 	    entry.className = "register_tab";

@@ -1,7 +1,8 @@
 /**
- * @author Ikaros Kappler
- * @date 2013-09-30
- * @version 1.0.0
+ * @author   Ikaros Kappler
+ * @date     2013-09-30
+ * @modified 2014-05-19 Ikaros Kappler (Added the optional width and height params to the show() function).
+ * @version  1.0.1
  **/
 
 IKRS.MessageBox = function( baseID ) {
@@ -12,8 +13,8 @@ IKRS.MessageBox = function( baseID ) {
     this.blanketID  = baseID + "_blanket";
     this.boxID      = baseID + "_box";
     
-    this.boxWidth   = 300;  // px
-    this.boxHeight  = 180;  // px
+    this.boxWidth   = IKRS.MessageBox.DEFAULT_WIDTH;  // 300;  // px
+    this.boxHeight  = IKRS.MessageBox.DEFAULT_HEIGHT; // 180;  // px
 
     var blanket                     = document.createElement( "div" );
     blanket.id                      = this.blanketID;
@@ -44,37 +45,27 @@ IKRS.MessageBox = function( baseID ) {
 
     box.style.textAlign             = "center";
     box.innerHTML                   = "Test";
-    /*
-    box.innerHTML               = 
-	"<div id=\"xyz\"></div>\n" +
-	"<script laguage=\"Javascript\">\n" +
-	"window.alert('Y');\n" +
-	"var xyz_step = 0;\n" +
-	"var xyz_elements = array( '|', '/', '-', '\' );\n" +
-	//"window.setTimeout( \"xyz_next();\", 1000 );\n" +
-	"function xyz_next() {\n" +
-	"window.alert('X');\n" +
-	"         document.getElementById( \"xyz\" ).innerHTML = xyz_elements[ xyz_step ];\n" +
-	"         xyz_step = (xyz_step + 1) % xyz_elements.length;\n" +
-	"}\n" +
-	"</script>";
-    window.setTimeout( "xyz_next();", 1000 );
-    */
+ 
+};
 
-}
+IKRS.MessageBox.DEFAULT_WIDTH         = 300; // px
+IKRS.MessageBox.DEFAULT_HEIGHT        = 180; // px
 
-IKRS.MessageBox.prototype = new IKRS.Object();
+IKRS.MessageBox.prototype             = new IKRS.Object();
 IKRS.MessageBox.prototype.constructor = IKRS.MessageBox;
+
+
+
 
 IKRS.MessageBox.prototype.setSize = function( width, height ) {
     this.boxWidth  = width;  // px
-    this.boxHeight = height;
-}
+    this.boxHeight = height; // px
+};
 
 
 IKRS.MessageBox.prototype.mouseEvent = function() {
     alert( "Mouse Event?" );
-}
+};
 
 IKRS.MessageBox.prototype.toggleVisibility = function() {
 
@@ -84,24 +75,11 @@ IKRS.MessageBox.prototype.toggleVisibility = function() {
     IKRS.MessageBox.toggleElementVisibility( this.getBox() );
 
     this.getBlanket().onMouseClick = this.hide;
-    
-    /*
-    if ( blanket.style.display == 'none' ) {
-	//if( typeof cssPopup_onOpenHandler == "function" )
-	//    cssPopup_onOpenHandler();
-	blanket.style.display = 'block';
-    }
-    else {
-	//if( typeof cssPopup_onCloseHandler == "function" )
-	//    cssPopup_onCloseHandler();
-	blanket.style.display = 'none';
-    }
-    */
 
-}
+};
 
 /**
- * A static function!
+ * A 'static' function!
  **/
 IKRS.MessageBox.toggleElementVisibility = function( element ) {
 
@@ -118,19 +96,19 @@ IKRS.MessageBox.toggleElementVisibility = function( element ) {
 	// ...
 	element.style.display = 'none';
     }
-}
+};
 
 IKRS.MessageBox.getDocumentBody = function() {
     return document.getElementsByTagName( "body" )[0];
-}
+};
 
 IKRS.MessageBox.prototype.getBlanket = function() {
     return document.getElementById( this.blanketID );
-}
+};
 
 IKRS.MessageBox.prototype.getBox = function() {
     return document.getElementById( this.boxID );
-}
+};
 
 /**
  * This resizes the blanket to fit the height of the page because there is not height=100% attribute. 
@@ -164,7 +142,7 @@ IKRS.MessageBox.prototype._blanket_resize = function() {
     box.style.height     = this.boxHeight + "px";
     box.style.top        = blanket_height/2 - this.boxHeight/2 + "px";
     box.style.left       = blanket.style.width/2  - this.boxWidth/2 + "px";
-}
+};
 
 /**
  * This centers the popUp vertically.
@@ -193,35 +171,38 @@ IKRS.MessageBox.prototype._box_reposition = function( ) {
 
     }
 
-    var popUpDiv        = this.getBox(); // document.getElementById(popUpDivVar);
-    window_width        = window_width/2-150;//150 is half popup's width
+    var popUpDiv        = this.getBox();      // document.getElementById(popUpDivVar);
+    window_width        = window_width/2-150; // 150 is half popup's width
     popUpDiv.style.left = window_width + 'px';
     
     //popUpDiv.style.dispaly = "table-cell";
     //popUpDiv.style.verticalAlign = "middle";
-}
+};
 
 /**
  * This function contains the other three to make life simple in the HTML file.
  **/
-IKRS.MessageBox.prototype.show = function( content ) {
-    this._blanket_resize(); // cssPopup_blanket_size(windowname);
-    this._box_reposition(); // cssPopup_window_pos(windowname);
-    this.toggleVisibility(); //  cssPopup_toggle('cssPopup_blanket');
-    // cssPopup_toggle(windowname);
+IKRS.MessageBox.prototype.show = function( content,
+					   opt_width,
+					   opt_height
+					 ) {
+    if( typeof opt_width != "undefined" && 
+	typeof opt_height != "undefined" )
+	this.setSize( opt_width, opt_height );
+   
+    this._blanket_resize(); 
+    this._box_reposition(); 
+    this.toggleVisibility();
     
     if( typeof content != "undefined" )
 	this.getBox().innerHTML = content;
-}
+};
 
 
 /**
  * This function contains the other three to make life simple in the HTML file.
  **/
 IKRS.MessageBox.prototype.hide = function() {
-    //this._blanket_resize(); // cssPopup_blanket_size(windowname);
-    //this._box_reposition(); // cssPopup_window_pos(windowname);
-    this.toggleVisibility(); //  cssPopup_toggle('cssPopup_blanket');
-    // cssPopup_toggle(windowname);
-}
+    this.toggleVisibility();
+};
 

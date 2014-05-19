@@ -4,8 +4,8 @@ Path Extrusion Generator
 
 @author   Ikaros Kappler
 @date     2013-09-11
-@modified 2013-10-30
-@version  0.2.6
+@modified 2014-05-16
+@version  0.2.21
 
 
 
@@ -16,6 +16,10 @@ CC BY-NC-SA
 
 Changelog
 ---------
+
+[2014-05-16] v0.2.20
+ - Click area bug fixed (zoom issue)
+
 [2013-10-30]
  - Added background images to the 2D- and 3D-canvas.
 
@@ -154,6 +158,5 @@ Thanks to
    mootools / https://github.com/mootools  
    <unknown author>
  
-
-
-
+ [mono-dc-monochrome-social-icons]
+   Natko Hasiæ & designchair.com

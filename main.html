@@ -14,6 +14,13 @@
   background-color: #f8f8f8;
   }
 </style>
+<script>
+  function isDildoGeneratorDomain() {
+      return ( window.location.host.toLowerCase().indexOf("dildo-generator.com") != -1 ||
+               window.location.host.toLowerCase().indexOf("dildogenerator.com") != -1
+             );
+  }
+</script>
 
 </head> 
 
@@ -48,13 +55,24 @@
   <a href="https://github.com/IkarosKappler/extrusiongen.git" target="_blank" style="text-decoration: none;">
     <img src="img/GitHub.png" width="32" height="32" alt="Clone at Github.com" style="border: 0;" />
   </a>
-  <a href="mailto:ikaros@polygon-berlin.de" style="text-decoration: none;">
+  <a href="mailto:ikaros@polygon-berlin.de" target="_blank" style="text-decoration: none;">
     <img src="img/Email.png" width="32" height="32" alt="Send Bug reports to ikaros@polygon-berlin.de" style="border: 0;" />
   </a>
-  <a href="http://twitter.com/dildogenerator" style="text-decoration: none;">
+  <a href="http://twitter.com/dildogenerator" target="_blank" style="text-decoration: none;">
     <img src="img/Twitter.png" width="32" height="32" alt="Follow us on Twitter at #dildogenerator" style="border: 0;" />
   </a>
+
+  <a href="https://www.flickr.com/photos/dildo-generator/" target="_blank" style="text-decoration: none;">
+    <img src="img/Flickr.png" width="32" height="32" alt="Find screenshots and photos of dildo making at flickr" style="border: 0;" />
+  </a>
   <br/>
+  <br/>
+  <script>
+    // Add 3D-Print link?
+    if( isDildoGeneratorDomain() ) {
+        document.write( "[<a href=\"#\" onclick=\"order_print()\" style=\"color: #ef0000; font-size: 8pt;\">Don't have a 3D printer?</a>]<br/>\n" );
+    }
+    </script>
 </div>
 
 <canvas 
@@ -149,7 +167,7 @@
 <!-- BEGIN - - - - -  PRINT CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
 <div class="register_card" id="print_controls" style="display: none;">
 <h3>Advanced controls</h3>
-<table style="border: 0">
+<table style="border: 0;">
 
 <tr>
   <td style="vertical-align: top;">Segments:</td>
@@ -157,19 +175,17 @@
     <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
       <tr>
 	<td style="align: left; vertical-align: top;">
-	  <input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." style="width: 35px;" />
+	  <input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
 	  <label for="shape_segments">Shape</label>
-	</td>
-
-	<td style="align: center; vertical-align: top;">
-	  <input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." style="width: 35px;" />
+	  <br/>
+	  <input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
 	  <label for="path_segments">Path</label>
 	</td>
 	
-	<td style="vertical-align: top;">
+	<td style="vertical-align: middle;" rowspan="2">
 	  <input type="button" onclick="increase_mesh_details()" value="+" />
 	</td>
-	<td style="vertical-align: top;">
+	<td style="vertical-align: middle;">
 	  <input type="button" onclick="decrease_mesh_details()" value="-" />
 	</td>
       </tr>
@@ -244,6 +260,7 @@
 <tr>
   <td>Parts:</td>
   <td>
+    <div class="indent_1">
     <table style="border: 0;">
       <tr>
 	<td>
@@ -260,6 +277,7 @@
 	</td>
       </tr>
     </table>
+    </div>
   </td>
 </tr>
 
@@ -267,14 +285,17 @@
 <tr>
   <td></td>
   <td>
+    <div class="indent_2">
         <input type="checkbox" id="arrange_splits_on_plane" name="arrange_splits_on_plane" onchange="toggleFormElementsEnabled(); preview_rebuild_model();" disabled="disabled" />
-          <label for="arrange_splits_on_plane">Arrange splits on plane</label>
+        <label for="arrange_splits_on_plane">Arrange splits on plane</label>
+	</div>
   </td>
 </tr>
 
 <tr>
   <td>Directions:</td>
   <td>
+    <div class="indent_1">
     <table style="border: 0;">
       <tr>
 	<td>
@@ -287,17 +308,20 @@
 	</td>
       </tr>
     </table>
+    </div>
   </td>
 </tr>
 
 <tr>
   <td>Base type: </td> 
   <td>
+    <div class="indent_1">
     <input type="radio" name="mesh_hull_type" id="mesh_hull_perpendicular" value="perpendicular" checked="checked" disabled="disabled" onchange="preview_rebuild_model();" />
     <label for="mesh_hull_perpendicular">Perpendicular</label>
 
     <input type="radio" name="mesh_hull_type" id="mesh_hull_prism" value="prism" disabled="disabled" onchange="preview_rebuild_model();" />
     <label for="mesh_hull_prism">Prism</label>
+    </div>
   </td>                                                                                                   
 </tr>  
 
@@ -322,9 +346,13 @@
       <td colspan="2"><label for="bezier_background_default">Default</label></td>
     </tr>
     <tr>
-      <td><input type="radio" name="bezier_background_type" value="file" onchange="changeBezierBackgroundType();" /></td>
-      <td><label for="bezier_background_file">File:</label></td>
-      <td><input type="file" id="bezier_background_file" name="bezier_background_file" accept="image/*" onchange="loadBezierBackground();" style="width: 330px;" /></td>
+      <td style="vertical-align: top;"><input type="radio" name="bezier_background_type" value="file" onchange="changeBezierBackgroundType();" /></td>
+      <td style="vertical-align: top;"><label for="bezier_background_file">File*:</label></td>
+      <td>
+	<input type="file" id="bezier_background_file" name="bezier_background_file" accept="image/*" onchange="loadBezierBackground();" style="width: 330px;" />
+	<br/>
+	<span style="font-size: 7pt;">* this site will not store nor keep any data you upload</span>
+      </td>
     </tr>
   </table>
 </form>
@@ -483,7 +511,7 @@
 <div id="menu_bar" style="z-index: 1001">
     <div id="dropdown-holder">
       <ul id="nav" class="dropdown">
-	<li class="heading"><a href="#">File</a>
+	<li class="heading"><a href="#">Model</a>
 	  <ul>
 	    <li><a href="#" onclick="newScene()">New</a></li>
 	    <li>
@@ -518,10 +546,25 @@
 	      </form>
 	    </li>
 	  </ul>
-	</li>	
+	</li>
+	
+	<script>
+	  // Add the 3D-Print menu?
+	  if( isDildoGeneratorDomain() ) {
+	  document.write( 
+	  "<li class=\"heading\"><a href=\"#\">3D Print</a>\n" +	    
+	    "<ul>\n" +
+	      "  <li><a href=\"#\" onclick=\"order_print()\">Order Print ...</a></li>\n" +
+	      "</ul>\n" +
+	    "</li>\n"
+	  );
+	  }
+	</script>
+	
 	<li class="heading"><a href="#">Help</a>
 	  <ul>
 	    <li><a href="#" onclick="open_faqs();">FAQ</a></li>
+	    <!-- <li><a href="#" onclick="open_legal_notice();">Legal Notice</a></li> -->
 	    <li><a href="#" onclick="about()">About</a></li> 
 	  </ul>
 	</li>
@@ -534,6 +577,18 @@
 
 
 
+
+
+<script>
+// Add the legal notice if domain is dildo-generator.com or dildogenerator.com
+// Meh.
+if( isDildoGeneratorDomain() ) {
+
+document.write( "<div id=\"impressum\"><a href=\"impressum.html\" target=\"dildogenerator_impressum\" style=\"color: #000000;\">Impressum</a></div>" );
+
+}
+
+</script>
 
 
 </body> 
