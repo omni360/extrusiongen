@@ -14,6 +14,9 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
 
     this.preview_canvas   = document.getElementById("preview_canvas");
     this.preview_renderer = new THREE.WebGLRenderer( { "canvas" : this.preview_canvas } );
+    // Tried to fetch some SVG data from the rendered object. Failed :(
+    //this.preview_renderer = new THREE.SVGRenderer();
+
 
     // An array to store the meshes in.
     this.preview_meshes = [];

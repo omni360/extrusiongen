@@ -742,19 +742,29 @@ function order_print() {
 	// "<img src=\"img/YOUin3D.com_A.png\" width=\"131\" height=\"118\" alt=\"Featured by YOUin3D.com\" /><br/>\n" +
 	"<img src=\"img/YOUin3D.com_B.png\" width=\"92\" height=\"79\" alt=\"Featured by YOUin3D.com\" /><br/>\n" +
 	"<br/>\n" +
-	"The 3D guys, girls and cyborgs at YOUin3D.com <br/>will print your designed dildo:<br/>\n" +
-	"<div style=\"text-align: left; margin-left: 65px;\">\n" +
+	"There are some tiny Hackerspaces in Berlin.<br/>\n" +
+	"Some have a 3D printer.<br/>\n" + 
+	//"The guys, girls, me and the cyborgs there will probably help<br/>\n" +
+	//"you printing your designed dildo.<br/>\n" +
+	"You can try this one:\n" +
+	"<div style=\"text-align: left; margin-left: 125px;\">\n" +
 	"<ul>\n" +
 	"  <li>\n" +
-	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-gussform-3d-gedruckte-gussform-und-silikon-fuer-3d-druck-sexspielzeug/\">Order without silicone (just the mold)</a>\n" +
+	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-gussform-3d-gedruckte-gussform-und-silikon-fuer-3d-druck-sexspielzeug/\" target=\"_blank\">Order without silicone (just the mold)</a>\n" +
 	"    </a>\n" +
 	"  </li>\n" +
 	"  <li>\n" +
-	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-diy-kit-silikon-fuer-3d-druck-sexspielzeug-gussform/\">Order with silicone</a>\n" +
+	"    <a href=\"http://3d-druck-shop.youin3d.com/online-kaufen/3d-drucker-reprap-zubehoer-einzelteile-bausaetze-kits-ersatzteile/dildogenerator-diy-kit-silikon-fuer-3d-druck-sexspielzeug-gussform/\" target=\"_blank\">Order with silicone</a>\n" +
 	"  </li>\n" +
 	"</ul>\n" +
+	//"Many have a 3D printer.<br/>\n" + 
+	"The guys, girls, me and the cyborgs there will support<br/>\n" +
+	"you printing your designed dildo.<br/>\n" +
+	"<br/>\n" +
 	"</div>\n" +
-	"<span style=\"font-size: 9pt;\">By the way, thanks for all the help!</span><br/>\n" +
+	"<br/>\n"+
+	"<span style=\"font-size: 10pt;\">Thanks for all the help, fun and the cool time!</span><br/>\n" +
+	//"I love you all.<br/>\n" +
 	"<br/>\n"+
 	"<br/><button onclick=\"messageBox.hide();\">Close</button>" 
 
@@ -762,7 +772,7 @@ function order_print() {
 		     
 		     // Make this message box extra large
 		     IKRS.MessageBox.DEFAULT_WIDTH*2, 
-		     IKRS.MessageBox.DEFAULT_HEIGHT*2 
+		     IKRS.MessageBox.DEFAULT_HEIGHT*2.5 
 		   );
 }
 

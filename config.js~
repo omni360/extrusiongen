@@ -1,0 +1,39 @@
+/**
+ * This is a global config file that helps to configure basic settings for the
+ * dildo generator.
+ *
+ * It should help the guys from wamungo.com to customize the dildo generator in 
+ * a comfortable manner.
+ *
+ *
+ * @author  Ikaros Kappler
+ * @date    2014-06-10
+ * @version 1.0.0
+ **/
+
+
+if( !_DILDO_CONFIG || typeof _DILDO_CONFIG === "undefined" )
+    var _DILDO_CONFIG = {};
+
+
+
+/**
+ * Set this flag to true if you wish the Model->Export sub menu to be hidden.
+ **/
+_DILDO_CONFIG.HIDE_EXPORT_MESH_MENU = true;
+
+
+/**
+ * Set this flag to true if you wish the whole Print menu to be hidden.
+ **/
+_DILDO_CONFIG.HIDE_PRINT_MENU       = false; // true|false
+//_DILDO_CONFIG.HIDE_PRINT_MENU       = isDildoGeneratorDomain(); 
+
+/**
+ * Set the Print->Order_Print sub menu action to the specific javascript action (string).
+ *
+ * This only takes effect if the _DILDO_CONFIG.HIDE_PRINT_MENU is set to false.
+ **/
+_DILDO_CONFIG.ORDER_PRINT_ACTION    = "_order_send_to_server('http://www.myserver.com/process_data.php?data=%json_string%');";
+//_DILDO_CONFIG.ORDER_PRINT_ACTION    = "order_print();";
+
