@@ -17,6 +17,12 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-06-17] v0.2.27
+ - Since this version there is a code snippet example explaining how to
+   to store dildo design on a server (in a database). This is just an example
+   and not active. The site dildo-generator.com does _not_ store any design
+   data.
+
 [2014-05-16] v0.2.20
  - Click area bug fixed (zoom issue)
 

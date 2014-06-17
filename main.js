@@ -478,7 +478,7 @@ function checkSizeBeforeSaving() {
     var bezierBounds        = this.bezierCanvasHandler.getBezierPath().computeBoundingBox();
     var heightInMillimeters = (bezierBounds.getHeight()/1.0) * this.bezierCanvasHandler.getMillimeterPerUnit();
     //window.alert( heightInMillimeters );
-    if( heightInMillimeters > 150 ) {	
+    if( heightInMillimeters > 210 ) {	
 	//window.alert( "The shape must not be bigger than 200mm." );
 	/*
 	messageBox.show(
@@ -486,7 +486,7 @@ function checkSizeBeforeSaving() {
 		"The shape must not be bigger than 200mm.<br/>\n"
 	);
 	*/
-	return window.confirm( "The shape is bigger than 150mm (height) and cannot be printed this way.\n" +
+	return window.confirm( "The shape is bigger than 210mm (height) and cannot be printed this way.\n" +
 			       "\n" +
 			       "Do you want to continue though?\n" 
 			     );

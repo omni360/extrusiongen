@@ -20,20 +20,21 @@ if( !_DILDO_CONFIG || typeof _DILDO_CONFIG === "undefined" )
 /**
  * Set this flag to true if you wish the Model->Export sub menu to be hidden.
  **/
-_DILDO_CONFIG.HIDE_EXPORT_MESH_MENU = true;
+_DILDO_CONFIG.HIDE_EXPORT_MESH_MENU = false;  // true|false
+
 
 
 /**
  * Set this flag to true if you wish the whole Print menu to be hidden.
  **/
-_DILDO_CONFIG.HIDE_PRINT_MENU       = false; // true|false
-//_DILDO_CONFIG.HIDE_PRINT_MENU       = isDildoGeneratorDomain(); 
+//_DILDO_CONFIG.HIDE_PRINT_MENU       = false; // true|false
+_DILDO_CONFIG.HIDE_PRINT_MENU       = isDildoGeneratorDomain(); 
 
 /**
  * Set the Print->Order_Print sub menu action to the specific javascript action (string).
  *
  * This only takes effect if the _DILDO_CONFIG.HIDE_PRINT_MENU is set to false.
  **/
-_DILDO_CONFIG.ORDER_PRINT_ACTION    = "_order_send_to_server('store_custom_dildo.php?bend=%bend%&bezier_path=%bezier_path%');";
-//_DILDO_CONFIG.ORDER_PRINT_ACTION    = "order_print();";
+//_DILDO_CONFIG.ORDER_PRINT_ACTION    = "_order_send_to_server('store_custom_dildo.php?bend=%bend%&bezier_path=%bezier_path%');";
+_DILDO_CONFIG.ORDER_PRINT_ACTION    = "order_print();";
 
