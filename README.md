@@ -17,6 +17,11 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-06-19] v0.2.31
+ - Updated JSZip to version 2.3.0, which fixed the "Constructor TextDecoder 
+   requires 'new'" issue with FireFox.
+ - ZIP files are now readable again.
+
 [2014-06-19] v0.2.30
  - Fixed the DOM canvas issue (DOM element was moved by constructor).
 

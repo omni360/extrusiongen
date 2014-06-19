@@ -412,6 +412,7 @@ function newScene() {
 
     setBezierPath( bezierPath );
     updateBezierStatistics( null, null );
+    toggleFormElementsEnabled();
 
     preview_rebuild_model();
 }
@@ -424,6 +425,7 @@ function saveShape() {
 
 function loadShape() {
     upload_bezier_json_file( document.forms['bezier_file_upload_form'].elements['bezier_json_file'] );
+    toggleFormElementsEnabled();
 }
 
 function exportZIP() {
@@ -439,8 +441,9 @@ function exportZIP() {
 
 function importZIP() {
     var zip_filename = document.forms['zip_import_form'].elements['zip_upload_file'];
-    if( zip_filename )
+    if( zip_filename ) {
 	ZipFileImporter.importZipFile( zip_filename );
+    }
 }
 
 /**
@@ -465,7 +468,8 @@ function about() {
     
 }
 
-
+// I think i don't use this any more
+/*
 function debug() {
     window.alert( 
 	"camera.ikrsSettings.rotation=" + JSON.stringify(this.previewCanvasHandler.preview_camera.ikrsSettings.rotation) + ",\n" + 
@@ -474,7 +478,7 @@ function debug() {
 	    "camera.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.position) + "\n"
     );
 }
-
+*/
 
 function checkSizeBeforeSaving() {
     var bezierBounds        = this.bezierCanvasHandler.getBezierPath().computeBoundingBox();

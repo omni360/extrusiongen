@@ -147,21 +147,15 @@ ZipFileImporter = {
 	var reader = new FileReader();
 	reader.onload = function( e ) {
 
-	    //window.alert( "File uploaded. Value=" + e.target.result );
-	    try {
-		//var bezierPath = IKRS.BezierPath.fromJSON( e.target.result );
-		//setBezierPath( bezierPath );
-		
+
+	    try {		
 
 		var zip                = new JSZip( e.target.result );
 		
-		//window.alert( zip );
 		var shapedPathFile     = zip.file( "shape.bezierpath.json" );
 		var meshSettingsFile   = zip.file( "mesh_settings.json" );
 		var colorSettingsFile  = zip.file( "color_settings.json" );
-		//window.alert( "ColorSettingsFile=" + colorSettingsFile );
 		
-
 
 		if( !shapedPathFile ) {
 
@@ -222,6 +216,9 @@ ZipFileImporter = {
 
 		// Apply color settings
 		ZipFileImporter._apply_color_settings( colorSettings );
+
+		// Enable/disable respective form elements
+		toggleFormElementsEnabled();
 		
 		// Rebuild model with new settings
 		preview_rebuild_model();
