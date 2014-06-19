@@ -139,7 +139,19 @@
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
       </tr>
+      <!--
+      <tr>
+	<td><br/><button onclick="debug();">[DEBUG] Display Bezier Data</button></td>
+	<td></td>
+	<td></td>
+      </tr>
+      -->
     </table>
+  </div>
+  
+  <div style="text-align: right;">
+    <br/>
+    <button onclick="debug();">[DEBUG] Display Bezier Data</button>
   </div>
 </div>
 
@@ -504,6 +516,8 @@
 
 <script type="text/javascript" src="IKRS.MessageBox.js"></script>
 
+<script type="text/javascript" src="presets.js"></script>
+
 <!-- This is the main script -->
 <script type="text/javascript" src="main.js"></script>
 
@@ -525,6 +539,10 @@
 	<li class="heading"><a href="#">Model</a>
 	  <ul>
 	    <li><a href="#" onclick="newScene()">New</a></li>
+	    <script>
+	      if( _DILDO_PRESETS )
+	          populate_dildo_presets_menu( _DILDO_PRESETS );
+	    </script>
 	    <li>
 	      <a href="#" onclick="exportZIP()">Save (*.zip)</a>
 	      <form name="zip_form">

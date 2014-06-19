@@ -67,8 +67,13 @@ function setSelectedRadioBoxValueByName( formName, radioName, value ) {
     return false;
 }
 
+function setBendingValue( value ) {
+    document.getElementById('preview_bend').value = value;
+    displayBendingValue();
+}
+
 function displayBendingValue() {
-    document.getElementById('preview_bend_display').innerHTML=document.getElementById('preview_bend').value;
+    document.getElementById('preview_bend_display').innerHTML = document.getElementById('preview_bend').value;
 }
 
 function toggleFormElementsEnabled() {

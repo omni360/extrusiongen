@@ -403,14 +403,39 @@ function newScene() {
 
 
     var json = getDefaultBezierJSON();
-    try {
+    setBezierPathFromJSON( json,  // a JSON string containing the bezier data
+			   0      // bend_angle
+			 );
+    /*try {
 	bezierPath = IKRS.BezierPath.fromJSON( json );		    
     } catch( e ) {
 	window.alert( "Error: " + e );
 	return false;
     }
+    
 
     setBezierPath( bezierPath );
+    updateBezierStatistics( null, null );
+    toggleFormElementsEnabled();
+
+    preview_rebuild_model();
+    */
+}
+
+function setBezierPathFromJSON( bezier_json, bend_angle ) {
+
+    // window.alert( bezier_json + ", bend_angle=" + bend_angle );
+
+    //var json = getDefaultBezierJSON();
+    var bezierPath = null;
+    try {
+	bezierPath = IKRS.BezierPath.fromJSON( bezier_json );		    
+    } catch( e ) {
+	window.alert( "Error: " + e );
+	return false;
+    }
+    setBezierPath( bezierPath );
+    setBendingValue( bend_angle );
     updateBezierStatistics( null, null );
     toggleFormElementsEnabled();
 
@@ -468,17 +493,21 @@ function about() {
     
 }
 
-// I think i don't use this any more
-/*
 function debug() {
+    /*
     window.alert( 
 	"camera.ikrsSettings.rotation=" + JSON.stringify(this.previewCanvasHandler.preview_camera.ikrsSettings.rotation) + ",\n" + 
 	    "camera.ikrsSettings.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.ikrsSettings.position) + ",\n" +
 	    "camera.rotation=" + JSON.stringify(this.previewCanvasHandler.preview_camera.rotation) + ",\n" +
 	    "camera.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.position) + "\n"
     );
+    */
+    //window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "" ) );
+    window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) );
+
+    //messageBox.show( this.bezierCanvasHandler.getBezierPath().toJSON() );
 }
-*/
+
 
 function checkSizeBeforeSaving() {
     var bezierBounds        = this.bezierCanvasHandler.getBezierPath().computeBoundingBox();
