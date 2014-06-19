@@ -17,6 +17,9 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-06-19] v0.2.30
+ - Fixed the DOM canvas issue (DOM element was moved by constructor).
+
 [2014-06-19] v0.2.29
  - Made the canvas background images configurable. See the config.js file 
    near lines 52 and 59: 

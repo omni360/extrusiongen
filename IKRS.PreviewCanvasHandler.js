@@ -14,6 +14,7 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
     this.bezierCanvasHandler = bezierCanvasHandler;
 
     this.preview_canvas   = document.getElementById("preview_canvas");
+    //window.alert( JSON.stringify(this.preview_canvas.parentNode) );
     this.preview_renderer = new THREE.WebGLRenderer( { "canvas" : this.preview_canvas } );
 
 
@@ -83,7 +84,9 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
     this.preview_renderer.setSize( preview_canvas_width, 
 				   preview_canvas_height 
 				 ); 
-    document.body.appendChild( this.preview_renderer.domElement );
+    // This seems not to be required when the canvas is already defined in the HTML document.
+    //document.body.appendChild( this.preview_renderer.domElement );
+    //this.preview_canvas.parentNode.appendChild( this.preview_renderer.domElement );
 
 
     // Create a backward-link to this so the canvas events have access!
