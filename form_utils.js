@@ -115,13 +115,7 @@ function togglePartsEnabled() {
 
 function changeBezierBackgroundType() {
     var type = getSelectedBezierBackgroundType();
-    //window.alert( type );
     if( type == "default" ) {
-	/*
-	bezierCanvasHandler.loadBackgroundImage( "bg_bezier.png", 
-			                         true             // redraw when ready
-					       ); 
-	*/
 	bezierCanvasHandler.setCustomBackgroundImage( null, 
 			                              true             // redraw when ready
 						    ); 

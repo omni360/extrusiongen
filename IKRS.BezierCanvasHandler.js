@@ -9,9 +9,10 @@
  * triggered - the bezier curve, holding points, rulers and background.
  *
  *
- * @author Ikaros Kappler
- * @date 2013-08-14
- * @version 1.0.0
+ * @author   Ikaros Kappler
+ * @date     2013-08-14
+ * @modified 2014-06-19 Ikaros Kappler (included the configurable background image object).
+ * @version  1.0.0
  **/
 
 IKRS.BezierCanvasHandler = function() {
@@ -80,10 +81,10 @@ IKRS.BezierCanvasHandler = function() {
     // Store a reverse reference inside the handler so the mousehandlers can access this object
     this.canvas.bezierCanvasHandler   = this;
         
-    //this.backgroundImage            = "bg_bezier.png";
+
     this.backgroundImage              = null; // undefined;
     this.customBackgroundImage        = null;
-    this.loadBackgroundImage( "bg_bezier.png", 
+    this.loadBackgroundImage( _DILDO_CONFIG.IMAGES.BEZIER_BACKGROUND, // "bg_bezier.png", 
 			      true             // redraw when ready
 			    ); 
 
@@ -207,7 +208,7 @@ IKRS.BezierCanvasHandler.prototype.loadBackgroundImage = function( url, redraw )
 	this.bezierCanvasHandler.setBackgroundImage( this, redraw );
     };
     
-    bgImage.src = url; // this.backgroundImage; //"bg_bezier.png"; 
+    bgImage.src = url; 
 };
 
 IKRS.BezierCanvasHandler.prototype.loadCustomBackgroundImage = function( url, redraw ) {
@@ -277,7 +278,7 @@ IKRS.BezierCanvasHandler.prototype._drawAnonymousBackgroundImage = function( ima
 			    drawWidth, // 512,
 			    drawHeight // 768
 			  );
-    //this._drawWithoutBackgroundImages();
+    
 
 };
 

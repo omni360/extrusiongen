@@ -71,6 +71,15 @@ canvas#bezier_canvas {
     border:              1px solid #000000;
 }
 
+div#status_bar {
+    position:            absolute;
+    background-color:    #d8d8d8;
+    left:                10px;
+    top:                 818px;
+    width:               1034px;
+    font-size:           9pt;
+}
+
 div#register_head {
     position:            absolute;
     top:                 21px;
@@ -91,7 +100,7 @@ div.register_card {
     border:              1px solid #000000;
     padding:             10px;
     background-color:    #ffffff;
-    background-image:    url('bg_controls.png');
+    background-image:    url('img/bg_controls.png');
     background-position: 0 0;
     background-size:     420px 400px;
     font-size:           9pt;

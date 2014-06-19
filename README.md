@@ -17,6 +17,12 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-06-19] v0.2.29
+ - Made the canvas background images configurable. See the config.js file 
+   near lines 52 and 59: 
+   _DILDO_CONFIG.IMAGES.BEZIER_BACKGROUND and
+   _DILDO_CONFIG.IMAGES.PREVIEW_BACKGROUND
+
 [2014-06-17] v0.2.27
  - Since this version there is a code snippet example explaining how to
    to store dildo design on a server (in a database). This is just an example

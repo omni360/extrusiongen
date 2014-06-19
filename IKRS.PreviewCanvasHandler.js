@@ -1,7 +1,8 @@
 /**
- * @author Ikaros Kappler
- * @date 2013-08-14
- * @version 1.0.0
+ * @author   Ikaros Kappler
+ * @date     2013-08-14
+ * @modified 2014-06-19 Ikaros Kappler (included the configurable background image object).
+ * @version  1.0.0
  **/
 
 IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
@@ -14,8 +15,6 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
 
     this.preview_canvas   = document.getElementById("preview_canvas");
     this.preview_renderer = new THREE.WebGLRenderer( { "canvas" : this.preview_canvas } );
-    // Tried to fetch some SVG data from the rendered object. Failed :(
-    //this.preview_renderer = new THREE.SVGRenderer();
 
 
     // An array to store the meshes in.
@@ -35,8 +34,7 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
     
     this.preview_camera.position = new THREE.Vector3( 0.39816335536663167, -376.42747328364794,    170.90660641346517 );
     this.preview_camera.rotation = new THREE.Vector3( 1.144602197912255,   0.0009631226746176703, -0.0021213060976673294 );
-    // THIS DEPENDS ON THE SCENE. ALIGN CAMERA AT THE END (AFTER ADDING THE MESHES)!
-    //this._setCameraPositionFromLocalSettings();
+
     
     // create a point light
     this.preview_pointLight =
@@ -66,7 +64,8 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
 
 
     // Prepare a second scene that contains the background only
-    var backgroundTexture = THREE.ImageUtils.loadTexture( "bg_preview.png" );
+    //var backgroundTexture = THREE.ImageUtils.loadTexture( "bg_preview.png" );
+    var backgroundTexture = THREE.ImageUtils.loadTexture( _DILDO_CONFIG.IMAGES.PREVIEW_BACKGROUND );
     var bg = new THREE.Mesh(
 	new THREE.PlaneGeometry( 2, 2, 0 ),
 	new THREE.MeshBasicMaterial( { map: backgroundTexture } )

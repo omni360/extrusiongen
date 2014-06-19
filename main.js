@@ -226,9 +226,11 @@ function initWebGL() {
 								 );
     
 	// Indicate success.
+	setStatus( "WebGL initialized. Ready." );
 	return true;
     } catch( e ) {
-	console.log( "Failed to initiate canvas handlers. Is WebGL enabled/supported?" );
+	console.log( "Error: failed to initiate canvas handlers. Is WebGL enabled/supported?" );
+	setStatus( "Error: failed to initiate canvas handlers. Is WebGL enabled/supported?" );
 	// Indicate error.
 	return false;
     }
@@ -788,6 +790,19 @@ function open_legal_notice() {
 		 "dildogenerator_legal_notice",
 		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
 	       );
+}
+
+function setStatus( msg ) {
+    var status_bar = document.getElementById("status_bar");
+    
+    // Early integrated versions might not have a status bar
+    if( !status_bar )
+	return false;
+    
+    if( msg )
+	status_bar.innerHTML = "$status: " + msg;
+    else
+	status_bar.innerHTML = "$status: &lt;ready&gt;";
 }
 
 function roundToDigits( number, digits, enforceInvisibleDigits ) {
