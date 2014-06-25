@@ -66,6 +66,12 @@ Date: 2014-06-17<br/>
   </li>
 </ul>
 
+<h3 class="faq">Technical</h3>
+<ul class="faq">
+  <li>
+    <a class="faq" href="#tech_presets">How do I configure presets?</a>
+  </li>
+</ul>
 
 <h3 class="faq">Other</h3>
 <ul class="faq">
@@ -183,14 +189,46 @@ Besides, feel free to share your created models or screen shots with the web com
 
 
 
+
+<h2 class="faq">Technical</h3>
+<a name="tech_presets"></a>
+<h3 class="faq">How do I configure presets?</h3>
+<div class="faq">
+Since version 0.2.32 there is a new file called <i>presets.js</i> which defines an
+<code>_DILDO_PRESETS</code> object. The object's members identify the preset sub menus
+for the menu bar. Each member must have this structure:<br/>
+<pre>
+{ label:       <span class="dt_string">"Sub menu name"</span>,
+  elements:    [ <i>&lt;preset&gt;</i>, ... ]
+}
+</pre>
+where each &lt;preset&gt; item in the <code>elements</code> array must look like this:<br/>
+<pre>
+{ name:        <span class="dt_string">"Preset name"</span>,
+  label:       <span class="dt_string">"Menu item name"</span>,
+  bezier_json: <i>&lt;bezier_string&gt;</i>,
+  bend_angle:  <i>&lt;integer in 0..180&gt;</i>
+}
+</pre>
+If you wonder where to get the bezier string data from, just select the <i>Display Bezier String</i> from the
+<i>Help</i> menu.<br/>
+<br/>
+The menu bar structure will automatically populated from your settings.
+</div>
+<br/>
+
+
+
+
+
 <h2 class="faq">Other</h3>
 <a name="how_to_scan"></a>
 <h3 class="faq">Can I scan my body parts and load them into the dildo generator?</h3>
 <div class="faq">
 <b>No.</b><br/>
 <br/>
-There are solutions for body part scanning (I assume you want to scan your head or your feet, right)
-but they don't create a bezier path.
+There are solutions for body part scanning but they don't create bezier paths.<br/>
+Take a look at <a href="http://motherboard.vice.com/blog/scanning-the-future-of-3d-printed-sex-toys-nsfw" target="_blank">http://motherboard.vice.com/blog/scanning-the-future-of-3d-printed-sex-toys-nsfw</a> or ask your search engine for <a href="http://lmgtfy.com/?q=kinect+scan" target="_blank"><code>kinect scan</code></a>.<br/>
 <br/>
 <br/>
 </div>

@@ -38,6 +38,10 @@ div.faq {
     text-align:         justify;
 }
 
+*.dt_string {
+    color:              #880000;
+}
+
 input {
     font-family:         Monospace;
 }

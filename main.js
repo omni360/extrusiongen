@@ -502,10 +502,16 @@ function debug() {
 	    "camera.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.position) + "\n"
     );
     */
-    //window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "" ) );
-    window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) );
+    debug_display_bezier_string();
+}
 
-    //messageBox.show( this.bezierCanvasHandler.getBezierPath().toJSON() );
+/**
+ * This function is called from the Help->Display_Bezier_String menu entry.
+ * It is required by merchants to retrieve the bezier string for setting up presets.
+ **/
+function debug_display_bezier_string() {
+    //window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "" ) );
+    window.alert( "\"" + this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) + "\"" );
 }
 
 
@@ -814,7 +820,7 @@ function order_print() {
 function open_faqs() {
     window.open( "faq.html",
 		 "dildogenerator_faq",
-		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
+		 "height=480,width=800,location=yes,toolbar=no,dependent=no,scrollbars=yes"
 	       );
 }
 

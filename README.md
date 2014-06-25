@@ -4,8 +4,8 @@ Path Extrusion Generator
 
 @author   Ikaros Kappler
 @date     2013-09-11
-@modified 2014-05-16
-@version  0.2.21
+@modified 2014-06-25
+@version  0.2.33
 
 
 
@@ -16,6 +16,12 @@ CC BY-NC-SA
 
 Changelog
 ---------
+
+[2014-06-25] v0.2.33
+ - Updated the FAQs: added the Presets howto.
+
+[2014-06-19] v0.2.32
+ - Added the preset menu and the presets.js config file.
 
 [2014-06-19] v0.2.31
  - Updated JSZip to version 2.3.0, which fixed the "Constructor TextDecoder 
