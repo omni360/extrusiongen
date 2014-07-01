@@ -17,6 +17,21 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-07-01] v0.2.34
+ - main.js: function createXMLHttpRequest() added.
+ - Replaced the remote (!) save function by a less brute-force solution
+   by using AJAX.
+ - Added the idForm form to store remote IDs inside.
+ - Added the UPDATE function for existing dildo designs (depending on passed id
+   and user_id); if id is missing, a regular INSERT is made.
+ 
+ - Note: Merchants should have a look at the new function in the 
+         merchant_tools.js file. I also added the %id% placeholder
+	 to the configured storage URL.
+
+[2014-06-25]
+ - IKRS.PathDirectedExtrudeGeometry: options.shapeAxisDistance added.
+
 [2014-06-25] v0.2.33
  - Updated the FAQs: added the Presets howto.
 

@@ -3,7 +3,8 @@
  * @author Ikaros Kappler
  * @date 2013-08-26
  * @modified 2014-03-30 Ikaros Kappler (options.meshHullType added).
- * @version 1.0.1
+ * @modified 2014-06-25 Ikaros Kappler (options.shapeAxisDistance added).
+ * @version 1.0.2
  **/
 
 
@@ -15,7 +16,17 @@
  * @param shapedPath
  * @param options        [optional]
  *                       Supports following members:
- *                         - ... 
+ *                         - size                       float (=pathLength)
+ *			   - curveSegments              int      
+ * 			   - triangulate                boolean        
+ *			   - hollow                     boolean   
+ *			   - perpendicularHullStrength  float
+ *                         - closePathEnd               boolean
+ *                         - closePathBegin             boolean
+ *                         - meshHullType               "perpendicular" (default) or "prism"
+ *                         - meshOffset                 THREE.Vector3
+ *                         - closeShape                 boolean
+ *                         - shapeAxisOffset            float   (default=0)
  *                          
  * @param vectorFactory  [optional]
  *                       If passed must have following function member:
@@ -28,8 +39,6 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 					     
 					     vectorFactory
 					   ) {
-    
-    //window.alert( "typeof vectorFactory=" + (typeof vectorFactory) + ", " + JSON.stringify(vectorFactory) );
 
     // Call super 'constructor'
     THREE.Geometry.call( this );
@@ -65,10 +74,6 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 
     // Iterate through path elements in n steps
     var vertexCount      = 0;
-    // Used to determine the 'tangent' along the path
-    //var lastPathPoint    = null;
-    //var pathTangent      = null;
-    //var pathTangentSlope = 0.0;
 
     var old_closePathEnd   = options.closePathEnd;
     var old_closePathBegin = options.closePathBegin;
@@ -92,7 +97,6 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 						   vectorFactory
 						 );
     // Restore old closePathEnd option?
-    //window.alert( options.closePathEnd );
     
     if( options.hollow ) {
 
@@ -116,11 +120,6 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 	var scaledShapePoints  = [];
 	for( var i = 0; i < shapePoints.length; i++ ) {
 
-	    /*
-	    var scaledPoint = vectorFactory.createVector2( shapePoints[ i ].x * shapeScaleX,
-							   shapePoints[ i ].y * shapeScaleY
-							 );
-	    */
 	    var scaledPoint = new THREE.Vector2( shapePoints[ i ].x * shapeScaleX,
 						 shapePoints[ i ].y * shapeScaleY
 					       );
@@ -156,10 +155,56 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 						     );
 
 	
-	// Build connection between outer and inner hull?
-	if( old_closePathEnd ) { // options.closePathEnd ) {
 
-	    //window.alert( "Closing path end ..." );
+
+	// Build connection between outer and inner hull?	
+	// TODO ... THE BEGIN CONNECTION DOES NOT YET WORK
+	if( old_closePathBegin ) { 
+	    //window.alert( "Close path begin: " + old_closePathBegin );
+
+	    // Note: outerPathResult.outerPointIndices.begin and innerPathResult.outerPointIndices.end
+	    //       have the same length!
+	    for( var i = 1; i < outerPathResult.outerPointIndices.begin.length; i++ ) {
+	    	
+
+		// if( triangulate )
+		this.faces.push( new THREE.Face3( outerPathResult.outerPointIndices.end[i-1],
+						  innerPathResult.outerPointIndices.end[i-1],						  
+						  outerPathResult.outerPointIndices.end[i]
+						) );
+		this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.end[i-1],
+						  innerPathResult.outerPointIndices.end[i],						 
+						  outerPathResult.outerPointIndices.end[i]
+						) );
+		
+		
+		
+		
+	    }
+
+	    // Connect first with last shape index ONLY if the shape is closed.
+	    if( options.closeShape ) {
+		
+		// triangulate yes or no?
+		this.faces.push( new THREE.Face3( outerPathResult.outerPointIndices.end[ outerPathResult.outerPointIndices.end.length-1 ],
+						  innerPathResult.outerPointIndices.end[ outerPathResult.outerPointIndices.end.length-1 ],						  
+						  outerPathResult.outerPointIndices.end[ 0 ]
+						) );	
+		this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.end[ innerPathResult.outerPointIndices.end.length-1 ],
+						  innerPathResult.outerPointIndices.end[0],						  
+						  outerPathResult.outerPointIndices.end[0]
+						) );
+	    }
+
+	} // END if [options.closePathBegin]
+
+
+
+
+
+	// Build connection between outer and inner hull?
+	if( old_closePathEnd ) { 
+
 	    // Note: outerPathResult.outerPointIndices.begin and innerPathResult.outerPointIndices.end
 	    //       have the same length!
 	    for( var i = 1; i < outerPathResult.outerPointIndices.begin.length; i++ ) {
@@ -204,7 +249,7 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 	//       have the same length!
 	if( !options.closeShape ) {
 
-	    //window.alert( outerPathResult.outerPointIndices.left.length );
+	    // Note: this connects the inner and outer hull _along_ the path.
 	    for( var i = 1; i < outerPathResult.outerPointIndices.left.length; i++ ) {
 
 		// Triangulate yes or no?
@@ -218,6 +263,7 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 						  outerPathResult.outerPointIndices.left[i]
 						) );
 
+		// ... and oin the right side ...
 		this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.right[i-1],
 						  outerPathResult.outerPointIndices.right[i],
 						  outerPathResult.outerPointIndices.right[i-1]
@@ -259,20 +305,39 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 
 	}
 
-    } else // END else [not hollow but closeShape]
-	if( old_closePathBegin ) {
+    } else {
 
+	// END else [not hollow but closeShape]
+	if( old_closePathBegin ) {	    
 	    // Close path Begin
-	for( var i = 2; i < innerPathResult.outerPointIndices.begin.length; i++ ) {
-
-	    // Triangulate yes or no?
-	    // Connect the left with the right side.
-	    this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.end[0],
-					      innerPathResult.outerPointIndices.end[i],
-					      innerPathResult.outerPointIndices.end[i-1]
-					    ) );
-
+	    for( var i = 2; i < innerPathResult.outerPointIndices.begin.length; i++ ) {
+		
+		// Triangulate yes or no?
+		// Connect the left with the right side.
+		this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.end[0],
+						  innerPathResult.outerPointIndices.end[i],
+						  innerPathResult.outerPointIndices.end[i-1]
+						) );
+		
+	    }
 	}
+
+	
+/*
+	if( old_closePathEnd ) {	    
+	    // Close path Begin
+	    for( var i = 2; i < innerPathResult.outerPointIndices.begin.length; i++ ) {
+		
+		// Triangulate yes or no?
+		// Connect the left with the right side.
+		this.faces.push( new THREE.Face3( innerPathResult.outerPointIndices.begin[0],
+						  innerPathResult.outerPointIndices.begin[i],
+						  innerPathResult.outerPointIndices.begin[i-1]
+						) );
+		
+	    }
+	}
+*/
 
     }
 
@@ -303,9 +368,7 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
     shape = shapePoints.shape;
 
     var shapeBounds = IKRS.BoundingBox2.computeFromPoints( shape );
-    //window.alert( "shapeBounds=" + shapeBounds );
-    
-    //window.alert( 
+
 
     var result_perpendicularPathPoints        = [];
     var result_outerPointIndices_left         = [];
@@ -335,7 +398,7 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
     var pathTangent      = null;
     var pathTangentSlope = 0.0;
     
-    // for( var i = 0; i <= options.curveSegments; i++ ) {
+
     var lastPerpendicularHullPoint = null;
     for( var i = options.curveSegments; i >= 0; i-- ) {
 
@@ -346,8 +409,12 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 	var tHeight         = Math.min( 1.0, 
 					(shapedPathBounds.getYMax() - shapedPathPoint.y) / shapedPathBounds.getHeight()
 				      );
+
+	// The shapeAxisDistance regulates the diameter for the revolution
+	if( options.shapeAxisDistance )
+	    shapedPathPoint.add( new THREE.Vector2(-options.shapeAxisDistance,0,0) );
 	
-	//window.alert( "options.perpendicularHullStrength=" + options.perpendicularHullStrength );
+
 
 	// This only works with bezier curves!!!
 	// (other paths have no perpendicular calculation implemented)
@@ -367,12 +434,10 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 	
 
 	// Store path-point in extended path
-	result_extendedExtrusionPathPoints.push( path.getPoint(1-tSegment) ); // pathPoint );
+	result_extendedExtrusionPathPoints.push( path.getPoint(1-tSegment) ); 
 
-	/*
-	if( i == options.curveSegments ) pathTangent = vectorFactory.createVector2( 0, 0 ); // No slope at first level?
-	else                             pathTangent = vectorFactory.createVector2( pathPoint.x-lastPathPoint.x, pathPoint.y-lastPathPoint.y );
-	*/
+
+
 	if( i == options.curveSegments ) pathTangent = new THREE.Vector2( 0, 0 ); // No slope at first level?
 	else                             pathTangent = new THREE.Vector2( pathPoint.x-lastPathPoint.x, pathPoint.y-lastPathPoint.y );	
 	
@@ -385,16 +450,8 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 
 	var firstShapePointIndex = vertexCount;
 	for( var s in shape ) {
-	    
-	    //window.alert( "s=" + s + ", len=" + shape.length + ", s+1=" + (s+1) + ", s+1 < len: " + (s+1 < shape.length) );
-	    
+	   	    
 	    var shapePoint2 = shapePoints.shape[s];
-	    /*
-	    var shapePoint3 = vectorFactory.createVector3( Math.sin(-pathTangentSlope) * shapePoint2.x,
-							   shapePoint2.y, 
-							   Math.cos(-pathTangentSlope) * shapePoint2.x
-							 );
-	    */
 	    var shapePoint3 = new THREE.Vector3( Math.sin(-pathTangentSlope) * shapePoint2.x,
 						 shapePoint2.y, 
 						 Math.cos(-pathTangentSlope) * shapePoint2.x
@@ -404,13 +461,6 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 
 	    // Translate along path		   
 	    var pathHeightPoint = path.getPoint( tHeight );
-/*	   
-	    shapePoint3.add( vectorFactory.createVector3( pathHeightPoint.x,  
-							  0, 
-							  pathHeightPoint.y 
-							) 
-			   ); // addSelf instead of add?!
-*/
 	    shapePoint3.add( new THREE.Vector3( pathHeightPoint.x,  
 							  0, 
 							  pathHeightPoint.y 
@@ -419,43 +469,31 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 
 
 	    // Add the passed mesh offset before adding.
-	    /*
-	    shapePoint3.add( vectorFactory.createVector3( options.meshOffset.z, // 0, // options.meshOffset.x,
-							  options.meshOffset.y,
-							  options.meshOffset.x
-							)
-			   );
-	    */
-	    shapePoint3.add( new THREE.Vector3( options.meshOffset.z, // 0, // options.meshOffset.x,
-							  options.meshOffset.y,
-							  options.meshOffset.x
-							)
+	    shapePoint3.add( new THREE.Vector3( options.meshOffset.z, 
+						options.meshOffset.y,
+						options.meshOffset.x
+					      )
 			   );
 
-	   // window.alert( options.meshHullType );
+
 	    if( options.meshHullType == "perpendicular" ) {
 
 		// NOOP
 
 	    } else if( options.meshHullType == "prism" ) {
 	
-		//window.alert( "shapeBounds.getHeight()=" + shapeBounds.getHeight() + ", options.perpendicularHullStrength=" + options.perpendicularHullStrength );
-		var maxHeight = shapedPathBounds.getWidth(); //shapeBounds.getHeight(); // + options.perpendicularHullStrength/10.0;
-		//window.alert( maxHeight );
+		var maxHeight = shapedPathBounds.getWidth();
 
 		// The direction of the prism only depends on the split 2D-shape! As it is split
 		// on the x axis, the (-y,+y) range defines the prism sign.
 		var prismDirection = Math.sign( Math.round( shapeBounds.getYMax() + shapeBounds.getYMin() ) );
 		if( s != 0 && parseInt(s)+1 < shape.length ) {
 		    var tmp = vectorFactory.createVector3( maxHeight, maxHeight, maxHeight );
-		    //if( Math.sign(vectorFactory.signX * vectorFactory.signY * vectorFactory.signZ) == -1 )
-		    shapePoint3.y = maxHeight * prismDirection; //tmp.y * vectorFactory.signY; //Math.sign(tmp.y*tmp.z*tmp.x) * vectorFactory.signZ * vectorFactory.signZ; //(-tmp.y); //-tmp.z; //tmp.x;
-		    //else
-		//	shapePoint3.y = maxHeight * vectorFactory.signY * vectorFactory.signZ; //Math.sign(tmp.y); //  * Math.sign(tmp.y*tmp.z*tmp.x);	;
+		    shapePoint3.y = maxHeight * prismDirection; 
 		}
 
 	    } else {
-		var errmsg = "[IKRS.PathDirectedExtrudeGeometry.buildPathExtrusion() Illegal value for options.meshHullType: " + options.meshHullType;
+		var errmsg = "[IKRS.PathDirectedExtrudeGeometry.buildPathExtrusion()] Illegal value for options.meshHullType: " + options.meshHullType;
 		console.log( errmsg );
 		throw errmsg;
 	    }
@@ -547,8 +585,10 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 	    // Close first and last shape/level (if at least 3 vertices are present: s > 1)
 	    if( s > 1 || options.closeShape ) {
 
+		// This closes the top of the (split,nonhollow) mesh.
 		// If the mesh should be build hollow this is not yet the last segment
 		if( i == options.curveSegments && options.closePathBegin ) {
+		   
 
 		    // Last segment 
 		    // ??? !!!
@@ -558,7 +598,7 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 						      firstShapePointIndex
 						    ) 
 				   );
-				   */
+		*/		   
 				   
 		} else if( i == 0 && options.closePathEnd ) {
 		    
@@ -631,7 +671,6 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 
 
     
-    //result_perpendicularPathPoints.push( shapedPath.getPoint(0) );
     
     return { perpendicularHullPoints: result_perpendicularPathPoints,
 	     vertexCount: vertexCount,
@@ -668,8 +707,8 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
     var shapePoints = shape.extractAllPoints();
     shape = shapePoints.shape;
 
-    if( !options.pathBend )
-	options.pathBend = Math.PI/4.0;  // 45 degrees for testing:)
+    //if( !options.pathBend )
+    //	options.pathBend = Math.PI/4.0;  // 45 degrees for testing:)
 
     var lastPathPoint    = null;
     var pathTangent      = null;
@@ -707,12 +746,6 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
 
 	    
 	    var shapePoint2 = shapePoints.shape[s];
-	    /*
-	    var shapePoint3 = new THREE.Vector3( Math.sin(-pathTangentSlope) * shapePoint2.x,
-						 shapePoint2.y, 
-						 Math.cos(-pathTangentSlope) * shapePoint2.x
-					       );
-	    */
 	    var shapePoint3 = vectorfactory.createVector3( Math.sin(-pathTangentSlope) * shapePoint2.x,
 							   shapePoint2.y, 
 							   Math.cos(-pathTangentSlope) * shapePoint2.x
@@ -722,13 +755,6 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
 	    
 	    // Translate along path		   
 	    var pathHeightPoint = path.getPoint( tHeight );
-	    /*
-	    shapePoint3.add( new THREE.Vector3( pathHeightPoint.x,  
-						0, 
-						pathHeightPoint.y 
-					      ) 
-			   ); // addSelf instead of add?!
-	    */
 	    shapePoint3.add( vectorFactory.createVector3( pathHeightPoint.x,  
 							  0, 
 							  pathHeightPoint.y 
@@ -737,13 +763,6 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
 	    
 	    // Add path point?	    	    
 	    // ... Vertex was replaced by Vector3 (Vertex is DEPRECATED!)
-	    /*
-	    this.vertices.push( new THREE.Vector3( shapePoint3.x, 
-						   shapePoint3.y, 
-						   shapePoint3.z 
-						 ) 
-			      );
-	    */
 	    this.vertices.push( vectorFactory.createVector3( shapePoint3.x, 
 							     shapePoint3.y, 
 							     shapePoint3.z 
@@ -819,10 +838,3 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
 
 
 
-
-//IKRS.PathDirectedExtrudeGeometry.prototype = new THREE.Geometry();
-//IKRS.PathDirectedExtrudeGeometry.prototype.constructor = IKRS.PathDirectedExtrudeGeometry;
-
-//IKRS.PathDirectedExtrudeGeometry.prototype.computePathBounds
-
-// window.alert( "IKRS.ShapedPathGeometry=" + IKRS.ShapedPathGeometry );

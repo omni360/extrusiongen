@@ -178,6 +178,26 @@
 
   </td>			     
 </tr>
+
+<!-- This is still very experimental
+<tr>
+  <td style="vertical-align: top; width: 100px;">Thickness (<span id="preview_axis_offset_display">0</span>%):</td>
+  <td>
+					     <script>
+					     preview_axis_offset_mousedown = false;
+                                             </script>
+					     <br/>
+					     0%<input type="range" id="preview_axis_offset" name="preview_axis_offset" min="0" max="50" value="0" 
+                                             style="width: 150px; margin-top: -12px;"
+					     onmousedown="preview_axis_offset_mousedown=true;"
+					     onmouseup="preview_axis_offset_mousedown=false;"
+					     onmousemove="if(preview_axis_offset_mousedown) document.getElementById('preview_axis_offset_display').innerHTML=document.getElementById('preview_axis_offset').value;"
+					     onchange="displayBendingValue(); preview_rebuild_model();" />50%
+
+  </td>			     
+</tr>
+-->
+
 </table>
 </div>
 <!-- END - - - - - -  MESH CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
@@ -530,6 +550,14 @@
 <script type="text/javascript">
    new UvumiDropdown('nav'); 
 </script>
+
+
+
+<!-- Add a hidden form to store the created dildo ID in -->
+<form name="idForm">
+  <input type="hidden" name="dildoID" id="dildoID" value="-1" />
+</form>
+
 
 
 <!-- BEGIN - - - - - - Menu bar structure - - - - - - - - - - - - - - -->

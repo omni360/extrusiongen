@@ -1,5 +1,12 @@
 
 /**
+ * This is just a (dirty) collection of javascript functions the main page
+ * uses.
+ *
+ *
+ * The actual generator logic is located in the class files.
+ *
+ *
  * @author Ikaros Kappler
  * @date 2013-10-13
  * @version 1.0.0
@@ -101,14 +108,12 @@ function onloadHandler() {
     // Thanks to weltraumpirat
     //   http://stackoverflow.com/questions/5448545/how-to-retrieve-get-parameters-from-javascript
     function getSearchParameters() {
-	//var prmstr = window.location.search.substr(1);
 	var url = window.location.href; //search;
 	var index = url.indexOf("?");
 	if( index == -1 || index+1 >= url.length ) 
 	    return {};
 
 	var prmstr = url.substr( index+1 );
-	//window.alert( prmstr );
 	return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
     }
     function transformToAssocArray( prmstr ) {
@@ -609,7 +614,6 @@ function exportSTL() {
 function exportSTL_cancelHandler() {
     if( divisibleSTLBuilder ) {
 	
-	//messageBox.show( "<br/><br/>Interrupted ...<br/><br/>Please wait for process to terminate.<br/>\n" );
 	divisibleSTLBuilder.interrupt();	
 	
     }
@@ -621,7 +625,6 @@ function exportOBJ() {
 
     if( !divisibleOBJBuilder ) { 
 	
-	//window.alert( "This function is still experimental." );
 	// Check size
 	if( !checkSizeBeforeSaving() )
 	    return false;
@@ -831,6 +834,10 @@ function open_legal_notice() {
 	       );
 }
 
+/**
+ * Sets the status bar message.
+ * If there is currently no status bar defined this function does just nothing.
+ **/
 function setStatus( msg ) {
     var status_bar = document.getElementById("status_bar");
     
@@ -843,6 +850,29 @@ function setStatus( msg ) {
     else
 	status_bar.innerHTML = "$status: &lt;ready&gt;";
 }
+
+
+/**
+ * This function creates a new XMLHttpRequest.
+ * I is a browser safe version for FireFox, Opera 8.0+, Safari, IE, Chrome.
+ **/
+function createXMLHttpRequest() {
+    var xmlHttp=null;
+    try {
+	// Firefox, Opera 8.0+, Safari
+	xmlHttp=new XMLHttpRequest();
+    } catch (e) {
+	//Internet Explorer
+	
+	try {
+	    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+	} catch (e) {
+	    xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+    }
+    return xmlHttp;
+} 
+
 
 function roundToDigits( number, digits, enforceInvisibleDigits ) {
     var magnitude = Math.pow( 10, digits ); // This could be LARGE :/

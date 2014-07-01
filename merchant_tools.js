@@ -40,23 +40,11 @@ function _order_send_to_server( url ) {
     var json_object = ZipFileExporter._build_export_data(); 
 
 
+    // Fetch the dildoID (if already saved before)
+    var dildoID     = -1;
+    if( document.getElementById("dildoID") )
+	dildoID = document.getElementById("dildoID").value;
 
-    // This replaces the configured placeholder from the passed URL.
-    // Usually the URL is specified in the config.js in 
-    // _DILDO_CONFIG.ORDER_PRINT_ACTION (near line 37).
-    /*
-    seen = [];
-    var tmp = JSON.stringify(json_object, function(key, val) {
-	if (typeof val == "object") {
-            if (seen.indexOf(val) >= 0)
-		return;
-            seen.push(val);
-	}
-	return JSON.stringify( val );
-    });
-    */
-    //window.alert( JSON.stringify(json_object) );
-    //var x         = JSON.stringify(json_data);
     var newURL    = url;
     newURL    = newURL.replace( new RegExp("%bezier_path%", 'g'), 
 				json_object.bezierPath.toJSON()           
@@ -64,14 +52,60 @@ function _order_send_to_server( url ) {
     newURL    = newURL.replace( new RegExp("%bend%", 'g'), 
 				json_object.meshSettings.bendAngle        
 			      );
+    newURL    = newURL.replace( new RegExp("%id%", 'g'), 
+				dildoID        
+			      );
+    
 
 
     // Now call the URL (might be a remote server)
-    //window.alert( "new url: " + newURL );
+    // This is the old version: a javascript Popup. Ugly :(
+    /* 
     window.open( newURL, 
 		 "store_custom_dildo",  // window name
 		 "height=600,width=600" // Params
 	       );
+    */
+
+    // This is the new version: an AJAX script that runs in background
+    _asynchronousURLCall( newURL );
+
+}
+
+function _asynchronousURLCall( url ) {
+
+    // The createXMLHttpRequest function is defined in the main.js file
+    var request = createXMLHttpRequest();
+    
+    request.onreadystatechange = function () {
+        if( request.readyState == 4 ) {
+	    
+	    // Everything OK. Model saved.
+	    
+	    // Fetch the ID.
+	    var dildoID = request.responseText;
+	    
+	    // (Re-)Store the ID into the HTML form (for later updates)
+	    messageBox.show( "<br/>\n" +
+			     "Your settings have been saved.<br/>\n" +
+			     "(dildoID=" + dildoID + ")<br/>\n" +
+			     "<br/>\n" +
+			     "<button onclick=\"messageBox.hide()\">OK</button>\n"
+			   );
+	    setStatus( "Your settings have been saved. (id=" + dildoID + ")" );
+	    document.getElementById( "dildoID" ).value = dildoID;
+	       
+        } else {
+
+	    // Error returned.
+	    console.log( "XMLHttpRequest returned readyState=" + request.readyState + ": " + request.responseText );
+	    setStatus( "Failed to save your settings!" );
+
+	}
+    };
+
+    request.open( "GET", url, true );
+    request.send( null ); // No POST data
 
 
 }

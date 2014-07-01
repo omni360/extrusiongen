@@ -273,13 +273,21 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     var triangulate              = document.forms["mesh_form"].elements["triangulate"].checked; 
     var split_shape              = document.forms["mesh_form"].elements["split_shape"].checked;
     var arrange_splits_on_plane  = document.forms["mesh_form"].elements["arrange_splits_on_plane"].checked;
+    var pathBendAngle            = Math.max( document.getElementById( "preview_bend" ).value,
+					     0.01
+					   );
+    var shapeAxisDistance_pct    = 0.0;
+    if( document.getElementById( "preview_axis_offset" ) )
+	shapeAxisDistance_pct = document.getElementById( "preview_axis_offset" ).value; // units? pixels? mm?
 
 
     var meshDirection            = getSelectedMeshDirection(); // "xyz" or "zxy"
     var hullType                 = getSelectedMeshHullType();  // "perpendicular" or "prism"
     var makeParts                = getSelectedMeshParts();     // "both" or "left" or "right"
-    //window.alert( "makeParts=" + makeParts );
     
+
+    //var shapeAxisDistance        = shapeAxisDistance_pct *
+
 
     // Convert numeric text values to numbers!
     mesh_hull_strength  = parseInt( mesh_hull_strength );
@@ -298,42 +306,25 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 	var bezierBounds = shapedPath.computeBoundingBox();
 
 	// Use different vector factories for both splits
-	var tmpFactory_A; // = new IKRS.VectorFactory( 1, 1, 1 );
-	/*tmpFactory_A.createVector2 = function( x, y ) { 
-	    return new THREE.Vector2(x,y); 
-	};*/
-	/*
-	if( meshDirection == "xyz" ) {
-	    tmpFactory_A.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(y,z,x); 
-	    };
-	} else {
-	    tmpFactory_A.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(y,z,-x); 
-	    };
-	}
-	*/
-	var tmpFactory_B; // = new IKRS.VectorFactory( 1, 1, 1 );
-	/*tmpFactory_B.createVector2 = function( x, y ) { 
-	    return new THREE.Vector2(x,y); 
-	};*/
+	var tmpFactory_A; 
+	var tmpFactory_B; 
 	if( meshDirection == "xyz" ) {
 	    tmpFactory_A = new IKRS.VectorFactory( 1, 1, 1 );
 	    tmpFactory_B = new IKRS.VectorFactory( 1, -1, -1 );
 	    tmpFactory_A.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(z,x,y); // OLD: )y,z,x); 
+		return new THREE.Vector3(z,x,y); 
 	    };
 	    tmpFactory_B.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(-z,x,-y); // OLD: (y,-z,-x); // y,-z,x); 
+		return new THREE.Vector3(-z,x,-y); 
 	    };
 	} else {
 	    tmpFactory_A = new IKRS.VectorFactory( 1, -1, -1 );
 	    tmpFactory_B = new IKRS.VectorFactory( 1, 1, 1 );
 	    tmpFactory_A.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(-z,x,-y); //-z,x,-y); // OLD: (y,z,-x); 
+		return new THREE.Vector3(-z,x,-y); 
 	    };
 	    tmpFactory_B.createVector3 = function( x, y, z ) { 
-		return new THREE.Vector3(z,x,y); // OLD: (y,-z,x); // y,-z,x); 
+		return new THREE.Vector3(z,x,y); 
 	    };
 	}
 	vectorFactories = [
@@ -384,7 +375,9 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 							 offsets[0], // new THREE.Vector3(0,50,0),  // offset,
 							 
 							 vectorFactories[0],
-							 hullType
+							 hullType,
+							 shapeAxisDistance_pct,
+							 pathBendAngle
 						       );
         
 	this._addMeshToScene( new_mesh_left, 
@@ -413,7 +406,9 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 
 							  offsets[1], // new THREE.Vector3(0,-50,0),  // offset
 							  vectorFactories[1],
-							  hullType
+							  hullType,
+							  shapeAxisDistance_pct,
+							  pathBendAngle
 							);
         
 	this._addMeshToScene( new_mesh_right, 
@@ -513,14 +508,19 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 								       
 								       shape_start_angle,
 								       
-								       mesh_offset,  // Vector3
+								       mesh_offset,       // Vector3
 
 								       vectorFactory,
-								       meshHullType // "perpendicular" or "box"
+								       meshHullType,      // "perpendicular" or "box"								       
+								       shapeAxisDistance_pct, // float
+								       pathBendAngle
 								     ) {
     
     var shapedPathBounds     = shapedPath.computeBoundingBox();
     var circleRadius         = shapedPathBounds.getWidth();
+
+    var shapeAxisDistance    = shapedPathBounds.getHeight() * (shapeAxisDistance_pct/100.0);
+    //window.alert( shapeAxisDistance );
     
     // The shape offset on the lower plane.
     // This will be the (x,y) translation of the final mesh; default is (0,0) if non-split.
@@ -552,9 +552,9 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
     // Note: the new implementation ALWAYS uses the curved path.
     //       As a curve bend of 0 DEG is not allowd (division by zereo) use a minimal
     //       non-zero angle (e.g. 0.01 DEG).
-    var pathBendAngle = Math.max( document.getElementById( "preview_bend" ).value,
+    /* var pathBendAngle = Math.max( document.getElementById( "preview_bend" ).value,
 				  0.01
-				);
+				);*/
 
     // The length of the circle arc must be exactly the shape's length
     var tmpCircleRadius   = pathLength / ((pathBendAngle/180.0)*Math.PI);
@@ -571,25 +571,13 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 					   sin * tmpCircleRadius, // 110?
 					   0 
 					 );
-	/*
-	var pathPoint = vectorFactory.createVector3( cos * tmpCircleRadius,  // 110?
-						     sin * tmpCircleRadius, // 110?
-						     0 
-						   );
-	*/
+
 	// translate to center
 	pathPoint.add( new THREE.Vector3( -tmpCircleRadius,
 					  -pathLength/2, 
 					  0
 					)
 		     );
-	/*
-	pathPoint.add( vectorFactory.createVector3( -tmpCircleRadius,
-						    -pathLength/2, 
-						    0
-						  )
-		     );
-	*/
 	pathPoints.push( pathPoint );
 
     }
@@ -613,7 +601,8 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 								    perpendicularHullStrength:  mesh_hull_strength,
 								    closeShape:                 !split_shape,
 								    meshOffset:                 mesh_offset,
-								    meshHullType:               meshHullType
+								    meshHullType:               meshHullType,
+								    shapeAxisDistance:          shapeAxisDistance
 								  },
 								  
 								  vectorFactory

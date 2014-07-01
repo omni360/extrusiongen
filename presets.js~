@@ -1,0 +1,17 @@
+/**
+ * This is a plain file defining a single javasscript object for
+ * the presets.
+ *
+ * The presets defined in the object specify the preset menu strucure.
+ *
+ * @author  Ikaros Kappler
+ * @date    2014-06-19
+ * @version 1.0.0
+ **/
+
+
+if( !_DILDO_PRESETS || typeof _DILDO_PRESETS === "undefined" )
+    _DILDO_PRESETS = {};
+
+
+
