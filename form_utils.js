@@ -67,6 +67,10 @@ function setSelectedRadioBoxValueByName( formName, radioName, value ) {
     return false;
 }
 
+function getBendingValue( value ) {
+    return document.getElementById('preview_bend').value;
+}
+
 function setBendingValue( value ) {
     document.getElementById('preview_bend').value = value;
     displayBendingValue();

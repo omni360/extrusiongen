@@ -20,6 +20,13 @@ if( !_DILDO_CONFIG.IMAGES || typeof _DILDO_CONFIG.IMAGES === "undefined" )
     _DILDO_CONFIG.IMAGES = {};
 
 
+/**
+ * Set this flag to true if you wish the Model->Publish item to be hidden.
+ * Valid values: true|false
+ **/
+//_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = false;  
+_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = true; 
+
 
 /**
  * Set this flag to true if you wish the Model->Export sub menu to be hidden.

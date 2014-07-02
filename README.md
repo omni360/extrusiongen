@@ -17,6 +17,16 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-07-02] v2.0.35
+ - store_custom_dildo.php: changed the submit method to HTTP POST.
+ - Added the setCookie() and getCookie() functions (main.js).
+ - Added the saveInCookie() and loadFromCookie() functions (main.js, still testing, 
+   not yet in use).
+ - Added the Model->Publish menu (not yet visible).
+ - Added the 'preserveDrawingBuffer' flag to the THREE.WebGLRenderer to enable
+   taking screenshots.
+ - New function: get3DScreenshotData() for taking screenshots (not yet in use).
+
 [2014-07-01] v0.2.34
  - main.js: function createXMLHttpRequest() added.
  - Replaced the remote (!) save function by a less brute-force solution
@@ -201,3 +211,6 @@ Thanks to
  
  [mono-dc-monochrome-social-icons]
    Natko Hasiæ & designchair.com
+
+ [WebGL screenshot howto]
+   Dinesh Saravanan

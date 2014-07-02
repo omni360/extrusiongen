@@ -15,7 +15,9 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
 
     this.preview_canvas   = document.getElementById("preview_canvas");
     //window.alert( JSON.stringify(this.preview_canvas.parentNode) );
-    this.preview_renderer = new THREE.WebGLRenderer( { "canvas" : this.preview_canvas } );
+    this.preview_renderer = new THREE.WebGLRenderer( { canvas: this.preview_canvas,
+						       preserveDrawingBuffer: true   // This is required to take screen shots
+						     } );
 
 
     // An array to store the meshes in.

@@ -476,6 +476,10 @@ function importZIP() {
     }
 }
 
+function publishMesh() {
+    window.alert( "Sorry, this function is not yet implemented." );
+}
+
 /**
  * Toggles the 'about' dialog.
  **/
@@ -498,6 +502,53 @@ function about() {
     
 }
 
+function saveInCookie() {
+    setCookie( "bend", getBendingValue(), 60*24 );
+    setCookie( "bezier_path", getBezierPath().toJSON(), 60*24 );
+}
+
+function loadFromCookie() {
+    var bend       = getCookie( "bend" );
+    var bezierJSON = getCookie( "bezier_path" );
+    //window.alert( "bend=" + bend + ", bezier_path=" + bezierJSON );
+    
+    // Try to convert JSON string to BezierPath object
+    try {
+	var bezier_path = IKRS.BezierPath.fromJSON( bezierJSON );
+	setBendingValue( bend );
+	setBezierPath( bezier_path );
+    } catch( e ) {
+	console.log( "Failed to load bezier path from cookie: " + e );
+	setStatus( "Failed to load bezier path from cookie: " + e );
+    }
+}
+
+/**
+ * Thanks to
+ *  http://www.w3schools.com/js/js_cookies.asp
+ **/
+function setCookie( cname, cvalue, exminutes ) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exminutes*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+} 
+
+/**
+ * Thanks to
+ *  http://www.w3schools.com/js/js_cookies.asp
+ **/
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+} 
+
+
 function debug() {
     /*
     window.alert( 
@@ -507,7 +558,23 @@ function debug() {
 	    "camera.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.position) + "\n"
     );
     */
-    debug_display_bezier_string();
+    //window.open( get3DScreenshotData() );
+    saveInCookie();
+}
+
+function debug_B() {
+    loadFromCookie();
+}
+
+/**
+ * This returns a MIME/Base64 string containing the screenshot data (usually a PNG image).
+ **/
+function get3DScreenshotData() {
+    // This requires that the preview_renderer was initialized with the preserveDrawingBuffer=true flag.
+
+    // Thanks to Dinesh Saravanan for the Screenshot howto at
+    // http://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+    this.previewCanvasHandler.preview_renderer.domElement.toDataURL();
 }
 
 /**

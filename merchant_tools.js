@@ -45,22 +45,22 @@ function _order_send_to_server( url ) {
     if( document.getElementById("dildoID") )
 	dildoID = document.getElementById("dildoID").value;
 
-    var newURL    = url;
-    newURL    = newURL.replace( new RegExp("%bezier_path%", 'g'), 
-				json_object.bezierPath.toJSON()           
-			      );
-    newURL    = newURL.replace( new RegExp("%bend%", 'g'), 
-				json_object.meshSettings.bendAngle        
-			      );
-    newURL    = newURL.replace( new RegExp("%id%", 'g'), 
-				dildoID        
-			      );
+    var newURL     = url;
+    newURL         = newURL.replace( new RegExp("%bezier_path%", 'g'), 
+				     "" // json_object.bezierPath.toJSON()           
+				   );
+    newURL         = newURL.replace( new RegExp("%bend%", 'g'), 
+				     json_object.meshSettings.bendAngle        
+				   );
+    newURL         = newURL.replace( new RegExp("%id%", 'g'), 
+				     dildoID        
+				   );
     
-
 
     // Now call the URL (might be a remote server)
     // This is the old version: a javascript Popup. Ugly :(
     /* 
+    
     window.open( newURL, 
 		 "store_custom_dildo",  // window name
 		 "height=600,width=600" // Params
@@ -68,14 +68,26 @@ function _order_send_to_server( url ) {
     */
 
     // This is the new version: an AJAX script that runs in background
-    _asynchronousURLCall( newURL );
+    _asynchronousURLCall( newURL, 
+			  dildoID,
+			  json_object 
+			);
 
 }
 
-function _asynchronousURLCall( url ) {
+function _asynchronousURLCall( url, 
+			       dildoID, 
+			       json_object 
+			     ) {
 
     // The createXMLHttpRequest function is defined in the main.js file
-    var request = createXMLHttpRequest();
+    var request   = createXMLHttpRequest();
+
+    // Build POST data
+    var postData  = 
+	"id="      + dildoID + "&" +
+	"bend="    + json_object.meshSettings.bendAngle    + "&" +
+	"bezier_path=" + json_object.bezierPath.toJSON();
     
     request.onreadystatechange = function () {
         if( request.readyState == 4 ) {
@@ -104,8 +116,11 @@ function _asynchronousURLCall( url ) {
 	}
     };
 
-    request.open( "GET", url, true );
-    request.send( null ); // No POST data
+    request.open( "POST", url, true );
+    request.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded");
+    request.setRequestHeader( "Content-Length", postData.length );
+    request.setRequestHeader( "Connection", "close" );
+    request.send( postData ); 
 
 
 }

@@ -139,19 +139,13 @@
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
       </tr>
-      <!--
-      <tr>
-	<td><br/><button onclick="debug();">[DEBUG] Display Bezier Data</button></td>
-	<td></td>
-	<td></td>
-      </tr>
-      -->
     </table>
   </div>
   
   <div style="text-align: right;">
     <br/>
-    <button onclick="debug();">[DEBUG] Display Bezier Data</button>
+    <button onclick="debug();">[DEBUG] Save in cookie</button>
+    <button onclick="debug_B();">[DEBUG] Load from cookie</button>
   </div>
 </div>
 
@@ -595,6 +589,9 @@
 		  "</ul>\n" +
 		"</li>\n"
 	      );
+	      } // END if
+	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU ) {
+	          document.write( "<li><a href=\"#\" onclick=\"publishMesh()\" class=\"popout\">Publish ...</a></li>\n" );
 	      } // END if
 	    </script>
 	    <li><a href="#" onclick="saveShape();">Export shape (*.json)</a></li>
