@@ -1,0 +1,19 @@
+/**
+ * This is the default shape factory, making circles.
+ *
+ * @author  Ikaros Kappler
+ * @date    2014-07-03
+ * @version 1.0.0
+ **/ 
+
+IKRS.CircleShapeFactory = function( name ) {
+
+    IKRS.ShapeFactory.call( this );
+
+};
+
+
+IKRS.ShapeFactory.prototype             = new IKRS.Object();
+IKRS.ShapeFactory.prototype.constructor = IKRS.ShapeFactory;
+
+

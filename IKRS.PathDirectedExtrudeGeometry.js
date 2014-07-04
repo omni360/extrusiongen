@@ -4,7 +4,9 @@
  * @date 2013-08-26
  * @modified 2014-03-30 Ikaros Kappler (options.meshHullType added).
  * @modified 2014-06-25 Ikaros Kappler (options.shapeAxisDistance added).
- * @version 1.0.2
+ * @modified 2014-07-03 Ikaros Kappler (options.shapeRotationAngle added).
+ * @modified 2014-07-04 Ikaros Kappler (renamed shapeRotationAngle to twistAngle).
+ * @version 1.0.4
  **/
 
 
@@ -27,6 +29,7 @@
  *                         - meshOffset                 THREE.Vector3
  *                         - closeShape                 boolean
  *                         - shapeAxisOffset            float   (default=0)
+ *                         - twistAngle                 float   (default=0)
  *                          
  * @param vectorFactory  [optional]
  *                       If passed must have following function member:
@@ -53,14 +56,14 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
     if( typeof options.meshOffset === "undefined" ) 
 	options.meshOffset = new THREE.Vector2( 0, 0 );
 
+    if( typeof options.twistAngle === "undefined" )
+	options.twistAngle = 0.0;
+
     if( typeof vectorFactory === "undefined" )
 	vectorFactory = new IKRS.VectorFactory();
     
-
     
-    //window.alert( JSON.stringify(vectorFactory.createVector3(1,2,3)) );
-
-
+   
 
     var shapedPathBounds = shapedPath.computeBoundingBox();
     // An object with 
@@ -96,8 +99,7 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 						   
 						   vectorFactory
 						 );
-    // Restore old closePathEnd option?
-    
+    // Restore old closePathEnd option?   
     if( options.hollow ) {
 
 	options.meshHullType = old_meshHullType; // DEFAULT (the inner shape is ALWAYS the shape itself)
@@ -134,7 +136,7 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 	// THERE IS A BUG IN THREE.js INSIDE THE PATH.getBounds() computation!
 	// Don't use it.
 	var outerHullPathBounds = IKRS.BoundingBox2.computeFromPoints( innerPathResult.perpendicularHullPoints );
-	//window.alert( "shapedPathBounds=" + shapedPathBounds.toString() + ", outerHullPathBounds=" + outerHullPathBounds.toString() );
+	
 		
 	
 	var extendedExtrusionPath       = new THREE.Path( innerPathResult.extendedExtrusionPathPoints );
@@ -157,10 +159,8 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 	
 
 
-	// Build connection between outer and inner hull?	
-	// TODO ... THE BEGIN CONNECTION DOES NOT YET WORK
+	// Build connection between outer and inner hull?
 	if( old_closePathBegin ) { 
-	    //window.alert( "Close path begin: " + old_closePathBegin );
 
 	    // Note: outerPathResult.outerPointIndices.begin and innerPathResult.outerPointIndices.end
 	    //       have the same length!
@@ -397,6 +397,7 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
     var lastPathPoint    = null;
     var pathTangent      = null;
     var pathTangentSlope = 0.0;
+    var ORIGIN           = new THREE.Vector3(0,0,0);
     
 
     var lastPerpendicularHullPoint = null;
@@ -409,6 +410,12 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 	var tHeight         = Math.min( 1.0, 
 					(shapedPathBounds.getYMax() - shapedPathPoint.y) / shapedPathBounds.getHeight()
 				      );
+	
+	/*var shapeRotation   = options.shapeRotationAngle * tSegment;
+	shapedPathPoint      = IKRS.Utils.rotateVectorAroundZ( shapedPathPoint, 
+							       ORIGIN,
+							       shapeRotation
+							     );*/
 
 	// The shapeAxisDistance regulates the diameter for the revolution
 	if( options.shapeAxisDistance )
@@ -456,6 +463,12 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPathExtrusion = function( shape,
 						 shapePoint2.y, 
 						 Math.cos(-pathTangentSlope) * shapePoint2.x
 					       );
+
+	    var shapeTwist      = options.twistAngle * tHeight; // tSegment;
+	    shapePoint3         = IKRS.Utils.rotateVectorAroundZ( shapePoint3, 
+								  ORIGIN,
+								  shapeTwist
+								);
 	    
 	    shapePoint3.multiplyScalar( radiusFactor );
 
@@ -729,10 +742,7 @@ IKRS.PathDirectedExtrudeGeometry.prototype.buildPerpendicularHull = function( sh
 	if( i == options.curveSegments ) pathTangent = new THREE.Vector2( 0, 0 ); // No slope at first level
 	else                             pathTangent = new THREE.Vector2( pathPoint.x-lastPathPoint.x, pathPoint.y-lastPathPoint.y );
 	
-	/*
-	if( i == options.curveSegments ) pathTangent = vectorFactory.createVector2( 0, 0 ); // No slope at first level
-	else                             pathTangent = vectorFactory.createVector2( pathPoint.x-lastPathPoint.x, pathPoint.y-lastPathPoint.y );
-	*/
+	
 	
 	// Calculate slope from tangent
 	if( pathTangent.x == 0 ) pathTangentSlope = -Math.PI/2.0; // 90 deg

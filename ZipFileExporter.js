@@ -1,9 +1,10 @@
 /**
  * This script requires jszip.js
  *
- * @author Ikaros Kappler
- * @date 2013-09-05
- * @version 1.0.0
+ * @author   Ikaros Kappler
+ * @date     2013-09-05
+ * @modified 2014-07-04 Ikaros Kappler (added values shapeTwist, shapeStyle and version).
+ * @version  1.0.1
  **/
 
 ZipFileExporter = {
@@ -45,7 +46,12 @@ ZipFileExporter = {
 		meshHullType:         getSelectedMeshHullType(),   // "perpendicular" or "prism"
 		
 		// This is new since 2014-04-25
-		parts:                getSelectedMeshParts()       // "both" or "left" or "right"
+		parts:                getSelectedMeshParts(),      // "both" or "left" or "right"
+		
+		// These are new since 2014-07-04
+		shapeTwist:           getTwistValue(),             // percentage
+		shapeStyle:           getSelectedShapeStyle(),     // "circle", "oval", ...
+		version:              VERSION_STRING
 	    },
 
 	    // This is new since 2014-04-23
@@ -71,7 +77,14 @@ ZipFileExporter = {
      *                   closePathEnd, 
      *                   wireframe, 
      *                   triangulate,
-     *                   splitShape } 
+     *                   splitShape,
+     *                   arrangeSplitsOnPlane,
+     *                   directions,
+     *                   meshHullType,
+     *                   parts,
+     *                   shapeTwist,
+     *                   shapeStyle
+     *                 } 
      **/
     exportZipFile: function( filename, data ) {
 
@@ -124,7 +137,6 @@ ZipFileExporter = {
 
 	// Add color settings (JSON) to zip
 	var colorSettingsJSON = JSON.stringify( data.colorSettings, null, "\t" );
-	//window.alert( meshSettingsJSON );
 	zip.file( "color_settings.json",
 		  colorSettingsJSON,
 		  { base64: false,
@@ -137,8 +149,7 @@ ZipFileExporter = {
         // The generate-function returns a base64 string
 	var zipData = zip.generate( { type: "base64", 
 				      compression: ( data.compress ? "DEFLATE" : "STORE" )
-				    } ); 
-	//window.alert( "zipData=" + zipData );
+				    } );
 
 	// This is one possibilty to send binary data: base64-encoded
 	// inside the window location. 

@@ -281,6 +281,14 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     var shapeAxisDistance_pct    = 0.0;
     if( document.getElementById( "preview_axis_offset" ) )
 	shapeAxisDistance_pct = document.getElementById( "preview_axis_offset" ).value; // units? pixels? mm?
+    
+    var twistValue               = 0.0;
+    if( getTwistValue )
+	twistValue = getTwistValue();  // A value in 0..25 (%)
+    var twistAngle               = Math.PI*2.0 * (twistValue/100.0);
+    
+    
+    var shapeStyle               = getSelectedShapeStyle(); // "circle" (default) or "oval"
 
 
     var meshDirection            = getSelectedMeshDirection(); // "xyz" or "zxy"
@@ -288,13 +296,15 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     var makeParts                = getSelectedMeshParts();     // "both" or "left" or "right"
     
 
-    //var shapeAxisDistance        = shapeAxisDistance_pct *
+    // "prism" hull type only allowed when split!
+    if( !split_shape && hullType == "prism" )
+	hullType = "perpendicular";
 
 
     // Convert numeric text values to numbers!
-    mesh_hull_strength  = parseInt( mesh_hull_strength );
-    circleSegmentCount  = parseInt( circleSegmentCount );
-    pathSegments        = parseInt( pathSegments );
+    mesh_hull_strength           = parseInt( mesh_hull_strength );
+    circleSegmentCount           = parseInt( circleSegmentCount );
+    pathSegments                 = parseInt( pathSegments );
     
 
     // Convert mesh hull strength to bezier units
@@ -379,7 +389,9 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 							 vectorFactories[0],
 							 hullType,
 							 shapeAxisDistance_pct,
-							 pathBendAngle
+							 pathBendAngle,
+							 twistAngle,
+							 shapeStyle
 						       );
         
 	this._addMeshToScene( new_mesh_left, 
@@ -410,7 +422,9 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 							  vectorFactories[1],
 							  hullType,
 							  shapeAxisDistance_pct,
-							  pathBendAngle
+							  pathBendAngle,
+							  twistAngle,
+							  shapeStyle
 							);
         
 	this._addMeshToScene( new_mesh_right, 
@@ -420,7 +434,7 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 
     }
     
-    //this._setCameraPositionFromLocalSettings();
+    
 }
 
 
@@ -432,18 +446,14 @@ IKRS.PreviewCanvasHandler.prototype._addMeshToScene = function( new_mesh,
     if( !viewSettings )
 	viewSettings = this._getViewSettings();
 
-    //new_mesh.position.y  = 150;
-    //new_mesh.position.z  = -250;
     new_mesh.overdraw    = true;
     new_mesh.doubleSided = false;  // true
 
     
     
     // Apply view settings
-    //var viewSettings = this._getViewSettings();
     if( viewSettings.rotation ) {
 	
-	//new_mesh.rotation.setFromRotationMatrix( viewSettings.rotation );
 	new_mesh.rotation.set( viewSettings.rotation.x,
 			       viewSettings.rotation.y,
 			       viewSettings.rotation.z 
@@ -475,19 +485,6 @@ IKRS.PreviewCanvasHandler.prototype._addMeshToScene = function( new_mesh,
     if( optionalOffset ) 
 	new_mesh.position.add( optionalOffset );
 
-
-    // ADD AN ADDITIONAL OBJECT TO EACH MESH IN THE SCENE.
-    //new_mesh.ikrsSettings = {
-	//rotation: viewSettings.rotation.clone()
-    //};
-
-    // Translate the mesh so the origin is at (0,0,0).
-    // This will be the later rotation point for the mouse handler.
-    /*new_mesh.geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -new_mesh.position.x, 
-									-new_mesh.position.y, 
-									-new_mesh.position.z 
-								      ) );
-								      */
     
     // Add new meshes to scene.
     this.preview_scene.add( new_mesh );
@@ -515,33 +512,26 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 								       vectorFactory,
 								       meshHullType,      // "perpendicular" or "box"								       
 								       shapeAxisDistance_pct, // float
-								       pathBendAngle
+								       pathBendAngle,
+								       twistAngle,
+								       shapeStyle
 								     ) {
     
     var shapedPathBounds     = shapedPath.computeBoundingBox();
     var circleRadius         = shapedPathBounds.getWidth();
 
     var shapeAxisDistance    = shapedPathBounds.getHeight() * (shapeAxisDistance_pct/100.0);
-    //window.alert( shapeAxisDistance );
+
     
-    // The shape offset on the lower plane.
-    // This will be the (x,y) translation of the final mesh; default is (0,0) if non-split.
+    //var shapeStyle           = "oval";
+    shapePoints              = this._createShapePoints( shapeStyle, split_shape, circleSegmentCount, circleRadius, shape_start_angle );
     /*
-    var mesh_offset;
-    if( split_shape )
-	mesh_offset = new THREE.Vector2( 0, 0 ); // -100 );
-    else
-	mesh_offset = new THREE.Vector2( 0, 0 );
-    */
-    //var mesh_offset = offset;
-    
-    
-    shapePoints = this._createCircleShapePoints( (split_shape ? circleSegmentCount/2 : circleSegmentCount),
-						 circleRadius,
-						 shape_start_angle, // -Math.PI/2.0,                            // startAngle
-						 (split_shape ? Math.PI : Math.PI * 2.0)  // arc
-					       );
-					       
+	shapePoints = this._createCircleShapePoints( (split_shape ? circleSegmentCount/2 : circleSegmentCount),
+						     circleRadius,
+						     shape_start_angle, // -Math.PI/2.0,                            // startAngle
+						     (split_shape ? Math.PI : Math.PI * 2.0)  // arc
+						   );
+    */					       
     
 
     var extrusionShape = new THREE.Shape( shapePoints );
@@ -604,15 +594,15 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 								    closeShape:                 !split_shape,
 								    meshOffset:                 mesh_offset,
 								    meshHullType:               meshHullType,
-								    shapeAxisDistance:          shapeAxisDistance
+								    shapeAxisDistance:          shapeAxisDistance,
+								    twistAngle:                 twistAngle
 								  },
 								  
 								  vectorFactory
 								);	
 	
-    var color            = document.forms["color_form"].elements["color"].value;
-    //window.alert( color );
 
+    var color            = document.forms["color_form"].elements["color"].value;
     var extrusionMaterial = new THREE.MeshPhongMaterial( 
 	{ color: color, // 0x151D28, //0x2D303D, 
 	  ambient: 0x996633, // 0xffffff, // 0x996633, // should generally match color
@@ -638,8 +628,32 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 				 );
     
     return new_mesh;
-}
+};
     
+IKRS.PreviewCanvasHandler.prototype._createShapePoints = function( shapeStyle,
+								   
+								   split_shape, 
+								   circleSegmentCount, 
+								   circleRadius, 
+								   shape_start_angle 
+								 ) {
+    if( shapeStyle == "oval" ) {
+	var ovalFactory = new IKRS.OvalShapeFactory( circleRadius,      // radiusX
+						     circleRadius*0.66, // radiusY
+						     shape_start_angle, 
+						     (split_shape ? Math.PI : Math.PI * 2.0) 
+						   );
+	//window.alert( circleFactory.createShapePoints );
+	return ovalFactory.createShapePoints( (split_shape ? circleSegmentCount/2 : circleSegmentCount) );
+
+    } else { // if( shapeStyle == "circle" ) { // DEFAULT
+	return this._createCircleShapePoints( (split_shape ? circleSegmentCount/2 : circleSegmentCount),
+					      circleRadius,
+					      shape_start_angle, // -Math.PI/2.0,                            // startAngle
+					      (split_shape ? Math.PI : Math.PI * 2.0)  // arc
+					    );
+    }
+};
 
 /**
  * This function creates the points for a circle shape (with the given segment count).
@@ -649,7 +663,7 @@ IKRS.PreviewCanvasHandler.prototype._createCircleShapePoints = function( circleS
 									 startAngle,
 									 arc						    
 								       ) {
-    
+    /*
     var shapePoints = [];
 
     // If the mesh is split, the shape will be split into two halfs. 
@@ -666,8 +680,12 @@ IKRS.PreviewCanvasHandler.prototype._createCircleShapePoints = function( circleS
     }
     
     return shapePoints;
+    */
+    var circleFactory = new IKRS.CircleShapeFactory( circleRadius, startAngle, arc );
+    //window.alert( circleFactory.createShapePoints );
+    return circleFactory.createShapePoints( circleSegmentCount );
+};
 
-}
 
 IKRS.PreviewCanvasHandler.prototype._getViewSettings = function() {
 

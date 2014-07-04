@@ -144,8 +144,9 @@
   
   <div style="text-align: right;">
     <br/>
-    <button onclick="debug();">[DEBUG] Save in cookie</button>
-    <button onclick="debug_B();">[DEBUG] Load from cookie</button>
+    <button onclick="debug();">[TEST] Save in cookie</button>
+    <button onclick="debug_B();">[TEST] Load from cookie</button>
+    <button onclick="debug_C();">[TEST] Take screenshot</button>
   </div>
 </div>
 
@@ -174,6 +175,7 @@
 </tr>
 
 
+<!-- This field 'thickness' is currently not in use (invisible) -->
 <tr>
   <td style="vertical-align: top; width: 100px; display: none;">Thickness (<span id="preview_axis_offset_display">0</span>%):</td>
   <td style="display: none;">
@@ -188,6 +190,39 @@
 					     onmousemove="if(preview_axis_offset_mousedown) document.getElementById('preview_axis_offset_display').innerHTML=document.getElementById('preview_axis_offset').value;"
 					     onchange="displayBendingValue(); preview_rebuild_model();" />50%
 
+  </td>			     
+</tr>
+
+
+<!-- This field 'Twist' is currently not in use as it breaks the mold models in some cases (self-intersecting mesh) -->
+<tr>
+  <td style="vertical-align: top; width: 100px;">Twist* (<span id="preview_twist_display">0</span>%):</td>
+  <td style="">
+					     <script>
+					     preview_twist_mousedown = false;
+                                             </script>
+					     <br/>
+					     0%<input type="range" id="preview_twist" name="preview_twist" min="0" max="15" value="0" 
+                                             style="width: 150px; margin-top: -12px;"
+					     onmousedown="preview_twist_mousedown=true;"
+					     onmouseup="preview_twist_mousedown=false;"
+					     onmousemove="if(preview_twist_mousedown) displayTwistValue();"
+					     onchange="displayTwistValue(); preview_rebuild_model();" />15%<br/>
+					     <div style="text-align: right; font-size: 8pt;">*experimental</div>
+
+  </td>			     
+</tr>
+
+
+<!-- This is new since 2014-07-04 (version 0.2.36) -->
+<tr>
+  <td style="vertical-align: top; width: 100px;">Shape Style:</td>
+  <td style="">
+    <input type="radio" name="shape_style" id="shape_style_circle" value="circle" checked="checked" onchange="preview_rebuild_model();" /> <label for="shape_style_circle">Circle</label>
+    <input type="radio" name="shape_style" id="shape_style_oval" value="oval" onchange="preview_rebuild_model();" /> <label for="shape_style_oval">Oval</label>
+    <br/>
+    <input type="radio" name="shape_style" id="shape_style_square" value="square" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_square" class="disabled">Square</label>
+    <input type="radio" name="shape_style" id="shape_style_triangle" value="triangle" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_triangle" class="disabled">Triangle</label>
   </td>			     
 </tr>
 
@@ -506,6 +541,9 @@
 
 <script type="text/javascript" src="IKRS.js"></script>
 <script type="text/javascript" src="IKRS.Object.js"></script>
+<script type="text/javascript" src="IKRS.ShapeFactory.js"></script>
+<script type="text/javascript" src="IKRS.CircleShapeFactory.js"></script>
+<script type="text/javascript" src="IKRS.OvalShapeFactory.js"></script>
 <script type="text/javascript" src="IKRS.ShapedPathGeometry.js"></script>
 <script type="text/javascript" src="IKRS.PathDirectedExtrudeGeometry.js"></script>
 

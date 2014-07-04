@@ -67,6 +67,20 @@ function setSelectedRadioBoxValueByName( formName, radioName, value ) {
     return false;
 }
 
+function getSelectedShapeStyle() {
+    //return "oval";
+    return getSelectedRadioBoxValueByName( "mesh_form", "shape_style" );
+}
+
+/**
+ * Allowed values are "circle" (DEFAULT) and "oval".
+ **/
+function setSelectedShapeStyle( shapeStyle ) {
+    if( !shapeStyle )
+	shapeStyle = "circle";
+    setSelectedRadioBoxValueByName( "mesh_form", "shape_style", shapeStyle );
+}
+
 function getBendingValue( value ) {
     return document.getElementById('preview_bend').value;
 }
@@ -79,6 +93,21 @@ function setBendingValue( value ) {
 function displayBendingValue() {
     document.getElementById('preview_bend_display').innerHTML = document.getElementById('preview_bend').value;
 }
+
+
+function getTwistValue( value ) {
+    return document.getElementById('preview_twist').value;
+}
+
+function setTwistValue( value ) {
+    document.getElementById('preview_twist').value = value;
+    displayTwistValue();
+}
+
+function displayTwistValue() {
+    document.getElementById('preview_twist_display').innerHTML = document.getElementById('preview_twist').value;
+}
+
 
 function toggleFormElementsEnabled() {
     document.getElementById('mesh_hull_strength').disabled      = !document.getElementById('build_negative_mesh').checked;

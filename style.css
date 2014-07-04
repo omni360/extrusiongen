@@ -252,6 +252,10 @@ comment {
     color:               #888888;
 }
 
+label.disabled {
+    color: #a8a8a8;
+}
+
 *.indent_1 {
     margin-left:         15px;
 }

@@ -1,7 +1,8 @@
 /**
  * @author Ikaros Kappler
  * @date 2013-09-11
- * @version 1.0.0
+ * @modified 2014-07-04 Ikaros Kappler (added new values shapeTwist, shapeStyle and version).
+ * @version 1.0.1
  **/
 
 
@@ -34,6 +35,14 @@ ZipFileImporter = {
 		// These are new since 2014-04-23
 		directions:           getSelectedMeshDirection(),  // "xyz" or "zxy"
 		meshHullType:         getSelectedMeshHullType()    // "perpendicular" or "prism"
+
+		// This is new since 2014-04-25
+		parts:                getSelectedMeshParts(),      // "both" or "left" or "right"
+		
+		// These are new since 2014-07-04
+		shapeTwist:           getTwistValue(),             // percentage
+		shapeStyle:           getSelectedShapeStyle(),     // "circle", "oval", ...
+		version:              VERSION_STRING
 	    },
 	    
 	    // This is new since 2014-04-23
@@ -107,6 +116,16 @@ ZipFileImporter = {
 	setSelectedMeshDirection( meshSettings.meshDirection ); // May be null
 	setSelectedMeshHullType( meshSettings.meshHullType );   // May be null
 	setSelectedMeshParts( meshSettings.parts );             // May be null
+	
+	if( meshSettings.shapeTwist )
+	    setTwistValue( meshSettings.shapeTwist );
+	else
+	    setTwistValue( 0 );
+
+
+
+	setSelectedShapeStyle( meshSettings.shapeStyle );       // May be null
+
 	
 	return true;
     },

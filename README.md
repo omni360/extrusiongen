@@ -4,8 +4,8 @@ Path Extrusion Generator
 
 @author   Ikaros Kappler
 @date     2013-09-11
-@modified 2014-06-25
-@version  0.2.33
+@modified 2014-07-04
+@version  0.2.36
 
 
 
@@ -17,6 +17,20 @@ CC BY-NC-SA
 Changelog
 ---------
 
+[2014-07-04] v0.2.36
+ - Added two new mesh features
+   	 + shapeStyle: "circle" (default) or "oval"
+	 + shapeTwist: percentage of rotations (still experimental)
+ - Fixed a form issue: when de-selecting the 'split shape' options (the
+   'base type' settings was still recognized which broke the mesh). 
+ - Fixed the createHumanReadableTimestamp() function: added leading zeros.
+ - Changed the default output file names to more expressive ones.
+
+[2014-07-03]
+ - IKRS.PathDirectedExtrudeGeometry.js: added the 'options.shapeTwist'
+   param to the constructor.
+ - Added the IKRS.ShapeFactory class and subclasses for circles and ovals.
+
 [2014-07-02] v2.0.35
  - store_custom_dildo.php: changed the submit method to HTTP POST.
  - Added the setCookie() and getCookie() functions (main.js).
@@ -27,7 +41,7 @@ Changelog
    taking screenshots.
  - New function: get3DScreenshotData() for taking screenshots (not yet in use).
 
-[2014-07-01] v0.2.34
+[2014-07-01] v2.0.34
  - main.js: function createXMLHttpRequest() added.
  - Replaced the remote (!) save function by a less brute-force solution
    by using AJAX.

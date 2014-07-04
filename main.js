@@ -33,18 +33,32 @@ function createHumanReadableTimestamp() {
 
     // Append the current date to the output filename values
     var curDate = new Date();
+    var year    = curDate.getFullYear();
+    var month   = curDate.getMonth() + 1;  // months start at 0
+    var day     = curDate.getDate();
+    var hours   = curDate.getHours();
+    var minutes = curDate.getMinutes();
+    var seconds = curDate.getSeconds();
+
+    if( month < 10 )   month   = "0" + month;
+    if( day < 10 )     day     = "0" + day;
+    if( hours < 10 )   hours   = "0" + hours;
+    if( minutes < 10 ) minutes = "0" + minutes;
+    if( seconds < 10 ) seconds = "0" + seconds;
+
     var ts        = "" +
-	curDate.getFullYear() +
+	year +    // curDate.getFullYear() +
 	"-" +
-	(curDate.getMonth()+1) +  // months start at 0
+	month +   // (curDate.getMonth()+1) +  // months start at 0
 	"-" +
-	curDate.getDate() +
+	day +     // curDate.getDate() +
 	"_" +
-	curDate.getHours() + 
+	hours +   // curDate.getHours() + 
 	"." +
-	curDate.getMinutes() +
+	minutes + // curDate.getMinutes() +
 	"." +
-	curDate.getSeconds();
+	seconds   // curDate.getSeconds();
+	;
 
     return ts;
 }
@@ -401,7 +415,10 @@ function newScene() {
 	closePathBegin:    false,
 	closePathEnd:      true,
 	wireframe:         false,
-	triangulate:       true
+	triangulate:       true,
+	parts:             null,  // default: "both"
+	shapeTwist:        0,
+	shapeStyle:        null   // default: "circle"
     };
 
     ZipFileImporter._apply_mesh_settings( defaultSettings );
@@ -449,7 +466,7 @@ function setBezierPathFromJSON( bezier_json, bend_angle ) {
 
 function saveShape() {
 
-    saveTextFile( bezierCanvasHandler.bezierPath.toJSON(), 'bezier_shape.json', 'application/json' );
+    saveTextFile( bezierCanvasHandler.bezierPath.toJSON(), 'dildo_bezier_shape_' + createHumanReadableTimestamp() + '.json', 'application/json' );
 
 }
 
@@ -464,8 +481,7 @@ function exportZIP() {
     if( !checkSizeBeforeSaving() )
 	return false;
 
-    //var zip_filename = document.forms['zip_form'].elements['zip_filename'].value;
-    var zip_filename = "settings_" + createHumanReadableTimestamp() + ".zip";
+    var zip_filename = "dildo_settings_" + createHumanReadableTimestamp() + ".zip";
     ZipFileExporter.exportZipFile( zip_filename );
 }
 
@@ -566,6 +582,11 @@ function debug_B() {
     loadFromCookie();
 }
 
+function debug_C() {
+    var screenshotData = get3DScreenshotData();
+    window.open( screenshotData );
+}
+
 /**
  * This returns a MIME/Base64 string containing the screenshot data (usually a PNG image).
  **/
@@ -574,7 +595,7 @@ function get3DScreenshotData() {
 
     // Thanks to Dinesh Saravanan for the Screenshot howto at
     // http://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
-    this.previewCanvasHandler.preview_renderer.domElement.toDataURL();
+    return this.previewCanvasHandler.preview_renderer.domElement.toDataURL();
 }
 
 /**
