@@ -40,9 +40,6 @@ IKRS.Utils.rotateVectorAroundZ = function( vector, axis, angle ) {
 };
 
 
-
-
-
 IKRS.Utils.calculateAngle = function( distA, distB ) {
     var pointAngle = 0.0;
     if( distA == 0 ) {
@@ -55,3 +52,8 @@ IKRS.Utils.calculateAngle = function( distA, distB ) {
 
     return pointAngle;
 };
+
+
+IKRS.Utils.isNumeric = function(n) { 
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n); 
+}

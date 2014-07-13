@@ -13,9 +13,19 @@ License:
 CC BY-NC-SA
 
 
+Note that since version 0.2.37 the app tries to store designs in cookies. Before
+no data had been saved anywhere. I switched to a new privacy policy.
+
+
+
 
 Changelog
 ---------
+
+[2014-07-13] v0.2.37
+ - Added the Base64 encoder/decoder class (should later replace base64-binary).
+ - Added the IKRS.Utils.isNumeric function.
+ - Activated the AUTOSAVE function which tries to store dildo designs in cookie!
 
 [2014-07-04] v0.2.36
  - Added two new mesh features
@@ -228,3 +238,7 @@ Thanks to
 
  [WebGL screenshot howto]
    Dinesh Saravanan
+
+ [Base64 encoder/decoder]
+   <unknown author>
+   

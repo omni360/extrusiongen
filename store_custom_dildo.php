@@ -8,10 +8,26 @@
  * @date     2014-06-11
  * @modified 2014-07-01 Ikaros Kappler (added the UPDATE function for remote storage, if $id is passed).
  * @modified 2014-07-02 Ikaros Kappler (changed the submit method to HTTP POST).
+ * @modified 2014-07-13 Ikaros Kappler (added IP check).
  * @version  1.0.2
  **/
 
 header( "Content-Type: text/plain; charset=utf-8" );
+
+
+// Configure access control to avoid Cross-Site-Scripting exploits
+// THIS SOMEHOW DOES NOT YET WORK!
+/* 
+header( "Access-Control-Allow-Origin: " .
+
+	"http://www.dildo-generator.com " .
+	"http://www.dildogenerator.com " .
+	"http://dildo-generator.com" .
+	"http://dildogenerator.com" 
+	);
+*/
+
+
 
 
 // Fetch the params from the GET or the POST request.
@@ -20,8 +36,9 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
   $bend        = $_POST["bend"];
   $id          = $_POST["id"];
   $bezier_path = $_POST["bezier_path"];
+  $originb64   = $_POST["originb64"];
 
-} /*else if( $_SERVER['REQUEST_METHOD'] == "GET" ) {
+/*} else if( $_SERVER['REQUEST_METHOD'] == "GET" ) {
   $bend        = $_GET["bend"];
   $id          = $_GET["id"];
   $bezier_path = $_GET["bezier_path"];  // A JSON string

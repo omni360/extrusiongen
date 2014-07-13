@@ -102,6 +102,10 @@ function getDefaultBezierJSON() {
  * This function is called when the page was completely loaded.
  **/
 function onloadHandler() {
+    
+    // Display current version
+    if( document.getElementById( "version_tag" ) )
+	document.getElementById( "version_tag" ).innerHTML = VERSION_STRING;
 
     if( !initWebGL() ) {
 
@@ -183,14 +187,22 @@ function onloadHandler() {
 	} // END if
     } // END for
 
+    // Try to load dildo design from last session cookie
+    loadFromCookie(true); // retainErrorStatus
+	
+
     displayBendingValue();
     toggleFormElementsEnabled();
     updateBezierStatistics( null, null );
-
+    
     // Is the rendering engine available?
     // Does this browser support WebGL?
     previewCanvasHandler.preview_rebuild_model();
     preview_render();
+
+
+    // Finally set a timeout for auto-saving
+    window.setInterval( "autosaveInCookie()", 1000*30 );
 
 }
 
@@ -518,12 +530,17 @@ function about() {
     
 }
 
+function autosaveInCookie() {
+    saveInCookie();
+    setStatus( "Autosaved in cookie." );
+}
+
 function saveInCookie() {
     setCookie( "bend", getBendingValue(), 60*24 );
     setCookie( "bezier_path", getBezierPath().toJSON(), 60*24 );
 }
 
-function loadFromCookie() {
+function loadFromCookie( retainErrorStatus ) {
     var bend       = getCookie( "bend" );
     var bezierJSON = getCookie( "bezier_path" );
     //window.alert( "bend=" + bend + ", bezier_path=" + bezierJSON );
@@ -533,9 +550,13 @@ function loadFromCookie() {
 	var bezier_path = IKRS.BezierPath.fromJSON( bezierJSON );
 	setBendingValue( bend );
 	setBezierPath( bezier_path );
+	return true;
     } catch( e ) {
-	console.log( "Failed to load bezier path from cookie: " + e );
-	setStatus( "Failed to load bezier path from cookie: " + e );
+	if( !retainErrorStatus ) {
+	    console.log( "Failed to load bezier path from cookie: " + e );
+	    setStatus( "Failed to load bezier path from cookie: " + e );
+	}
+	return false;
     }
 }
 

@@ -83,35 +83,77 @@ function _asynchronousURLCall( url,
     // The createXMLHttpRequest function is defined in the main.js file
     var request   = createXMLHttpRequest();
 
+    //window.alert( window.location.host );
+    var originb64 = Base64.encode( window.location.host );
+    //window.alert( originb64 );
+
     // Build POST data
     var postData  = 
-	"id="      + dildoID + "&" +
-	"bend="    + json_object.meshSettings.bendAngle    + "&" +
-	"bezier_path=" + json_object.bezierPath.toJSON();
+	"id="          + dildoID                             + "&" +
+	"bend="        + json_object.meshSettings.bendAngle  + "&" +
+	"bezier_path=" + json_object.bezierPath.toJSON()     + "&" +
+	"origin"       + originb64;
     
     request.onreadystatechange = function () {
         if( request.readyState == 4 ) {
 	    
-	    // Everything OK. Model saved.
 	    
-	    // Fetch the ID.
-	    var dildoID = request.responseText;
-	    
-	    // (Re-)Store the ID into the HTML form (for later updates)
-	    messageBox.show( "<br/>\n" +
-			     "Your settings have been saved.<br/>\n" +
-			     "(dildoID=" + dildoID + ")<br/>\n" +
-			     "<br/>\n" +
-			     "<button onclick=\"messageBox.hide()\">OK</button>\n"
-			   );
-	    setStatus( "Your settings have been saved. (id=" + dildoID + ")" );
-	    document.getElementById( "dildoID" ).value = dildoID;
+	    if( request.status == 200 ) {
+		// Everything OK. Model saved.
+		
+		// Fetch the ID.
+		var dildoID = request.responseText;
+		
+		// Check if numeric
+		if( IKRS.Utils.isNumeric(dildoID) ) {
+		    
+		    // (Re-)Store the ID into the HTML form (for later updates)
+		    messageBox.show( "<br/>\n" +
+				     "Your settings have been saved.<br/>\n" +
+				     "(dildoID=" + dildoID + ")<br/>\n" +
+				     "<br/>\n" +
+				     "<button onclick=\"messageBox.hide()\">OK</button>\n"
+				   );
+		    setStatus( "Your settings have been saved. (id=" + dildoID + ")" );
+		    document.getElementById( "dildoID" ).value = dildoID;
+
+		} else {
+		    
+		    window.alert("X");
+		    // Returned ID is NOT numeric.
+		    console.log( "Dildo was saved but returned ID is not numeric (" + dildoID + ")." );
+		    setStatus( "Dildo was saved but returned ID is not numeric (" + dildoID + ")." );
+		    messageBox.show( "<br/>Dildo was saved but returned ID is not numeric (" + dildoID + ").<br/>\n" +
+				     "<br/>\n" +
+				     "<button onclick=\"messageBox.hide()\">OK</button>\n" );
+		    
+		}
+
+	    } else {
+
+		// Error returned.
+		console.log( "XMLHttpRequest returned HTTP status code " + request.status + " (" + request.statusText + "): " + request.responseText );
+		setStatus( "Failed to save your settings (status " + request.status + ")!" );
+		/*
+		messageBox.show( "<br/>Failed to save your settings!<br/>\n" +
+				 "(status " + request.status + ")!<br/>\n" +
+				 "<br/>\n" +
+				 "<button onclick=\"messageBox.hide()\">OK</button>\n" );
+*/
+
+	    }
 	       
         } else {
 
 	    // Error returned.
 	    console.log( "XMLHttpRequest returned readyState=" + request.readyState + ": " + request.responseText );
 	    setStatus( "Failed to save your settings!" );
+	    /*
+	    messageBox.show( "<br/>Failed to save your settings!<br/>\n" +
+			     "(readyState " + request.readyState + ")!<br/>\n" +
+			     "<br/>\n" +
+			     "<button onclick=\"messageBox.hide()\">OK</button>\n" );
+*/
 
 	}
     };
