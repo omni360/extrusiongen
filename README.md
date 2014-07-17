@@ -43,6 +43,7 @@ Changelog
    See table_structure.sql for details.
  - Added the new storage/publishing features to the main.js and the 
    store_custom_dildo.php files.
+ - Added isHexadecimal() to the IKRS.Utils.js file.
 
 [2014-07-13] v0.2.37
  - Added the Base64 encoder/decoder class (should later replace base64-binary).
