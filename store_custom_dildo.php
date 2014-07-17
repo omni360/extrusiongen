@@ -9,6 +9,7 @@
  * @modified 2014-07-01 Ikaros Kappler (added the UPDATE function for remote storage, if $id is passed).
  * @modified 2014-07-02 Ikaros Kappler (changed the submit method to HTTP POST).
  * @modified 2014-07-13 Ikaros Kappler (added IP check).
+ * @modified 2014-07-16 Ikaros Kappler (added additional publishing data: user_name, email_address, ...).
  * @version  1.0.2
  **/
 
@@ -33,16 +34,19 @@ header( "Access-Control-Allow-Origin: " .
 // Fetch the params from the GET or the POST request.
 // (Better send dildo data via HTTP POST?)
 if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
-  $bend        = $_POST["bend"];
-  $id          = $_POST["id"];
-  $bezier_path = $_POST["bezier_path"];
-  $originb64   = $_POST["originb64"];
+  $bend               = $_POST["bend"];
+  $id                 = $_POST["id"];
+  $public_hash        = $_POST["public_hash"];
+  $bezier_path        = $_POST["bezier_path"];
+  $dildo_name         = $_POST["dildo_name"];
+  $user_name          = $_POST["user_name"];
+  $email_address      = $_POST["email_address"];
+  $hide_email_address = $_POST["hide_email_address"];
+  $allow_download     = $_POST["allow_download"];
+  $allow_edit         = $_POST["allow_edit"];
+  $image_data         = $_POST["image_data"];
+  $originb64          = $_POST["originb64"];
 
-/*} else if( $_SERVER['REQUEST_METHOD'] == "GET" ) {
-  $bend        = $_GET["bend"];
-  $id          = $_GET["id"];
-  $bezier_path = $_GET["bezier_path"];  // A JSON string
-  */
 } else {
   header( "HTTP/1.1 405 Method Not Allowed", TRUE ); 
   die( "The requested method '" . $_SERVER['REQUEST_METHOD'] . "' is not allowed here.\n" );
@@ -72,23 +76,46 @@ mysql_select_db( "dildogenerator" );
 
 // INSERT or UPDATE?
 $query    = "";
-if( !$id || $id == -1 ) {
+if( !$id || $id == -1 || !$public_hash ) {
+
+  // Make a public hash
+  $salt = rand(0, 65535);
+  $time = time();
+  $raw  = $bend . "#" . $salt . "$" . $time . "*" . $name . "/" . $user_name . "\"" . $user_id . "-" . $origin_b64;
+  $public_hash = md5($raw);
+
   $query =
     "INSERT INTO dildogenerator.custom_dildos " .
-    "( bend, bezier_path, user_id ) " .
+    "( bend, bezier_path, user_id, name, user_name, email_address, hide_email_address, allow_download, allow_edit, preview_image, public_hash ) " .
     "VALUES ( " .
     "'" . addslashes($bend) . "', " .
     "'" . addslashes($bezier_path) . "', " .
-    "'" . addslashes($user_id) . "' ".
+    "'" . addslashes($user_id) . "', ".
+    "'" . addslashes($dildo_name) . "', " .
+    "'" . addslashes($user_name) . "', " .
+    "'" . addslashes($email_address) . "', " .
+    "'" . ($hide_email_address ? 'Y' : 'N') . "', " .
+    "'" . ($allow_download ? 'Y' : 'N') . "', " .
+    "'" . ($allow_edit ? 'Y' : 'N') . "', " .
+    "'" . addslashes($image_data) . "', " .
+    "'" . addslashes($public_hash) . "' " .
     ");";
 
 } else {
   $query = 
     "UPDATE dildogenerator.custom_dildos SET " .
-    "bend        = '" . addslashes($bend) . "', " .
-    "bezier_path = '" . addslashes($bezier_path) . "' " .
-    //"user_id     = '" . addslashes($user_id) . "', " .
-    "WHERE id = '" . addslashes($id) . "' ".
+    "bend               = '" . addslashes($bend) . "', " .
+    "bezier_path        = '" . addslashes($bezier_path) . "', " .
+    //"user_id            = '" . addslashes($user_id) . "', " .
+    "name               = '" . addslashes($dildo_name) . "', " .
+    "user_name          = '" . addslashes($user_name) . "', " .
+    "email_address      = '" . addslashes($email_address) . "', " .
+    "hide_email_address = '" . ($hide_email_address ? 'Y' : 'N') . "', " .
+    "allow_download     = '" . ($allow_download ? 'Y' : 'N') . "', " .
+    "allow_edit         = '" . ($allow_edit ? 'Y' : 'N') . "', " .
+    "preview_image      = '" . addslashes($image_data) . "' " .
+    "WHERE id           = '" . addslashes($id) . "' ".
+    "AND   public_hash  = '" . addslashes($public_hash) . "' " .
     "AND   user_id = '" . addslashes($user_id) . "' " .
     "LIMIT 1;";
 
@@ -102,7 +129,8 @@ if( !mysql_query($query,$mcon) ) {
 
 } else if( $id && $id != -1 ) {
 
-  // NOOP
+  // This was an update. NOOP
+  
 
 } else {
   
@@ -111,7 +139,7 @@ if( !mysql_query($query,$mcon) ) {
 }
 
 
-echo $id;
+echo $id . " " . $public_hash;
 
 
 

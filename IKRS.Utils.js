@@ -56,4 +56,11 @@ IKRS.Utils.calculateAngle = function( distA, distB ) {
 
 IKRS.Utils.isNumeric = function(n) { 
     return /^-?[\d.]+(?:e-?\d+)?$/.test(n); 
-}
+};
+
+IKRS.Utils.isHexadecimal = function( str ) {
+    return /^[0-9A-F]*$/i.test(str);
+};
+
+
+

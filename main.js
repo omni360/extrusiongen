@@ -454,6 +454,7 @@ function newScene() {
 
     preview_rebuild_model();
     */
+    setDildoID( -1, "" );
 }
 
 function setBezierPathFromJSON( bezier_json, bend_angle ) {
@@ -504,8 +505,100 @@ function importZIP() {
     }
 }
 
-function publishMesh() {
-    window.alert( "Sorry, this function is not yet implemented." );
+function publishDildoDesign() {
+
+    var dongNames  = new Array( "Karl", 
+				"Intruder Alert",  
+				"Silicone Redeemer",
+				"Enter the Void",
+				"It's a fap!",
+				"Snoosnoo Enhancer"			    
+			      );
+    var userNames  = new Array( "Señor Pijo",
+				"Madame Laineux"
+			      );
+    var dongIndex  = Math.floor( Math.random() * dongNames.length );
+    var userIndex  = Math.floor( Math.random() * userNames.length );
+    //window.alert( random + ", " + names.length );
+
+    var imageData = get3DScreenshotData();
+    messageBox.show( "<br/>\n" +
+		     "<h3>Publish your Dildo</h3>\n" +
+		     "This will publish your dildo and add it to the gallery.<br/>\n" +
+		     //"<div style=\"text-align: center;\">\n" +
+		     "<form name=\"publish_form\" onkeypress=\"return event.keyCode != 13;\">\n" +
+		     "   <input type=\"hidden\" name=\"image_data\" value=\"" + imageData + "\" />\n" +
+		     //"   <div id=\"screenshot_div\"></div>\n" +
+		     "   <table border=\"0\" style=\"text-align: left; margin-left: 5%; margin-right: 5%;\">\n" +
+		     "      <tr>\n" +
+		     "         <td rowspan=\"12\" style=\"padding: 10px;\"><img src=\"" + imageData + "\" width=\"256\" height=\"384\" alt=\"Preview\" /></td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td>Give&nbsp;your&nbsp;dong&nbsp;a&nbsp;name:</td>\n" +
+		     "         <td><input type=\"text\" maxlength=\"64\" name=\"dong_name\" value=\"" + dongNames[dongIndex] + "\" /></td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td>Your&nbsp;name/alias:</td>\n" +
+		     "         <td><input type=\"text\" name=\"user_name\" maxlength=\"128\" value=\"" + userNames[userIndex] + "\"\" /></td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td style=\"vertical-align: top;\">Email&nbsp;address:</td>\n" +
+		     "         <td style=\"vertical-align: top;\"><input type=\"text\" id=\"hide_email_address\" name=\"email_address\" value=\"\" /> (optional)<br/>\n" +
+		     "                                            <input type=\"checkbox\" name=\"hide_email_address\" value=\"1\" checked=\"checked\" /> " +
+		     "                                            <label for=\"hide_email_address\">Hide email address from public</label>\n" +
+		     "             </td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td><label for=\"allow_download\">Allow&nbsp;download:</label></td>\n" +
+		     "         <td><input type=\"checkbox\" id=\"allow_download\" name=\"allow_download\" value=\"1\" checked=\"checked\" />\n" +
+		     "             </td>\n" +
+		     "      </tr>\n" +
+
+		     /*
+		     "      <tr>\n" +
+		     "         <td><label for=\"allow_edit\">Allow&nbsp;edit:</label></td>\n" +
+		     "         <td><input type=\"checkbox\" id=\"allow_edit\" name=\"allow_edit\" value=\"1\" />\n" +
+		     "             </td>\n" +
+		     "      </tr>\n" +
+		     */
+		     
+		     
+		     "      <tr><td>&nbsp;</td><td></td></tr>\n" +
+		     "      <tr><td>&nbsp;</td><td></td></tr>\n" +
+		     "      <tr><td>&nbsp;</td><td></td></tr>\n" +
+		     "      <tr><td>&nbsp;</td><td><span id=\"loading_span_static\"></span></td></tr>\n" +
+		     "      <tr><td>&nbsp;</td><td><span id=\"loading_span\"></span></td></tr>\n" +
+		     "      <tr><td>&nbsp;</td><td></td></tr>\n" +
+		     
+		     //"      <tr>\n" +
+		     //"         <td></td>\n" +
+		     //"         <td><button onclick=\"_publish_dildo_design();\">Save</button> <button onclick=\"messageBox.hide();\">Cancel</button></td>\n" +
+		     //"      </tr>\n" +
+		     
+		     "      </tr>\n" +
+		     "      </table>\n" +
+		     "</form>\n" +
+		     "<button onclick=\"_publish_dildo_design();\">Save</button> <button onclick=\"messageBox.hide()\">Cancel</button>",
+		     //"</div>\n",
+		     800,
+		     600 
+		   );
+
+    // Now display the screenshot image
+    
+    /*var img       = document.createElement('img');
+    //img.src       = 'data:image/jpeg;base64,' + btoa('your-binary-data');
+    img.src       = imageData;
+    img.width     = 256; // 512/2
+    img.height    = 384; // 768/2
+    document.getElementById("screenshot_div").appendChild( img );
+*/
+
+    //window.alert( "Sorry, this function is not yet implemented." );
 }
 
 /**
@@ -875,7 +968,6 @@ function startLoadingAnimation() {
           loadingAnimationKey = window.setInterval( "startLoadingAnimation();", 250 );
 
       document.getElementById("loading_span").innerHTML = loadingAnimationElements[loadingAnimationPointer];
-      //displayProcessState( stlProcessListener.getCurrentStep(), stlProcessListener.getTotalStepCount() );
       loadingAnimationPointer = (loadingAnimationPointer + 1) % loadingAnimationElements.length;
 }
 
@@ -941,6 +1033,45 @@ function open_legal_notice() {
 		 "dildogenerator_legal_notice",
 		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
 	       );
+}
+
+/**
+ * If the current dildo design was already saved before the returned dildo ID is stored
+ * in an hidden form field.
+ *
+ * This function returns the stored dildoID or -1 if not available/not set.
+ **/
+function getCurrentDildoID() {
+    // Early versions might not yet have the form/element.
+    if( document.getElementById("dildoID") )
+	return document.getElementById("dildoID").value;
+    else
+	return -1;
+}
+
+function getCurrentDildoHash() {
+    if( document.getElementById("publicDildoHash") )
+	return document.getElementById("publicDildoHash").value;
+    else
+	return "";
+}
+
+/**
+ * This function stores the passed dildoID inside the hidden form field (if avaiable).
+ **/
+function setCurrentDildoID( dildoID, public_hash ) {
+    var result = true;
+    if( document.getElementById("dildoID") ) 
+	document.getElementById("dildoID").value = dildoID;
+    else
+	result = false;
+	
+    if( document.getElementById("publicDildoHash") )
+	document.getElementById("publicDildoHash").value = public_hash;
+    else
+	result = false;
+    
+    return result;
 }
 
 /**

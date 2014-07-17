@@ -5,7 +5,7 @@ Path Extrusion Generator
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-07-04
-@version  0.2.36
+@version  0.2.38
 
 
 
@@ -21,6 +21,28 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-07-16] v0.2.38
+ - Added the getCurrentDildoID() function to main.js file.
+ - Added the setCurrentDildoID(dildoID) function to the main.js file.
+ - Added the publish_dildo.js file which handles the publishing process.
+ - Added the publishDildoDesign() function to the main.js file.
+ - Added _DILDO_CONFIG.PUBLISHING_URL to the config.js file.
+ - Added member function setVisibility(visible) to the IKRS.MessageBox.js class.
+ - Fixed a bug in IKRS.MessageBox.show(...) function: calling show(...) twice
+   made the message box invisible again.
+ - Added new columns to the database/table:
+    + name
+    + user_name
+    + email_address
+    + hide_email_address
+    + allow_download
+    + allow_edit [currently not in use]
+    + preview_image (base64 string)
+    + public_hash   (to hide real database IDs).
+   See table_structure.sql for details.
+ - Added the new storage/publishing features to the main.js and the 
+   store_custom_dildo.php files.
 
 [2014-07-13] v0.2.37
  - Added the Base64 encoder/decoder class (should later replace base64-binary).

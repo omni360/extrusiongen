@@ -41,9 +41,10 @@ function _order_send_to_server( url ) {
 
 
     // Fetch the dildoID (if already saved before)
-    var dildoID     = -1;
-    if( document.getElementById("dildoID") )
-	dildoID = document.getElementById("dildoID").value;
+    //var dildoID     = -1;
+    //if( document.getElementById("dildoID") )
+    //dildoID = document.getElementById("dildoID").value;
+    var dildoID = getCurrentDildoID();
 
     var newURL     = url;
     newURL         = newURL.replace( new RegExp("%bezier_path%", 'g'), 
@@ -115,7 +116,8 @@ function _asynchronousURLCall( url,
 				     "<button onclick=\"messageBox.hide()\">OK</button>\n"
 				   );
 		    setStatus( "Your settings have been saved. (id=" + dildoID + ")" );
-		    document.getElementById( "dildoID" ).value = dildoID;
+		    //document.getElementById( "dildoID" ).value = dildoID;
+		    setCurrentDildoID( dildoID, "" ); // no hash here
 
 		} else {
 		    

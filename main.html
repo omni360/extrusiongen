@@ -134,9 +134,11 @@
   
   <div style="text-align: right;">
     <br/>
+    <!--
     <button onclick="debug();">[TEST] Save in cookie</button>
     <button onclick="debug_B();">[TEST] Load from cookie</button>
     <button onclick="debug_C();">[TEST] Take screenshot</button>
+    -->
   </div>
 </div>
 
@@ -509,6 +511,7 @@
 <script type="text/javascript" src="console_check.js"></script>
 <script type="text/javascript" src="register_cards.js"></script>
 <script type="text/javascript" src="form_utils.js"></script>
+<script type="text/javascript" src="publish_dildo.js"></script>
 <script type="text/javascript" src="three.js"></script>
 
 <script type="text/javascript" src="Blob.js"></script>
@@ -579,6 +582,7 @@
 <!-- Add a hidden form to store the created dildo ID in -->
 <form name="idForm">
   <input type="hidden" name="dildoID" id="dildoID" value="-1" />
+  <input type="hidden" name="publicDildoHash" id="publicDildoHash" value="" />
 </form>
 
 
@@ -620,7 +624,7 @@
 	      );
 	      } // END if
 	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU ) {
-	          document.write( "<li><a href=\"#\" onclick=\"publishMesh()\" class=\"popout\">Publish ...</a></li>\n" );
+	          document.write( "<li><a href=\"#\" onclick=\"publishDildoDesign()\" class=\"popout\">Publish ...</a></li>\n" );
 	      } // END if
 	    </script>
 	    <li><a href="#" onclick="saveShape();">Export shape (*.json)</a></li>

@@ -86,17 +86,28 @@ IKRS.MessageBox.toggleElementVisibility = function( element ) {
     if ( !element.style.display ||
 	 element.style.display == 'none' || 
 	 typeof element.style == "undefined" ) {
-	//if( typeof cssPopup_onOpenHandler == "function" )
-	//    cssPopup_onOpenHandler();
-	element.style.display = 'block';
+	
+	//element.style.display = 'block';
+	IKRS.MessageBox.setElementVisibility( element, true );
     }
     else {
-	//if( typeof cssPopup_onCloseHandler == "function" )
-	//    cssPopup_onCloseHandler();
-	// ...
-	element.style.display = 'none';
+	
+	//element.style.display = 'none';
+	IKRS.MessageBox.setElementVisibility( element, false );
     }
 };
+
+IKRS.MessageBox.prototype.setVisibility = function( visible ) {
+    IKRS.MessageBox.setElementVisibility( this.getBlanket(), visible );
+    IKRS.MessageBox.setElementVisibility( this.getBox(), visible );
+
+    this.getBlanket().onMouseClick = this.hide;
+};
+
+IKRS.MessageBox.setElementVisibility = function( element, visible ) {
+    if( visible ) element.style.display = 'block';
+    else          element.style.display = 'none';
+}
 
 IKRS.MessageBox.getDocumentBody = function() {
     return document.getElementsByTagName( "body" )[0];
@@ -172,7 +183,8 @@ IKRS.MessageBox.prototype._box_reposition = function( ) {
     }
 
     var popUpDiv        = this.getBox();      // document.getElementById(popUpDivVar);
-    window_width        = window_width/2-150; // 150 is half popup's width
+    //window_width        = window_width/2-150; // 150 is half popup's width
+    window_width        = window_width/2 - this.boxWidth/2;
     popUpDiv.style.left = window_width + 'px';
     
     //popUpDiv.style.dispaly = "table-cell";
@@ -186,13 +198,15 @@ IKRS.MessageBox.prototype.show = function( content,
 					   opt_width,
 					   opt_height
 					 ) {
+    
     if( typeof opt_width != "undefined" && 
 	typeof opt_height != "undefined" )
 	this.setSize( opt_width, opt_height );
    
     this._blanket_resize(); 
     this._box_reposition(); 
-    this.toggleVisibility();
+    //this.toggleVisibility();
+    this.setVisibility( true );
     
     if( typeof content != "undefined" )
 	this.getBox().innerHTML = content;

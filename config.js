@@ -41,17 +41,23 @@ _DILDO_CONFIG.HIDE_EXPORT_MESH_MENU       = false;
  * Set this flag to true if you wish the whole Print menu to be hidden.
  * Valid values: true|false
  **/
-_DILDO_CONFIG.HIDE_PRINT_MENU             = false; // true|false
-//_DILDO_CONFIG.HIDE_PRINT_MENU             = !isDildoGeneratorDomain(); 
+//_DILDO_CONFIG.HIDE_PRINT_MENU             = false; // true|false
+_DILDO_CONFIG.HIDE_PRINT_MENU             = !isDildoGeneratorDomain(); 
 
 /**
  * Set the Print->Order_Print sub menu action to the specific javascript action (string).
  *
  * This only takes effect if the _DILDO_CONFIG.HIDE_PRINT_MENU is set to false.
  **/
-_DILDO_CONFIG.ORDER_PRINT_ACTION          = "_order_send_to_server('store_custom_dildo.php?bend=%bend%&bezier_path=%bezier_path%&id=%id%');";
-//_DILDO_CONFIG.ORDER_PRINT_ACTION          = "order_print();";
+//_DILDO_CONFIG.ORDER_PRINT_ACTION          = "_order_send_to_server('store_custom_dildo.php?bend=%bend%&bezier_path=%bezier_path%&id=%id%');";
+_DILDO_CONFIG.ORDER_PRINT_ACTION          = "order_print();";
 
+
+/**
+ * Since version 0.2.38 there is a new 'Publish' function (still testing).
+ * This configures the publishing URl where the server script is located at.
+ **/
+_DILDO_CONFIG.PUBLISHING_URL              = "store_custom_dildo.php"; // Relative path
 
 
 /**
