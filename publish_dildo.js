@@ -51,6 +51,16 @@ function _publish_dildo_design() {
     var hide_email_address = document.forms[ "publish_form" ].elements[ "hide_email_address" ].checked;
     var allow_download     = document.forms[ "publish_form" ].elements[ "allow_download" ].checked;
 
+    //window.alert( image_data );
+    
+    // Attention!
+    // The post data will be sent as multipart/form-data, which handles the 
+    // characters '+' and '/' in a special way.
+    // Use the alternative representation instead: replace '+' by '-' and replace '/' by '_'.
+    var image_data_clean   = image_data.replace( /\+/g, "-" );
+    image_data_clean       = image_data_clean.replace( /\//g, "_" );
+    //window.alert( image_data_clean );
+
     // Currently there is no method to avoid editing a loaded bezier curve :(
     // Who wants to implement it?
     var allow_edit         = true; // document.forms[ "publish_form" ].elements[ "allow_edit" ].checked;
@@ -75,7 +85,7 @@ function _publish_dildo_design() {
 				       json_object,
 				       
 				       dildo_name,
-				       image_data,
+				       image_data_clean,
 				       user_name,
 				       email_address,
 				       hide_email_address,

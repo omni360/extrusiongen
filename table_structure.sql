@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 17, 2014 at 01:50 AM
+-- Generation Time: Jul 18, 2014 at 04:12 PM
 -- Server version: 5.5.37-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.3
 
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `custom_dildos` (
   `hide_email_address` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y' COMMENT 'Indicates if the email address must be hidden.',
   `allow_download` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y' COMMENT 'Indicates if the model may be downloaded.',
   `allow_edit` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N' COMMENT 'Indicates if the bezier curve may be edited.',
-  `preview_image` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'A base64 encoded png file. 136533bytes = 100kB in Bas64',
+  `preview_image` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'A base64 encoded png file. 136533bytes = 100kB in Bas64',
   `public_hash` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '00000000000000000000000000000000' COMMENT 'A public ID to address the design entry.',
   PRIMARY KEY (`id`),
   KEY `hide_email_address` (`hide_email_address`,`allow_download`,`allow_edit`),
   KEY `public_hash` (`public_hash`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table stores the custom dildo settings.' AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table stores the custom dildo settings.' AUTO_INCREMENT=60 ;

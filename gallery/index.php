@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * This server script displays the gallery (the collection of stored dildo designs, which
+ * reside in the database).
+ *
+ * @author  Ikaros Kappler
+ * @date    2014-07-17
+ * @version 1.0.0
+ **/
+
+
+// Establish a database connection
+require_once( "../inc/function.mcon.inc.php" );
+$mcon = mcon();
+
+
+$query =
+  "SELECT * FROM custom_dildos ORDER BY id DESC;";
+
+$result = mysql_query( $query, $mcon );
+if( !$result ) {
+
+  echo "<div class=\"error\">Failed to query stored dildos: " . mysql_error($mcon) . ".</div>\n";
+
+} else {
+
+  $columnCount = 5;
+  $i           = 0;
+  echo "<table border=\"0\">\n";
+  while( $row = mysql_fetch_assoc($result) ) {
+
+    if( $i % $columnCount == 0 ) {
+      if( $i > 0 )
+	echo "</tr>\n";
+      echo "   <tr>\n";
+    }
+    //print_r( $row );
+    //echo "      <td><img src=\"" . $row["preview_image"] . "\" width=\"256\" height=\"384\" alt=\"preview#" . $row["id"] . "\"/></td>\n";
+    echo "      <td><img src=\"getPreviewImage.php?public_hash=" . $row["public_hash"] . "\" width=\"256\" height=\"384\" alt=\"preview#" . $row["id"] . "\"/></td>\n";
+    if( $row["id"] == 50 )
+      ; //echo "<td>" . $row["preview_image"] . "</td>\n";
+    
+    
+    $i++;
+    
+  }
+
+  mysql_free_result( $result );
+
+}
+
+
+mysql_close( $mcon );
+
+
+?>

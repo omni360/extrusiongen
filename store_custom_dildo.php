@@ -67,11 +67,8 @@ $user_id     = $_SESSION["user_id"];
 
 
 // Establish a database connection
-$mcon        = mysql_connect( "127.0.0.1",        // MySQL host
-			      "dildogenerator",   // user
-			      "dildogenerator"    // password
-			      );
-mysql_select_db( "dildogenerator" );
+require_once( "inc/function.mcon.inc.php" );
+$mcon = mcon();
 
 
 // INSERT or UPDATE?
@@ -83,6 +80,12 @@ if( !$id || $id == -1 || !$public_hash ) {
   $time = time();
   $raw  = $bend . "#" . $salt . "$" . $time . "*" . $name . "/" . $user_name . "\"" . $user_id . "-" . $origin_b64;
   $public_hash = md5($raw);
+  
+  // Restore original base64 data (was modified for HTTP POST transfer)
+  $image_data_clean = str_replace( array("-", "_"), //  "\"",   "'"), 
+				   array("+", "/"), // "\\\"", "\\'"), 
+				   $image_data 
+				   );
 
   $query =
     "INSERT INTO dildogenerator.custom_dildos " .
@@ -97,7 +100,7 @@ if( !$id || $id == -1 || !$public_hash ) {
     "'" . ($hide_email_address ? 'Y' : 'N') . "', " .
     "'" . ($allow_download ? 'Y' : 'N') . "', " .
     "'" . ($allow_edit ? 'Y' : 'N') . "', " .
-    "'" . addslashes($image_data) . "', " .
+    "'" . addslashes($image_data_clean) . "', " .
     "'" . addslashes($public_hash) . "' " .
     ");";
 
@@ -139,9 +142,8 @@ if( !mysql_query($query,$mcon) ) {
 }
 
 
+//echo $id . " " . $image_data; // $public_hash;
 echo $id . " " . $public_hash;
-
-
 
 
 // Don't forget to close the connection!
