@@ -5,7 +5,7 @@ Path Extrusion Generator
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-07-04
-@version  0.2.38
+@version  0.2.39
 
 
 
@@ -21,6 +21,11 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-07-20] v0.2.39
+ - Fixed a bug in the screenshot storing routine (for existing IDs).
+ - Added the gallery script in ./gallery/index.php (only server version).
+ - Added the date_created and date_upated fields to the database table structure.
 
 [2014-07-16] v0.2.38
  - Added the getCurrentDildoID() function to main.js file.

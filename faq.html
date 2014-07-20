@@ -22,7 +22,10 @@
   </style>
 
 Date: 2014-06-17<br/>
+<!--
 <img src="img/Screenshot_20140425_overlapping_B_128x192.png" width="128" height="192" alt="Dildo Generator Image" align="right" />
+-->
+<img src="resources/Twitter_Logo_B1.png" width="192" height="192" alt="Dildo Generator Image" align="right" />
 <h1 class="faq">Dildo Generator - Frequently Asked Questions (FAQ)</h1>
 
 <!-- <h2 class="faq">Contents</h2> -->
@@ -64,12 +67,18 @@ Date: 2014-06-17<br/>
   <li>
     <a class="faq" href="#privacy">Is any of my private data shared?</a>
   </li>
+   <li>
+    <a class="faq" href="#privacy_publishing">What happens when I <i>Publish</i> my design?</a>
+  </li>
 </ul>
 
 <h3 class="faq">Technical</h3>
 <ul class="faq">
   <li>
     <a class="faq" href="#tech_presets">How do I configure presets?</a>
+  </li>
+  <li>
+    <a class="faq" href="#tech_publishing_settings">How to I set up the publishing settings on my local host?</a>
   </li>
 </ul>
 
@@ -172,7 +181,7 @@ you might have to activate it first in the advanced settings.<br/>
 <div class="faq">
 <b>No / Only on your demand.</b><br/>
 The whole generator runs in Javascript and is nothing more than a browser app. No server scripts are included.<br/>
-Even the custom background images are loaded using the <a href="http://www.w3.org/TR/FileAPI/" target="_blank">File#FileReader API</a> which resides inside your browser. No data is sent to any server nor shared with any network <b>as long as you don't decide to permanently store/share your design</b>. 
+Even the custom background images are loaded using the <a href="http://www.w3.org/TR/FileAPI/" target="_blank">File#FileReader API</a> which resides inside your browser. No data is sent to any server nor shared with any network <b>as long as you don't decide to publish your design</b>. 
 You explicitly have to agree before any of your data will be stored.<br/>
 <br/>
 Note that since version 0.2.37 there is an autosave function which temporarily stores your design in a 
@@ -193,6 +202,24 @@ Besides, feel free to share your created models or screen shots with the web com
 </div>
 <br/>
 
+<a name="privacy_publishing"></a>
+<h3 class="faq">What happens when I <i>Publish</i> my design?</h3>
+<div class="faq">
+Since version 0.2.38 there exists a <code>Publish</code> functionality in the <code>Model</code>
+menu.<br/>
+If you want to share your dildo design with the web community you might want to publish your design.
+Publishing in this case means your design, a screenshot of it, your name/alias/pseudonym and optionally 
+your email address will be stored on the official website and added to the public
+<a href="http://www.dildo-generator.com/gallery" target="_blank">gallery</a>.<br/>
+Please note that <b>only the official website is allowed and capable to do this</b>. If you run
+this dildo-generator app on your local host or your own web space you first have to configure the
+publishing settings. See <a href="#tech_publishing_settings">this</a> FAQ section for details.
+
+</div>
+<br/>
+
+<br/>
+
 
 
 
@@ -200,16 +227,16 @@ Besides, feel free to share your created models or screen shots with the web com
 <a name="tech_presets"></a>
 <h3 class="faq">How do I configure presets?</h3>
 <div class="faq">
-Since version 0.2.32 there is a new file called <i>presets.js</i> which defines an
+Since version 0.2.32 there is a new file called <code class="faq">presets.js</code> which defines an
 <code>_DILDO_PRESETS</code> object. The object's members identify the preset sub menus
 for the menu bar. Each member must have this structure:<br/>
-<pre>
+<pre class="faq">
 { label:       <span class="dt_string">"Sub menu name"</span>,
   elements:    [ <i>&lt;preset&gt;</i>, ... ]
 }
 </pre>
 where each &lt;preset&gt; item in the <code>elements</code> array must look like this:<br/>
-<pre>
+<pre class="faq">
 { name:        <span class="dt_string">"Preset name"</span>,
   label:       <span class="dt_string">"Menu item name"</span>,
   bezier_json: <i>&lt;bezier_string&gt;</i>,
@@ -220,6 +247,41 @@ If you wonder where to get the bezier string data from, just select the <i>Displ
 <i>Help</i> menu.<br/>
 <br/>
 The menu bar structure will automatically populated from your settings.
+</div>
+<br/>
+
+<a name="tech_publishing_settings"></a>
+<h3 class="faq">How to I set up the publishing settings on my local host?</h3>
+<div class="faq">
+If you want to run the app on your local host or on your own website and you want to allow users
+to publish their designs you first have to set up the publishing configuration.<br/>
+<br/>
+First of all you need to enable the publish function in general. Go to the <code class="faq">config.js</code>
+file and set<br/>
+<pre class="faq">
+   _DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU      = false;
+</pre>
+<br/>
+You also might want to change the publishing URL to the value of your choice:
+<pre class="faq">
+   _DILDO_CONFIG.PUBLISHING_URL              = "store_custom_dildo.php"; 
+</pre>
+<br/>
+Note that the URL may be absolute or relative. Whatever you require.<br/>
+These two steps will make the Model&rarr;Publish menu appear and when clicked the publishing 
+dialog to pop up (to the user). After the user entered the required/optional data and pressed
+the <code class="faq">'Publish!'</code> button, the configured URL will be called and the form data sent
+to the server script via the HTTP POST request method.<br/>
+Note that the screenshot data is passed as a url/form-data compatible base64 string, which means
+that '/' is replaced by '_', and '+' is replaced by '-'.<br/>
+<br/>
+If you are not sure what to do just take a look and the <code class="faq">store_cusstom_dildo.php</code> file.
+Of course you may want to user any other server script language of your choice here (for those who
+dislike PHP).<br/>
+<br/>
+Don't forget to set up a database service. The <code class="faq">table_structure.sql</code> file might guide
+you if you don't know how to start, assumed that you want to use a relational database system.
+
 </div>
 <br/>
 

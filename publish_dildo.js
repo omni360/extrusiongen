@@ -247,11 +247,12 @@ function _publishDildo_succeeded( dildoID, public_hash ) {
     
     stopLoadingAnimation();
     setCurrentDildoID( dildoID, public_hash );
+    var openGalleryAction = "javascript:open_gallery('?public_hash=" + public_hash + "')";
     messageBox.show( "<br/>\n" +
 		     "Your settings have been saved.<br/>\n" +
-		     "ID: " + public_hash + "<br/>\n" +
+		     "ID: <a href=\"" + openGalleryAction + "\">" + public_hash + "</a><br/>\n" +
 		     "<br/>\n" +
-		     "<button onclick=\"messageBox.hide()\">OK</button>\n",
+		     "<button onclick=\"messageBox.hide();" + openGalleryAction + ";\">OK</button>\n",
 		     400,
 		     IKRS.MessageBox.DEFAULT_HEIGHT
 		   );

@@ -517,11 +517,12 @@ function publishDildoDesign() {
     var userNames  = new Array( "Señor Pijo",
 				"Madame Laineux"
 			      );
-    var dongIndex  = Math.floor( Math.random() * dongNames.length );
-    var userIndex  = Math.floor( Math.random() * userNames.length );
+    var dongIndex        = Math.floor( Math.random() * dongNames.length );
+    var userIndex        = Math.floor( Math.random() * userNames.length );
     //window.alert( random + ", " + names.length );
 
-    var imageData = get3DScreenshotData();
+    var imageData        = get3DScreenshotData();
+    var currentDildoHash = getCurrentDildoHash();
     messageBox.show( "<br/>\n" +
 		     "<h3>Publish your Dildo</h3>\n" +
 		     "This will publish your dildo and add it to the gallery.<br/>\n" +
@@ -531,7 +532,7 @@ function publishDildoDesign() {
 		     //"   <div id=\"screenshot_div\"></div>\n" +
 		     "   <table border=\"0\" style=\"text-align: left; margin-left: 5%; margin-right: 5%;\">\n" +
 		     "      <tr>\n" +
-		     "         <td rowspan=\"12\" style=\"padding: 10px;\"><img src=\"" + imageData + "\" width=\"256\" height=\"384\" alt=\"Preview\" /></td>\n" +
+		     "         <td rowspan=\"14\" style=\"padding: 10px;\"><img src=\"" + imageData + "\" width=\"256\" height=\"384\" alt=\"Preview\" /></td>\n" +
 		     "      </tr>\n" +
 
 		     "      <tr>\n" +
@@ -565,6 +566,16 @@ function publishDildoDesign() {
 		     "             </td>\n" +
 		     "      </tr>\n" +
 		     */
+
+		     "      <tr>\n" +
+		     "         <td></td>\n" +
+		     "         <td><div style=\"font-size: 8pt; text-align: right;\">What does this do? Where is my dong published? See the <a href=\"javascript:open_faqs('publish');\">FAQ</a> (popup)</div></td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td></td>\n" +
+		     "         <td><div style=\"text-align: right;\"><a href=\"javascript:open_gallery();\">Gallery</a></div></td>\n" +
+		     "      </tr>\n" +
 		     
 		     
 		     "      <tr><td>&nbsp;</td><td></td></tr>\n" +
@@ -578,11 +589,14 @@ function publishDildoDesign() {
 		     //"         <td></td>\n" +
 		     //"         <td><button onclick=\"_publish_dildo_design();\">Save</button> <button onclick=\"messageBox.hide();\">Cancel</button></td>\n" +
 		     //"      </tr>\n" +
+
+		     //"      <tr><td>&nbsp;</td><td>" + (currentDildoHash ? "Your design was already saved under ID " + currentDildoHash + "." : "") + "</td></tr>\n" +
 		     
 		     "      </tr>\n" +
 		     "      </table>\n" +
 		     "</form>\n" +
-		     "<button onclick=\"_publish_dildo_design();\">Save</button> <button onclick=\"messageBox.hide()\">Cancel</button>",
+		     "<button onclick=\"_publish_dildo_design();\"" + (currentDildoHash ? "disabled=\"disabled\"" : "") + ">Publish!</button> <button onclick=\"messageBox.hide()\">Cancel</button><br/>\n" + 
+		     (currentDildoHash ? "<div class=\"error\">Your design was already saved under ID " + currentDildoHash + ".</div>" : ""),
 		     //"</div>\n",
 		     800,
 		     600 
@@ -1021,8 +1035,8 @@ function order_print() {
 		   );
 }
 
-function open_faqs() {
-    window.open( "faq.html",
+function open_faqs( anchor ) {
+    window.open( "faq.html" + (anchor ? "#"+anchor : ""),
 		 "dildogenerator_faq",
 		 "height=480,width=800,location=yes,toolbar=no,dependent=no,scrollbars=yes"
 	       );
@@ -1034,6 +1048,14 @@ function open_legal_notice() {
 		 "height=480,width=640,location=yes,toolbar=no,dependent=no,scrollbars=yes"
 	       );
 }
+
+function open_gallery( query_string ) {
+    window.open( "gallery/" + (query_string ? query_string : ""),
+		 "dildogenerator_gallery",
+		 "location=yes,toolbar=yes,dependent=no,scrollbars=yes"
+	       );
+}
+
 
 /**
  * If the current dildo design was already saved before the returned dildo ID is stored

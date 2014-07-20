@@ -15,6 +15,26 @@ h3 {
     margin-top:          0px;
 }
 
+a:link {
+    color:               #0072ff;
+}
+
+a:hover {
+    color:               #0072ff;
+}
+
+a:active {
+    color:               #0072ff;
+}
+
+a:visited {
+    color:               #0072ff;
+}
+
+*.error {
+    color:               #884400;
+}
+
 *.faq {
     font-family:         Verdana, Arial, Helvetica, sans-serif;
 }
@@ -33,16 +53,26 @@ h3.faq {
 }
 
 div.faq {
-    margin-left:        35px;
-    width:              480px;
-    text-align:         justify;
+    margin-left:         35px;
+    width:               480px;
+    text-align:          justify;
 }
 
 *.dt_string {
-    color:              #880000;
+    color:               #880000;
 }
 
 input {
+    font-family:         Monospace;
+}
+
+code.faq {
+    color:               #68a868;
+    font-family:         Monospace;
+}
+
+pre.faq {
+    color:               #68a868;
     font-family:         Monospace;
 }
 

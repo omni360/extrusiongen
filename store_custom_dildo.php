@@ -15,6 +15,8 @@
 
 header( "Content-Type: text/plain; charset=utf-8" );
 
+$your_mail_address = "info@dildo-generator.com";
+
 
 // Configure access control to avoid Cross-Site-Scripting exploits
 // THIS SOMEHOW DOES NOT YET WORK!
@@ -27,7 +29,6 @@ header( "Access-Control-Allow-Origin: " .
 	"http://dildogenerator.com" 
 	);
 */
-
 
 
 
@@ -54,6 +55,19 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
 }
 
 
+
+$originb64_clean = str_replace( array("-", "_"), //  "\"",   "'"), 
+				array("+", "/"), // "\\\"", "\\'"), 
+				$originb64 
+				);
+if( $_SERVER["SERVER_ADDR"] != "127.0.0.1" && base64_decode($originb64) != "www.dildo-generator.com" ) {
+
+  header( "HTTP/1.1 401 Unauthorized", TRUE ); 
+  die( "You are not authorized.\n" );
+
+}
+
+
 if( $id && !is_numeric($id) ) {
   header( "HTTP/1.1 400 Bad Request", TRUE ); 
   die( "The passed ID '" . $id . "' is not numeric.\n" );
@@ -71,6 +85,13 @@ require_once( "inc/function.mcon.inc.php" );
 $mcon = mcon();
 
 
+// Restore original base64 data (was modified for HTTP POST transfer)
+$image_data_clean = str_replace( array("-", "_"), //  "\"",   "'"), 
+				 array("+", "/"), // "\\\"", "\\'"), 
+				 $image_data 
+				 );
+
+
 // INSERT or UPDATE?
 $query    = "";
 if( !$id || $id == -1 || !$public_hash ) {
@@ -81,17 +102,15 @@ if( !$id || $id == -1 || !$public_hash ) {
   $raw  = $bend . "#" . $salt . "$" . $time . "*" . $name . "/" . $user_name . "\"" . $user_id . "-" . $origin_b64;
   $public_hash = md5($raw);
   
-  // Restore original base64 data (was modified for HTTP POST transfer)
-  $image_data_clean = str_replace( array("-", "_"), //  "\"",   "'"), 
-				   array("+", "/"), // "\\\"", "\\'"), 
-				   $image_data 
-				   );
+  
 
   $query =
     "INSERT INTO dildogenerator.custom_dildos " .
-    "( bend, bezier_path, user_id, name, user_name, email_address, hide_email_address, allow_download, allow_edit, preview_image, public_hash ) " .
+    "( bend, date_created, date_updated, bezier_path, user_id, name, user_name, email_address, hide_email_address, allow_download, allow_edit, preview_image, public_hash ) " .
     "VALUES ( " .
     "'" . addslashes($bend) . "', " .
+    "'" . addslashes(time()) . "', " .
+    "'" . addslashes(time()) . "', " .
     "'" . addslashes($bezier_path) . "', " .
     "'" . addslashes($user_id) . "', ".
     "'" . addslashes($dildo_name) . "', " .
@@ -108,6 +127,7 @@ if( !$id || $id == -1 || !$public_hash ) {
   $query = 
     "UPDATE dildogenerator.custom_dildos SET " .
     "bend               = '" . addslashes($bend) . "', " .
+    "date_updated       = '" . addslashes(time()) . "', " .
     "bezier_path        = '" . addslashes($bezier_path) . "', " .
     //"user_id            = '" . addslashes($user_id) . "', " .
     "name               = '" . addslashes($dildo_name) . "', " .
@@ -116,7 +136,7 @@ if( !$id || $id == -1 || !$public_hash ) {
     "hide_email_address = '" . ($hide_email_address ? 'Y' : 'N') . "', " .
     "allow_download     = '" . ($allow_download ? 'Y' : 'N') . "', " .
     "allow_edit         = '" . ($allow_edit ? 'Y' : 'N') . "', " .
-    "preview_image      = '" . addslashes($image_data) . "' " .
+    "preview_image      = '" . addslashes($image_data_clean) . "' " .
     "WHERE id           = '" . addslashes($id) . "' ".
     "AND   public_hash  = '" . addslashes($public_hash) . "' " .
     "AND   user_id = '" . addslashes($user_id) . "' " .
@@ -125,19 +145,39 @@ if( !$id || $id == -1 || !$public_hash ) {
 }
 //echo "Executing query: " . $query . "\n";
 
+
+$message = 
+  "Server-IP:   " . $_SERVER["SERVER_ADDR"] . ",\n" +
+  "Server-Name: " . $_SERVER["SERVER_NAME"] . ",\n" +
+  "Script:      " . $_SERVER["PHP_SELF"] . ",\n\n\n";
+  
 if( !mysql_query($query,$mcon) ) {
 
   header( "HTTP/1.1 500 Internal Server Error", TRUE ); 
   echo "Error: " . mysql_error($mcon) . "\n";
+  mail( $your_mail_address, 
+	"Failed to store dildo!", 
+	$message . "Failed to store dildo: " . mysql_error($mcon) . "\n" 
+	);
+	
 
 } else if( $id && $id != -1 ) {
 
-  // This was an update. NOOP
+  // This was an UPDATE. 
+  mail( $your_mail_address, 
+	"Dildo (id=" . $id . ") was updated!", 
+	$message . "Dildo was updated. ID=" . $id . ", hash=" . $public_hash . "\n" 
+	);
   
 
 } else {
   
+  // This was an INSERT.
   $id  = mysql_insert_id($mcon);
+  mail( $your_mail_address, 
+	"Dildo (id=" . $id . ") was stored!", 
+	$message . "Dildo was stored. ID=" . $id . ", hash=" . $public_hash . "\n" 
+	);
 
 }
 
