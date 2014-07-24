@@ -10,8 +10,9 @@
 <link rel="stylesheet" type="text/css" media="screen" href="../style.css" />
 
 <style type="text/css" media="screen">
-  body {
-  background-color: #f8f8f8;
+   body {
+   background-color: #f8f8f8;
+ margin:             35px; 
   }
 </style>
 
@@ -20,6 +21,8 @@
 <body>
 
 <h1>Dildo-Generator - Gallery</h1>
+<a href="../main.html">Back to the dildo generator</a><br/>
+<br/>
 <?php
 
 /**
@@ -30,6 +33,29 @@
  * @date    2014-07-17
  * @version 1.0.0
  **/
+
+
+
+// How many rows and columns should the gallery have?
+$columnCount = 5;
+$rowCount    = 3;
+
+
+// Fetch gallery start offset and display length (both optional)
+$startOffset   = FALSE;
+$displayLength = FALSE;
+
+if( array_key_exists("start_offset",$_GET) )
+  $startOffset = $_GET["start_offset"];
+if( array_key_exists("display_length",$_GET) )
+  $displayLength = $_GET["display_length"];
+
+
+if( !$startOffset || !is_numeric($startOffset) || $startOffset < 0 )
+  $startOffset   = 0;
+if( !$displayLength || !is_numeric($displayLength) || $display_length < 0 )
+  $displayLength = $columnCount*$rowCount;
+
 
 
 // Establish a database connection
@@ -43,16 +69,42 @@ if( array_key_exists("public_hash",$_GET) )
 
 
 
+if( $public_hash )
+  echo "<a href=\"?\">&larr; to the gallery</a><br/>\n";
 
+
+$condition = "disabled_by_moderator = 'N' ";
+
+
+// First: count all entries:
+$query =
+  "SELECT count(id) AS _num_total_rows FROM custom_dildos WHERE " . $condition . ";";
+$result = mysql_query($query,$mcon);
+if( !$result ) {
+  echo "<div class=\"error\">Error: failed to count rows: " . mysql_error($mcon) . "</div>\n";
+  mysql_close( $mcon );
+  die();
+}
+$row = mysql_fetch_assoc($result);
+mysql_free_result($result);
+$num_total_rows = $row["_num_total_rows"];
+
+
+
+
+// Now start the real (limited!) query
 $query =
   "SELECT * " .
-  "FROM custom_dildos ";
+  "FROM custom_dildos " .
+  "WHERE disabled_by_moderator = 'N' ";
 
 if( $public_hash )
-  $query .= "WHERE public_hash = '" . addslashes($public_hash) . "' ";
+  $query .= 
+    "AND public_hash = '" . addslashes($public_hash) . "' ";
 
 $query .=
-  "ORDER BY id DESC;";
+  "ORDER BY id DESC " .
+  "LIMIT " . addslashes($startOffset) . ", " . addslashes($displayLength) . ";";
 
 $result = mysql_query( $query, $mcon );
 if( !$result ) {
@@ -61,7 +113,30 @@ if( !$result ) {
 
 } else {
 
-  $columnCount = 6;
+  $navigationHTML = FALSE;
+
+  if( !$public_hash ) {
+    require_once( "../inc/function.generate_result_set_navigator.inc.php" );
+    list( $rc,
+	  $errmsg,
+	  $navigationHTML ) = generate_result_set_navigator( $result,
+							   
+							     $startOffset,
+							     $displayLength,
+							   
+							     $num_total_rows,
+							     3,                       // interval_radius
+							     "rs_nav"
+							     );
+    $navigationHTML = "<div style=\"color: #888888; font-weight: bold;\">" . $navigationHTML . "</div>\n";
+							 
+
+
+    // Here starts th real output of the data.
+    echo $navigationHTML;
+  }
+
+
   $i           = 0;
   echo "<table border=\"0\">\n";
   while( $row = mysql_fetch_assoc($result) ) {
@@ -71,11 +146,9 @@ if( !$result ) {
 	echo "</tr>\n";
       echo "   <tr>\n";
     }
-    //print_r( $row );
-    //echo "      <td><img src=\"" . $row["preview_image"] . "\" width=\"256\" height=\"384\" alt=\"preview#" . $row["id"] . "\"/></td>\n";
     
     echo 
-      "      <td>\n";
+      "      <td class=\"gallery\">\n";
     
     if( $public_hash ) {
       echo
@@ -91,34 +164,49 @@ if( !$result ) {
     echo
       "         <br/>\n" .
       "         <b>" . $row["name"] . "</b><br/>\n".
-      "         Creator: " . $row["user_name"] . "<br/>\n" .
-      "         Date: " . date("Y-m-d H:i:s", $row["date_created"]) . "<br/>\n";
+      "         by " . $row["user_name"] . "<br/>\n";
+    if( $public_hash )
+      echo "         " . date("Y-m-d", $row["date_created"]) . "<br/>\n";
 
     if( $row["hide_email_address"] != 'Y' )
       echo "         Email: " . $row["email_address"] . "<br/>\n";
 
     echo
       "      </td>\n";
-    if( $row["id"] == 50 )
-      ; //echo "<td>" . $row["preview_image"] . "</td>\n";
+
+
+    // Also display bezier image?
+    if( $public_hash ) {
+      echo "      <td class=\"gallery\"><img src=\"getBezierImage.php?public_hash=" . $row["public_hash"] . "\" width=\"512\" height=\"768\" alt=\"dildo bezier preview #" . $row["id"] . "\" /></td>\n";
+    }
     
     
     $i++;
     
-  }
-
+  } // END while [print table data]
   mysql_free_result( $result );
 
-}
+  echo "</table>\n";
+
+
+  if( !$public_hash ) {
+    echo $navigationHTML;
+  }
+
+} // END else
+
+
+
 
 if( $public_hash )
-  echo "<a href=\"?\">&larr; back</a><br/>\n";
+  echo "<a href=\"?\">&larr; to the gallery</a><br/>\n";
 
 
 mysql_close( $mcon );
 
 
 ?>
+
 
 </body>
 </html>

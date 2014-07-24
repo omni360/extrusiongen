@@ -3,5 +3,5 @@
  * @date 2013-10-30
  **/
 
-var VERSION_STRING = "v0.2.38 built 20140716#0";
+var VERSION_STRING = "v0.3.0 beta, built 20140724#0";
 

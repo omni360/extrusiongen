@@ -46,20 +46,22 @@ function _publish_dildo_design() {
 
     var dildo_name         = document.forms[ "publish_form" ].elements[ "dong_name" ].value;
     var image_data         = document.forms[ "publish_form" ].elements[ "image_data" ].value;
+    var bezier_image_data  = document.forms[ "publish_form" ].elements[ "bezier_image_data" ].value;
     var user_name          = document.forms[ "publish_form" ].elements[ "user_name" ].value;
     var email_address      = document.forms[ "publish_form" ].elements[ "email_address" ].value;
     var hide_email_address = document.forms[ "publish_form" ].elements[ "hide_email_address" ].checked;
     var allow_download     = document.forms[ "publish_form" ].elements[ "allow_download" ].checked;
+    var keywords           = document.forms[ "publish_form" ].elements[ "keywords" ].value;
 
-    //window.alert( image_data );
     
     // Attention!
     // The post data will be sent as multipart/form-data, which handles the 
     // characters '+' and '/' in a special way.
     // Use the alternative representation instead: replace '+' by '-' and replace '/' by '_'.
-    var image_data_clean   = image_data.replace( /\+/g, "-" );
-    image_data_clean       = image_data_clean.replace( /\//g, "_" );
-    //window.alert( image_data_clean );
+    var image_data_clean          = image_data.replace( /\+/g, "-" );
+    image_data_clean              = image_data_clean.replace( /\//g, "_" );
+    var bezier_image_data_clean   = bezier_image_data.replace( /\+/g, "-" );
+    bezier_image_data_clean       = bezier_image_data_clean.replace( /\//g, "_" );
 
     // Currently there is no method to avoid editing a loaded bezier curve :(
     // Who wants to implement it?
@@ -86,11 +88,13 @@ function _publish_dildo_design() {
 				       
 				       dildo_name,
 				       image_data_clean,
+				       bezier_image_data_clean,
 				       user_name,
 				       email_address,
 				       hide_email_address,
 				       allow_download,
-				       allow_edit
+				       allow_edit,
+				       keywords
 				     );
 
 }
@@ -102,25 +106,28 @@ function _publishDildo_asynchronousURLCall( url,
 					    
 					    dildo_name,
 					    image_data,
+					    bezier_image_data,
 					    user_name,
 					    email_address,
 					    hide_email_address,
 					    allow_download,
-					    allow_edit
+					    allow_edit,
+					    keywords
 					  ) {
 
     // The createXMLHttpRequest function is defined in the main.js file
     var request   = createXMLHttpRequest();
     
     // Display a nice 'please wait' indicator
-    //window.alert( "A" );
     startLoadingAnimation();
     document.getElementById( "loading_span_static" ).innerHTML = "Loading ...";
-    //window.alert( "B" );
 
-    //window.alert( window.location.host );
-    var originb64 = Base64.encode( window.location.host );
-    //window.alert( originb64 );
+
+    var originb64         = Base64.encode( window.location.host );
+    var originb64_clean   = originb64.replace( /\+/g, "-" );
+    originb64_clean       = originb64_clean.replace( /\//g, "_" );
+
+    //window.alert( bezier_image_data );
 
     // Build POST data
     var postData  = 
@@ -134,9 +141,13 @@ function _publishDildo_asynchronousURLCall( url,
 	"hide_email_address=" + hide_email_address                  + "&" +
 	"allow_download="     + allow_download                      + "&" +
 	"allow_edit="         + allow_edit                          + "&" +
-	"image_data="         + image_data                          + "&" +
-	"origin"              + originb64;
+	"keywords="           + keywords                            + "&" +
+	"originb64="          + originb64_clean                     + "&" + 
+	"image_data="         + image_data                          + "&" + 
+	"bezier_image_data="  + bezier_image_data                   + "&" + 
+	"dummy="              + "Do_I_have_to_terminate_POST_data___question_mark";
     
+    //window.alert( "originb64=" + originb64 );
     //window.alert( "postData=" + postData );
 
     
@@ -210,6 +221,7 @@ function _publishDildo_asynchronousURLCall( url,
 		messageBox.show( "<br/>Failed to save your settings!<br/>\n" +
 				 "(HTTP status code " + request.status + ")<br/>\n" +
 				 "<br/>\n" +
+				 request.statusText + "<br/>\n" +
 				 "<button onclick=\"messageBox.hide()\">Close</button>\n" );
 
 	    } // END else [HTTP status code != 200]
@@ -250,11 +262,15 @@ function _publishDildo_succeeded( dildoID, public_hash ) {
     var openGalleryAction = "javascript:open_gallery('?public_hash=" + public_hash + "')";
     messageBox.show( "<br/>\n" +
 		     "Your settings have been saved.<br/>\n" +
-		     "ID: <a href=\"" + openGalleryAction + "\">" + public_hash + "</a><br/>\n" +
+		     //<br/>"ID: <a href=\"" + openGalleryAction + "\">" + public_hash + "</a><br/>\n" +
 		     "<br/>\n" +
-		     "<button onclick=\"messageBox.hide();" + openGalleryAction + ";\">OK</button>\n",
+		     "<img src=\"gallery/getPreviewImage.php?public_hash=" + public_hash + "\" width=\"128\" height\"192\" alt=\"uploaded dildo screenshot\" /><br/>\n" +
+		     "<a href=\"javascript:" + openGalleryAction + "\">View in gallery</a><br/>\n" +
+		     "<br/>\n" +
+		     "<button onclick=\"newScene(); messageBox.hide();\">New Scene</button>\n" +
+		     "<button onclick=\"messageBox.hide();\">Continue editing</button>\n",
 		     400,
-		     IKRS.MessageBox.DEFAULT_HEIGHT
+		     400 // IKRS.MessageBox.DEFAULT_HEIGHT
 		   );
     setStatus( "Your settings have been saved. ID: " + public_hash );
     

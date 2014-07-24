@@ -302,3 +302,12 @@ div#impressum {
     margin:              10px 10px 10px 10px;
     text-align:          right;
 }
+
+
+
+/* The gallery styles */
+td.gallery {
+    padding:             35px;
+    spacing:             25px;
+    vertical-align:      top;
+}

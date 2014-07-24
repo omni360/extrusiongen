@@ -95,7 +95,9 @@ if( !Math.sign ) {
  *  IKRS.BezierPath.fromJSON( string ).
  **/
 function getDefaultBezierJSON() {
-    return "[ { \"startPoint\" : [-122,77.80736634304651], \"endPoint\" : [-65.59022229786551,21.46778533702511], \"startControlPoint\": [-121.62058129515852,25.08908859418696], \"endControlPoint\" : [-79.33419353770395,48.71529293460728] }, { \"startPoint\" : [-65.59022229786551,21.46778533702511], \"endPoint\" : [-65.66917273472913,-149.23537680826058], \"startControlPoint\": [-52.448492057756646,-4.585775770903305], \"endControlPoint\" : [-86.1618869001374,-62.11613821618976] }, { \"startPoint\" : [-65.66917273472913,-149.23537680826058], \"endPoint\" : [-61.86203591980055,-243.8368165606738], \"startControlPoint\": [-53.701578771473564,-200.1123697454778], \"endControlPoint\" : [-69.80704300441666,-205.36451303641783] }, { \"startPoint\" : [-61.86203591980055,-243.8368165606738], \"endPoint\" : [-21.108966092052256,-323], \"startControlPoint\": [-54.08681426887413,-281.486963896856], \"endControlPoint\" : [-53.05779349623559,-323] } ]";
+    /*
+    return "[ { \"startPoint\" : [-122,77.80736634304651], \"endPoint\" : [-65.59022229786551,21.46778533702511], \"startControlPoint\": [-121.62058129515852,25.08908859418696], \"endControlPoint\" : [-79.33419353770395,48.71529293460728] }, { \"startPoint\" : [-65.59022229786551,21.46778533702511], \"endPoint\" : [-65.66917273472913,-149.23537680826058], \"startControlPoint\": [-52.448492057756646,-4.585775770903305], \"endControlPoint\" : [-86.1618869001374,-62.11613821618976] }, { \"startPoint\" : [-65.66917273472913,-149.23537680826058], \"endPoint\" : [-61.86203591980055,-243.8368165606738], \"startControlPoint\": [-53.701578771473564,-200.1123697454778], \"endControlPoint\" : [-69.80704300441666,-205.36451303641783] }, { \"startPoint\" : [-61.86203591980055,-243.8368165606738], \"endPoint\" : [-21.108966092052256,-323], \"startControlPoint\": [-54.08681426887413,-281.486963896856], \"endControlPoint\" : [-53.05779349623559,-323] } ]";*/
+    return _DILDO_CONFIG.DEFAULT_BEZIER_JSON;
 }
 
 /**
@@ -187,8 +189,9 @@ function onloadHandler() {
 	} // END if
     } // END for
 
-    // Try to load dildo design from last session cookie
-    loadFromCookie(true); // retainErrorStatus
+    // Try to load dildo design from last session cookie (if allowed)
+    if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED )
+	loadFromCookie(true); // retainErrorStatus
 	
 
     displayBendingValue();
@@ -454,7 +457,9 @@ function newScene() {
 
     preview_rebuild_model();
     */
-    setDildoID( -1, "" );
+    
+    // Clear dildo ID (otherwise the new design cannot be published)
+    setCurrentDildoID( -1, "" );
 }
 
 function setBezierPathFromJSON( bezier_json, bend_angle ) {
@@ -510,18 +515,21 @@ function publishDildoDesign() {
     var dongNames  = new Array( "Karl", 
 				"Intruder Alert",  
 				"Silicone Redeemer",
-				"Enter the Void",
+				"Love Machine",
 				"It's a fap!",
-				"Snoosnoo Enhancer"			    
+				"Snoosnoo Enhancer"
 			      );
     var userNames  = new Array( "Señor Pijo",
-				"Madame Laineux"
+				"Madame Laineux",
+				"Bernd",
+				"Navel Fluff"
 			      );
     var dongIndex        = Math.floor( Math.random() * dongNames.length );
     var userIndex        = Math.floor( Math.random() * userNames.length );
     //window.alert( random + ", " + names.length );
 
     var imageData        = get3DScreenshotData();
+    var bezierImageData  = getBezierScreenshotData();
     var currentDildoHash = getCurrentDildoHash();
     messageBox.show( "<br/>\n" +
 		     "<h3>Publish your Dildo</h3>\n" +
@@ -529,6 +537,7 @@ function publishDildoDesign() {
 		     //"<div style=\"text-align: center;\">\n" +
 		     "<form name=\"publish_form\" onkeypress=\"return event.keyCode != 13;\">\n" +
 		     "   <input type=\"hidden\" name=\"image_data\" value=\"" + imageData + "\" />\n" +
+		     "   <input type=\"hidden\" name=\"bezier_image_data\" value=\"" + bezierImageData + "\" />\n" +
 		     //"   <div id=\"screenshot_div\"></div>\n" +
 		     "   <table border=\"0\" style=\"text-align: left; margin-left: 5%; margin-right: 5%;\">\n" +
 		     "      <tr>\n" +
@@ -547,7 +556,7 @@ function publishDildoDesign() {
 
 		     "      <tr>\n" +
 		     "         <td style=\"vertical-align: top;\">Email&nbsp;address:</td>\n" +
-		     "         <td style=\"vertical-align: top;\"><input type=\"text\" id=\"hide_email_address\" name=\"email_address\" value=\"\" /> (optional)<br/>\n" +
+		     "         <td style=\"vertical-align: top;\"><input type=\"text\" id=\"hide_email_address\" name=\"email_address\" value=\"you@domain.com\" /> (optional)<br/>\n" +
 		     "                                            <input type=\"checkbox\" name=\"hide_email_address\" value=\"1\" checked=\"checked\" /> " +
 		     "                                            <label for=\"hide_email_address\">Hide email address from public</label>\n" +
 		     "             </td>\n" +
@@ -557,6 +566,11 @@ function publishDildoDesign() {
 		     "         <td><label for=\"allow_download\">Allow&nbsp;download:</label></td>\n" +
 		     "         <td><input type=\"checkbox\" id=\"allow_download\" name=\"allow_download\" value=\"1\" checked=\"checked\" />\n" +
 		     "             </td>\n" +
+		     "      </tr>\n" +
+
+		     "      <tr>\n" +
+		     "         <td>Keywords:</td>\n" +
+		     "         <td><input type=\"text\" name=\"keywords\" maxlength=\"1024\" value=\"\" /></td>\n" +
 		     "      </tr>\n" +
 
 		     /*
@@ -569,12 +583,12 @@ function publishDildoDesign() {
 
 		     "      <tr>\n" +
 		     "         <td></td>\n" +
-		     "         <td><div style=\"font-size: 8pt; text-align: right;\">What does this do? Where is my dong published? See the <a href=\"javascript:open_faqs('publish');\">FAQ</a> (popup)</div></td>\n" +
+		     "         <td><div style=\"font-size: 8pt; text-align: right;\">What does this do? Where is my dong published? See the <a href=\"javascript:open_faqs('privacy_publishing');\">FAQ</a> (popup)</div></td>\n" +
 		     "      </tr>\n" +
 
 		     "      <tr>\n" +
 		     "         <td></td>\n" +
-		     "         <td><div style=\"text-align: right;\"><a href=\"javascript:open_gallery();\">Gallery</a></div></td>\n" +
+		     "         <td><div style=\"text-align: right;\">To the <a href=\"javascript:open_gallery();\">Gallery</a>.</div></td>\n" +
 		     "      </tr>\n" +
 		     
 		     
@@ -590,13 +604,13 @@ function publishDildoDesign() {
 		     //"         <td><button onclick=\"_publish_dildo_design();\">Save</button> <button onclick=\"messageBox.hide();\">Cancel</button></td>\n" +
 		     //"      </tr>\n" +
 
-		     //"      <tr><td>&nbsp;</td><td>" + (currentDildoHash ? "Your design was already saved under ID " + currentDildoHash + "." : "") + "</td></tr>\n" +
+		     //"      <tr><td>&nbsp;</td><td>" + (currentDildoHash ? "Your design was already saved with ID " + currentDildoHash + "." : "") + "</td></tr>\n" +
 		     
 		     "      </tr>\n" +
 		     "      </table>\n" +
 		     "</form>\n" +
 		     "<button onclick=\"_publish_dildo_design();\"" + (currentDildoHash ? "disabled=\"disabled\"" : "") + ">Publish!</button> <button onclick=\"messageBox.hide()\">Cancel</button><br/>\n" + 
-		     (currentDildoHash ? "<div class=\"error\">Your design was already saved under ID " + currentDildoHash + ".</div>" : ""),
+		     (currentDildoHash ? "<div class=\"error\">Your design was already saved under ID <a href=\"javascript:open_gallery('?public_hash=" + currentDildoHash + "');\">" + currentDildoHash + "</a>.<br/>If you want to publish a different design create a new scene first.</div>" : ""),
 		     //"</div>\n",
 		     800,
 		     600 
@@ -711,7 +725,9 @@ function debug_B() {
 }
 
 function debug_C() {
-    var screenshotData = get3DScreenshotData();
+    //var screenshotData = get3DScreenshotData();
+    var screenshotData = getBezierScreenshotData();
+    //window.alert( screenshotData );
     window.open( screenshotData );
 }
 
@@ -723,7 +739,11 @@ function get3DScreenshotData() {
 
     // Thanks to Dinesh Saravanan for the Screenshot howto at
     // http://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
-    return this.previewCanvasHandler.preview_renderer.domElement.toDataURL();
+    return this.previewCanvasHandler.preview_renderer.domElement.toDataURL();  // image/png is default
+}
+
+function getBezierScreenshotData() {
+    return this.bezierCanvasHandler.canvas.toDataURL(); // image/png is default
 }
 
 /**
@@ -830,7 +850,8 @@ function exportSTL() {
 function exportSTL_cancelHandler() {
     if( divisibleSTLBuilder ) {
 	
-	divisibleSTLBuilder.interrupt();	
+	divisibleSTLBuilder.interrupt();
+	stopLoadingAnimation() ;
 	
     }
 }
@@ -909,7 +930,8 @@ function exportOBJ_cancelHandler() {
     if( divisibleOBJBuilder ) {
 	
 	//messageBox.show( "<br/><br/>Interrupted ...<br/><br/>Please wait for process to terminate.<br/>\n" );
-	divisibleOBJBuilder.interrupt();	
+	divisibleOBJBuilder.interrupt();
+	stopLoadingAnimation() ;
 	
     }
 }
@@ -949,7 +971,7 @@ function showLoadingBar( buttonHandler ) {
     
     if( !buttonHandler )
 	buttonHandler = "hideLoadingBar()";
-    
+       
     messageBox.setSize( 300, 180 );
     messageBox.show( 
         "<br/><br/>Loading ...<br/>\n" +
@@ -970,28 +992,42 @@ function hideLoadingBar() {
     //stopLoadingAnimation();
     
     
-     messageBox.hide();
+    messageBox.hide();
+    stopLoadingAnimation();
 }
 
 
-var loadingAnimationKey = null;
-var loadingAnimationElements = [ '|', '/', '&ndash;', '\\' ];
-var loadingAnimationPointer  = 0;
+var loadingAnimationKey         = null;
+var loadingAnimationInterrupted = false;
+var loadingAnimationElements    = [ '|', '/', '&ndash;', '\\' ];
+var loadingAnimationPointer     = 0;
 function startLoadingAnimation() {
-      if( !loadingAnimationKey )
-          loadingAnimationKey = window.setInterval( "startLoadingAnimation();", 250 );
+    if( !loadingAnimationKey )
+        loadingAnimationKey = window.setInterval( "nextLoadingAnimationStep();", 250 ); // "startLoadingAnimation();", 250 );
 
-      document.getElementById("loading_span").innerHTML = loadingAnimationElements[loadingAnimationPointer];
-      loadingAnimationPointer = (loadingAnimationPointer + 1) % loadingAnimationElements.length;
+} 
+
+function nextLoadingAnimationStep() {
+    if( !loadingAnimationKey )
+	return;
+    
+    // Be sure the loading_span is really there 
+    // (otherwise stop the animation automatically)
+    if( document.getElementById("loading_span") ) 
+	document.getElementById("loading_span").innerHTML = loadingAnimationElements[loadingAnimationPointer];
+    else if( loadingAnimationKey ) 
+    	stopLoadingAnimation();
+
+    loadingAnimationPointer = (loadingAnimationPointer + 1) % loadingAnimationElements.length;
 }
 
 
 
 function stopLoadingAnimation() {
-      if( loadingAnimationKey )
-           window.clearInterval( loadingAnimationKey );
+    if( loadingAnimationKey )
+        window.clearInterval( loadingAnimationKey );
 
-      loadingAnimationKey;
+    loadingAnimationKey = null;
 }
 
 function order_print() {

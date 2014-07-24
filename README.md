@@ -1,17 +1,20 @@
 
-Path Extrusion Generator
-========================
+Path Extrusion Generator (Dildo Generator)
+==========================================
 
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-07-04
-@version  0.2.39
+@version  0.3.0
 
 
 
 License:
 CC BY-NC-SA
 
+
+Note that since version 0.3.0 the app is capable to store dildo designs in a
+databse.
 
 Note that since version 0.2.37 the app tries to store designs in cookies. Before
 no data had been saved anywhere. I switched to a new privacy policy.
@@ -21,6 +24,16 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-07-24] v0.3.0 (new features published: storing in DB and gallery)
+ - Feature published: store designs in an online database
+ - Feature published: view stored designs in the gallery.
+ - Added _DILDO_CONFIG.AUTOLOAD_ENABLED to the config.js file.
+ - Added _DILDO_CONFIG.DEFAULT_BEZIER_JSON to the config.js file.
+ - Added the 'disabled_by_moderator' column to the database table.	
+ - Added the 'keywords' column to the databse table.
+ - Added the getBezierScreenshotData() function to the main.js file.
+ - Added the 'bezier_image' column to the database table.
 
 [2014-07-20] v0.2.39
  - Fixed a bug in the screenshot storing routine (for existing IDs).
@@ -269,4 +282,16 @@ Thanks to
 
  [Base64 encoder/decoder]
    <unknown author>
-   
+
+
+
+ Special thanks to the YOUin3D team, particulary to
+  Jan, who supports this with all his passion.
+  Sami, who manages the financial issues of this assembly.
+  Frank, who set up Piwik for me (to avoid google).
+
+
+Thanks to Atze, Clemens, Anne, Tobi, Gideon, Rin, Wischi, 
+Sam, Peggy, Tx-Oh, the older Lady passing by who asked for a beer and
+we ended up in a political discussion about imigrants, you all make 
+the time a good time.

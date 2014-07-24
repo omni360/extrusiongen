@@ -28,9 +28,11 @@
 <script src="version.js"></script>
 <div id="version_tag"></div>
 
+<!--
 <div id="beta_tag">
   <img src="img/icon_beta_A_(50x25).png" alt="This is a beta version!" width="36" height="18" />
 </div>
+-->
 
 <div id="license">
   <img src="img/cc.large.32.png" alt="Creative Commons CC" width="32" height="32" />
@@ -139,6 +141,7 @@
     <button onclick="debug_B();">[TEST] Load from cookie</button>
     <button onclick="debug_C();">[TEST] Take screenshot</button>
     -->
+    <button onclick="debug_C();">[TEST] Take 2D screenshot</button>
   </div>
 </div>
 
@@ -475,6 +478,10 @@
       <td class="color_cell"><div class="color_picker" style="background-color: #a000a0;" onclick="changeColor('#a000a0');">&nbsp;</div></td>
     </tr>
   </table>
+  <script language="Javascript">
+    if( isDildoGeneratorDomain() )
+        document.write( "<br/><div style=\"font-size: 8pt; text-align: right; color: #686868;\">Please note that not all of these colors are available in silicone.</div>\n" );
+  </script>
 </div>
 
 
@@ -624,7 +631,7 @@
 	      );
 	      } // END if
 	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU ) {
-	          document.write( "<li><a href=\"#\" onclick=\"publishDildoDesign()\" class=\"popout\">Publish ...</a></li>\n" );
+	          document.write( "<li><a href=\"#\" onclick=\"publishDildoDesign()\">Publish ...</a></li>\n" );
 	      } // END if
 	    </script>
 	    <li><a href="#" onclick="saveShape();">Export shape (*.json)</a></li>
