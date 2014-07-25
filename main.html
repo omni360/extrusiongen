@@ -28,6 +28,15 @@
 <script src="version.js"></script>
 <div id="version_tag"></div>
 
+<div id="gallery_links">
+  To the <a href="gallery/" target="_blank">Gallery</a>
+  <script language="Javascript">
+     if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU ) {
+        document.write( "| <button onclick=\"publishDildoDesign()\">Publish ...</button>\n" );
+     } // END if
+  </script>
+</div>
+
 <!--
 <div id="beta_tag">
   <img src="img/icon_beta_A_(50x25).png" alt="This is a beta version!" width="36" height="18" />
@@ -190,6 +199,7 @@
 
 
 <!-- This field 'Twist' is currently not in use as it breaks the mold models in some cases (self-intersecting mesh) -->
+<!--
 <tr>
   <td style="vertical-align: top; width: 100px;">Twist* (<span id="preview_twist_display">0</span>%):</td>
   <td style="">
@@ -202,11 +212,15 @@
 					     onmousedown="preview_twist_mousedown=true;"
 					     onmouseup="preview_twist_mousedown=false;"
 					     onmousemove="if(preview_twist_mousedown) displayTwistValue();"
-					     onchange="displayTwistValue(); preview_rebuild_model();" />15%<br/>
+					     onchange="displayTwistValue(); preview_rebuild_model();" 
+						      disabled="disabled" />15%<br/>
 					     <div style="text-align: right; font-size: 8pt;">*experimental</div>
 
   </td>			     
 </tr>
+-->
+<input type="hidden" id="preview_twist" name="preview_twist" min="0" max="15" value="0" />
+
 
 
 <!-- This is new since 2014-07-04 (version 0.2.36) -->
@@ -415,7 +429,7 @@
       <td>
 	<input type="file" id="bezier_background_file" name="bezier_background_file" accept="image/*" onchange="loadBezierBackground();" style="width: 330px;" />
 	<br/>
-	<span style="font-size: 7pt;">* this site will not store nor keep any data you upload</span>
+	<span style="font-size: 7pt; color: #686868;">* this site will not store nor keep background images you upload, except you <i>explicitly</i> publish them via the Model&rarr;Publish menu.</span>
       </td>
     </tr>
   </table>
@@ -480,7 +494,7 @@
   </table>
   <script language="Javascript">
     if( isDildoGeneratorDomain() )
-        document.write( "<br/><div style=\"font-size: 8pt; text-align: right; color: #686868;\">Please note that not all of these colors are available in silicone.</div>\n" );
+        document.write( "<br/><div style=\"font-size: 7pt; text-align: right; color: #686868;\">Please note that not all of these colors are available in silicone.</div>\n" );
   </script>
 </div>
 
@@ -663,6 +677,7 @@
 	<li class="heading"><a href="#">Help</a>
 	  <ul>
 	    <li><a href="#" onclick="open_faqs();">FAQ</a></li>
+	    <li><a href="#" onclick="open_faqs('general_publish');">How to publish?</a></li>
 	    <!-- <li><a href="#" onclick="open_legal_notice();">Legal Notice</a></li> -->
 	    <li><a href="http://www.dildo-generator.com/resources/Dildo_Slides_re-publica_20140507.pdf" target="_blank">Making a Dildo (PDF)</a></li>
 	    <li><a href="#" onclick="debug_display_bezier_string();">Display Bezier String</a></li>

@@ -17,7 +17,7 @@
 
 header( "Content-Type: text/plain; charset=utf-8" );
 
-$your_mail_address     = "info@dildo-generator.com";
+$your_mail_address     = "published@dildo-generator.com";
 $_DILDO_UPDATE_ALLOWED = FALSE;
 
 
@@ -171,13 +171,21 @@ if( !$id || $id == -1 || !$public_hash ) {
 
 
 $message = 
-  "Server-IP:                         " . $_SERVER["SERVER_ADDR"] . ",\n" .
-  "Server-Name:                       " . $_SERVER["SERVER_NAME"] . ",\n" .
-  "Passed server name (base64):       " . $originb64 . ",\n" .
+  "Server-IP:      " . $_SERVER["SERVER_ADDR"] . ",\n" .
+  "Server-Name:    " . $_SERVER["SERVER_NAME"] . ",\n" .
+  "Passed server name (base64): " . $originb64 . ",\n" .
   "Passed server name (base64_clean): " . $originb64_clean . ",\n" .
-  "Passed server name (decoded):      " . $origin_decoded . ",\n" .
-  "Script:                            " . $_SERVER["PHP_SELF"] . ",\n" .
-  //"Query:                             " . $query . "\n" .
+  "Passed server name (decoded): " . $origin_decoded . ",\n" .
+  "Script:         " . $_SERVER["PHP_SELF"] . ",\n" .
+  
+  "\n" .
+  "Request method: " . $_SERVER["REQUEST_METHOD"] . ",\n" .
+  "HTTP referer:   " . $_SERVER["HTTP_REFERER"] . ",\n" .
+  "User agent:     " . $_SERVER["HTTP_USER_AGENT"] . ",\n" .
+  "Remote address: " . $_SERVER["REMOTE_ADDR"] . ",\n" .
+  "Remote host:    " . $_SERVER["REMOTE_HOST"] . ",\n" .
+  //"Query:          " . $query . "\n" .  
+
   "\n\n";
   
 if( !mysql_query($query,$mcon) ) {

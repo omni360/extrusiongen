@@ -265,7 +265,8 @@ function _publishDildo_succeeded( dildoID, public_hash ) {
 		     //<br/>"ID: <a href=\"" + openGalleryAction + "\">" + public_hash + "</a><br/>\n" +
 		     "<br/>\n" +
 		     "<img src=\"gallery/getPreviewImage.php?public_hash=" + public_hash + "\" width=\"128\" height\"192\" alt=\"uploaded dildo screenshot\" /><br/>\n" +
-		     "<a href=\"javascript:" + openGalleryAction + "\">View in gallery</a><br/>\n" +
+		     //"<a href=\"javascript:" + openGalleryAction + "\">View in gallery</a><br/>\n" +
+		     "<a href=\"gallery/?public_hash=" + public_hash + "\" target=\"_blank\">View in gallery</a><br/>\n" +
 		     "<br/>\n" +
 		     "<button onclick=\"newScene(); messageBox.hide();\">New Scene</button>\n" +
 		     "<button onclick=\"messageBox.hide();\">Continue editing</button>\n",

@@ -610,7 +610,7 @@ function publishDildoDesign() {
 		     "      </table>\n" +
 		     "</form>\n" +
 		     "<button onclick=\"_publish_dildo_design();\"" + (currentDildoHash ? "disabled=\"disabled\"" : "") + ">Publish!</button> <button onclick=\"messageBox.hide()\">Cancel</button><br/>\n" + 
-		     (currentDildoHash ? "<div class=\"error\">Your design was already saved under ID <a href=\"javascript:open_gallery('?public_hash=" + currentDildoHash + "');\">" + currentDildoHash + "</a>.<br/>If you want to publish a different design create a new scene first.</div>" : ""),
+		     (currentDildoHash ? "<div class=\"error\">Your design was already saved under ID <a href=\"javascript:open_gallery('?public_hash=" + currentDildoHash + "');\">" + currentDildoHash + "</a>.<br/>If you want to publish a different design please create a new scene first (go to Model&rarr;New).</div>" : ""),
 		     //"</div>\n",
 		     800,
 		     600 

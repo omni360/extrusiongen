@@ -51,7 +51,7 @@ function populate_dildo_presets_menu( presets ) {
 	
 	var category = presets[ category_name ];
 
-	document.write( "<li><a href=\"#\" >Presets &gt;</a>\n" );
+	document.write( "<li><a href=\"#\" class=\"popout\">Presets &gt;</a>\n" );
 	document.write( "<ul>\n" );
 	
 	for( var i in category.elements ) {

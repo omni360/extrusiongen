@@ -203,6 +203,16 @@ tooltip:hover:before{
 
 }
 
+#gallery_links {
+    position:   absolute;
+    top:        10px;
+    left:       532px;
+    width:      512px;
+    text-align: center;
+    /* font-size:  pt; */
+
+}
+
 #beta_tag {
     position:   absolute;
     top:        18px;

@@ -105,7 +105,8 @@ function setTwistValue( value ) {
 }
 
 function displayTwistValue() {
-    document.getElementById('preview_twist_display').innerHTML = document.getElementById('preview_twist').value;
+    // Sorry, the Twist setting made issues when 3D printing
+    //document.getElementById('preview_twist_display').innerHTML = document.getElementById('preview_twist').value;
 }
 
 

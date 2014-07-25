@@ -163,13 +163,13 @@ if( !$result ) {
 
     echo
       "         <br/>\n" .
-      "         <b>" . $row["name"] . "</b><br/>\n".
-      "         by " . $row["user_name"] . "<br/>\n";
+      "         <b>" . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["name"] ) . "</b><br/>\n".
+      "         by " . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["user_name"] ) . "<br/>\n";
     if( $public_hash )
       echo "         " . date("Y-m-d", $row["date_created"]) . "<br/>\n";
 
-    if( $row["hide_email_address"] != 'Y' )
-      echo "         Email: " . $row["email_address"] . "<br/>\n";
+    if( $public_hash && $row["hide_email_address"] != 'Y' )
+      echo "         Email: " . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["email_address"] ) . "<br/>\n";
 
     echo
       "      </td>\n";
