@@ -26,7 +26,6 @@ if( !_DILDO_CONFIG.IMAGES || typeof _DILDO_CONFIG.IMAGES === "undefined" )
  **/
 _DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = !isDildoGeneratorDomain();  
 //_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = false; 
-//_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = true;
 
 
 /**

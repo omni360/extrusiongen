@@ -321,3 +321,14 @@ td.gallery {
     spacing:             25px;
     vertical-align:      top;
 }
+
+
+/* Sorry for the adverts. I hope you all use advertisment 
+   blockers such as AdBlock Plus and/or Ghostery! */
+div#adv_footer {
+    position:            absolute;
+    width:               1024px;
+    left:                10px;
+    top:                 1018px;
+    background-color:    #ff0000;
+}
