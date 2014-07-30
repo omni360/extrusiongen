@@ -58,7 +58,7 @@ _DILDO_CONFIG.ORDER_PRINT_ACTION          = "order_print();";
  * Since version 0.2.38 there is a new 'Publish' function (still testing).
  * This configures the publishing URl where the server script is located at.
  **/
-_DILDO_CONFIG.PUBLISHING_URL              = "store_custom_dildo.php"; // Relative path
+_DILDO_CONFIG.PUBLISHING_URL              = "gallery/store_custom_dildo.php"; // Relative path
 
 
 /**

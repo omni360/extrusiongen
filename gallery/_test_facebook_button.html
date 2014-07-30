@@ -1,0 +1,86 @@
+<html>
+<head>
+
+</head>
+
+<body>
+
+<!-- BEGIN - Facebook share button (two-click) - - - - - - - - - - - -->
+<div id="fb-root"></div>
+<script language="Javascript">
+/**
+ * Thanks to
+ *  http://turkeyland.net/projects/two-click/ 
+ * For the Facebook/Google two-click 
+ **/
+  
+  function fb_init(d, s, id) {
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) return;
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&version=v2.0";
+     fjs.parentNode.insertBefore(js, fjs);
+  }
+ 
+  function dg_fb_init() {
+
+
+     // Init Facebook buttons
+     var elem = document.getElementById("dg_fb_placeholder");
+     elem.innerHTML = "<div class=\"fb-like\" data-href=\"https://developers.facebook.com/docs/plugins/\" data-width=\"32\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"false\" data-share=\"false\"></div>";
+
+     //fb_init(document, 'script', 'facebook-jssdk');
+
+
+     var e = document.createElement('script'); e.async = true;
+     e.src = document.location.protocol +
+                 '//connect.facebook.net/en_US/all.js#xfbml=1';
+     document.getElementById('fb-root').appendChild(e);
+
+}
+
+function dg_gplus_init() {
+   var url = document.location.href;
+   var elem = document.getElementById("dg_gplus_placeholder");
+   elem.innerHTML = "<div class=\"g-plusone\" data-size=\"small\" data-href=\""+url+"\"></div>\n";
+
+   // This is the code provided by Google to asynchronously load their SDK
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+}
+
+function dg_twitter_init() {
+   var url = document.location.href;
+   var elem = document.getElementById("dg_twitter_placeholder");
+   elem.innerHTML = "<a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-lang=\"en\">Tweet</a>\n";
+
+   !function(d,s,id) {
+      var js,fjs=d.getElementsByTagName(s)[0];
+      if(!d.getElementById(id)){
+         js=d.createElement(s);
+         js.id=id;js.src="https://platform.twitter.com/widgets.js";
+         fjs.parentNode.insertBefore(js,fjs);
+      }
+   }(document,"script","twitter-wjs");
+}
+</script>
+
+
+<div id="dg_fb_placeholder">
+  <button onclick="dg_fb_init();">Share on Facebook</button>
+</div>
+
+<div id="dg_gplus_placeholder">
+  <button onclick="dg_gplus_init();">Share on G+</button>
+</div>
+
+<div id="dg_twitter_placeholder">
+  <button onclick="dg_twitter_init();">Share on Twitter</button>
+</div>
+
+
+
+
+</body>
+</html>
