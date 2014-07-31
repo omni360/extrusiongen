@@ -105,7 +105,7 @@ $bezier_image_data_clean = str_replace( array("-", "_"),
 					);
 
 require_once( "../inc/function.gallery_word_check.inc.php" );
-$hasIllegalWords = !( gallery_word_check($name) && gallery_word_check($user_name) );
+$hasIllegalWords = false; !( gallery_word_check($name) && gallery_word_check($user_name) );
 
 
 

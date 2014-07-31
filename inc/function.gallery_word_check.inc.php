@@ -25,7 +25,7 @@ function gallery_word_check( $sentence ) {
   $sentence = strtolower( $sentence );
   foreach( $_ILLEGAL_WORDS AS $i => $w ) {
     
-    if( strpor($word,$w) !== FALSE ) {
+    if( strpos($word,$w) !== FALSE ) {
       return FALSE;
     }
 
