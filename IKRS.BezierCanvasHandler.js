@@ -161,11 +161,6 @@ IKRS.BezierCanvasHandler.prototype.zoomFactor = 1.4;
 // 3: end point
 IKRS.BezierCanvasHandler.prototype.draggedPointID = -1; 
 
-IKRS.BezierCanvasHandler.prototype.setDrawCustomBackgroundImage = function( value, redraw ) {
-    this.drawCustomBackgroundImage = value;
-    if( redraw )
-	this.redraw();
-};
 
 IKRS.BezierCanvasHandler.prototype.increaseZoomFactor = function( redraw ) {
     this.zoomFactor *= 1.2;
@@ -241,6 +236,12 @@ IKRS.BezierCanvasHandler.prototype.setCustomBackgroundImage = function( image, r
 	this.redraw();
 };
 
+IKRS.BezierCanvasHandler.prototype.setDrawCustomBackgroundImage = function( value, redraw ) {
+    this.drawCustomBackgroundImage = value;
+    if( redraw )
+	this.redraw();
+};
+
 IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
 
     var contextWidth  = this.canvasWidth;  // 512;
@@ -249,9 +250,11 @@ IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
     // Clear screen!
     this.context.fillStyle = "#FFFFFF";
     this.context.fillRect( 0, 0, contextWidth, contextHeight );
-        
-    if( this.customBackgroundImage != null && this.drawCustomBackgroundImage)
+                                              
+    if( this.customBackgroundImage != null && this.drawCustomBackgroundImage ) {
+	//window.alert( "Drawing custom background image." );
 	this._drawAnonymousBackgroundImage( this.customBackgroundImage );
+    }
     this._drawAnonymousBackgroundImage( this.backgroundImage );
     this._drawWithoutBackgroundImages();
 };
