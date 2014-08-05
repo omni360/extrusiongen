@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html> 
 <head> 
-<title>A Dildo</title> 
+<title>User Created 3D Model</title> 
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="description" content="A bleeding edge HTML5/WebGL/THREE.js dildo generator for 3D printing." />

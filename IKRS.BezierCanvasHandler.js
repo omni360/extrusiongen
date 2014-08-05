@@ -12,7 +12,8 @@
  * @author   Ikaros Kappler
  * @date     2013-08-14
  * @modified 2014-06-19 Ikaros Kappler (included the configurable background image object).
- * @version  1.0.0
+ * @modified 2014-08-05 Ikaros Kappler (added function setDrawCustomBackgrundImage(...)).
+ * @version  1.0.1
  **/
 
 IKRS.BezierCanvasHandler = function() {
@@ -87,6 +88,7 @@ IKRS.BezierCanvasHandler = function() {
     this.loadBackgroundImage( _DILDO_CONFIG.IMAGES.BEZIER_BACKGROUND, // "bg_bezier.png", 
 			      true             // redraw when ready
 			    ); 
+    this.drawCustomBackgroundImage    = true;
 
 };
 
@@ -159,28 +161,34 @@ IKRS.BezierCanvasHandler.prototype.zoomFactor = 1.4;
 // 3: end point
 IKRS.BezierCanvasHandler.prototype.draggedPointID = -1; 
 
+IKRS.BezierCanvasHandler.prototype.setDrawCustomBackgroundImage = function( value, redraw ) {
+    this.drawCustomBackgroundImage = value;
+    if( redraw )
+	this.redraw();
+};
+
 IKRS.BezierCanvasHandler.prototype.increaseZoomFactor = function( redraw ) {
     this.zoomFactor *= 1.2;
     if( redraw )
 	this.redraw();
-}
+};
 
 IKRS.BezierCanvasHandler.prototype.decreaseZoomFactor = function( redraw ) {
     this.zoomFactor /= 1.2;
     if( redraw )
 	this.redraw();
-}
+};
 
 IKRS.BezierCanvasHandler.prototype.getMillimeterPerUnit = function() {
     return this.millimeterPerPixel;
-}
+};
 
 IKRS.BezierCanvasHandler.prototype.setMillimeterPerUnit = function( m, redraw ) {
     this.millimeterPerPixel = m;
     if( redraw )
 	this.redraw();
     this._fireChangeEvent( { nextEventFollowing: false } );
-}
+};
 
 IKRS.BezierCanvasHandler.prototype.undo = function() {
 
@@ -242,7 +250,7 @@ IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
     this.context.fillStyle = "#FFFFFF";
     this.context.fillRect( 0, 0, contextWidth, contextHeight );
         
-    if( this.customBackgroundImage != null )
+    if( this.customBackgroundImage != null && this.drawCustomBackgroundImage)
 	this._drawAnonymousBackgroundImage( this.customBackgroundImage );
     this._drawAnonymousBackgroundImage( this.backgroundImage );
     this._drawWithoutBackgroundImages();
@@ -982,7 +990,10 @@ IKRS.BezierCanvasHandler.prototype.mouseUpHandler = function( e ) {
 
     if( fireChangeEvent )
 	this.bezierCanvasHandler._fireChangeEvent( { nextEventFollowing: false } );
-} // END mouseUpHandler
+}; // END mouseUpHandler
+
+
+
 
 IKRS.BezierCanvasHandler.prototype.mouseMoveHandler = function( e ) {
     

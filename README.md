@@ -5,7 +5,7 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-05
-@version  0.3.4
+@version  0.3.5
 
 
 
@@ -34,6 +34,9 @@ Changelog
 [2014-08-05]
  - Added social media integration (Two-Click!) for Facebook, G+ and 
    Twitter to the gallery.
+ - Added the function IKRS.BezierCanvasHandler.drawCustomBackgroundImage(...).
+ - Uploaded bezier preview images are no longer stored with custom background
+   images. Visitores stored too much pr0n. Sorry.
 
 [2014-07-25]
  - Replacing HTML entities in the gallery now (security issue 

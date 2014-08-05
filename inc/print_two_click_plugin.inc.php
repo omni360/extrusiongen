@@ -20,7 +20,8 @@
 
      // Init Facebook buttons
      var elem = document.getElementById("dg_fb_placeholder");
-     elem.innerHTML = "<div class=\"fb-like\" data-href=\"https://developers.facebook.com/docs/plugins/\" data-width=\"32\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"false\" data-share=\"false\"></div>";
+     //elem.innerHTML = "<div class=\"fb-like\" data-href=\"https://developers.facebook.com/docs/plugins/\" data-width=\"32\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"false\" data-share=\"true\"></div>";
+     elem.innerHTML = "<div class=\"fb-like\" data-href=\"" + window.location.href + "\" data-width=\"32\" data-layout=\"standard\" data-action=\"like\" data-show-faces=\"false\" data-share=\"true\"></div>";
 
      //fb_init(document, 'script', 'facebook-jssdk');
 

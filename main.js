@@ -522,15 +522,25 @@ function publishDildoDesign() {
     var userNames  = new Array( "Señor Pijo",
 				"Madame Laineux",
 				"Bernd",
-				"Navel Fluff"
+				"Navel Fluff",
+				"Sev"
 			      );
     var dongIndex        = Math.floor( Math.random() * dongNames.length );
     var userIndex        = Math.floor( Math.random() * userNames.length );
     //window.alert( random + ", " + names.length );
 
+    // Clear bezier background data!
+    // Some visitors used it to upload p0rn
+    this.bezierCanvasHandler.setDrawCustomBackgroundImage( false, true ); // redraw=true
+
+
     var imageData        = get3DScreenshotData();
     var bezierImageData  = getBezierScreenshotData();
     var currentDildoHash = getCurrentDildoHash();
+    
+    // Restore the old custom background image
+    this.bezierCanvasHandler.setDrawCustomBackgroundImage( true, true ); // redraw=true
+    
     messageBox.show( "<br/>\n" +
 		     "<h3>Publish your Dildo</h3>\n" +
 		     "This will publish your dildo and add it to the gallery.<br/>\n" +
