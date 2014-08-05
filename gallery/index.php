@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html> 
 <head> 
-<title>Extrusion and Revolution Solids - A Dildo Generator</title> 
+<title>A Dildo</title> 
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="description" content="A bleeding edge HTML5/WebGL/THREE.js dildo generator for 3D printing." />
@@ -165,11 +165,17 @@ if( !$result ) {
       "         <br/>\n" .
       "         <b>" . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["name"] ) . "</b><br/>\n".
       "         by " . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["user_name"] ) . "<br/>\n";
-    if( $public_hash )
+    if( $public_hash ) {
       echo "         " . date("Y-m-d", $row["date_created"]) . "<br/>\n";
+      
+      if( $row["hide_email_address"] != 'Y' )
+	echo "         Email: " . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["email_address"] ) . "<br/>\n";
 
-    if( $public_hash && $row["hide_email_address"] != 'Y' )
-      echo "         Email: " . str_replace( array("<",">","&"), array("&lt;","&gt;","&amp;"), $row["email_address"] ) . "<br/>\n";
+      // Include the social media bar
+      echo "<div style=\"text-align: center\">\n";
+      include( "../inc/print_two_click_plugin.inc.php" );
+      echo "</div>\n";
+    }
 
     echo
       "      </td>\n";

@@ -4,14 +4,20 @@ Path Extrusion Generator (Dildo Generator)
 
 @author   Ikaros Kappler
 @date     2013-09-11
-@modified 2014-07-04
-@version  0.3.2
+@modified 2014-08-05
+@version  0.3.4
 
 
 
 License:
 CC BY-NC-SA
 
+If you want to use this software on your commercial website, please write an
+email to info@dildo-generator.com.
+
+
+Note that since version 0.3.4 the gallery has social media integration (using
+a Two-Click plugin).
 
 Note that since version 0.3.0 the app is capable to store dildo designs in a
 databse.
@@ -25,8 +31,13 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
-[2013-07-25]
- - Replacing HTML entities in the gallery now (security issue).
+[2014-08-05]
+ - Added social media integration (Two-Click!) for Facebook, G+ and 
+   Twitter to the gallery.
+
+[2014-07-25]
+ - Replacing HTML entities in the gallery now (security issue 
+   javascript injection).
 
 [2014-07-24] v0.3.0 (new features published: storing in DB and gallery)
  - Feature published: store designs in an online database
@@ -286,15 +297,19 @@ Thanks to
  [Base64 encoder/decoder]
    <unknown author>
 
+ [Facebook / G+ Two-Click]
+   <unknwn author> / http://turkeyland.net/projects/two-click/
 
 
- Special thanks to the YOUin3D team, particulary to
+Special thanks to the YOUin3D team, particulary to
   Jan, who supports this with all his passion.
   Sami, who manages the financial issues of this assembly.
   Frank, who set up Piwik for me (to avoid google).
+  Angelo, who processes the shipping.
+  Frank and Sam, who maintain the 3D printers.
+  Tx-Oh, who maintains the server and keeps the network running.
 
 
-Thanks to Atze, Clemens, Anne, Tobi, Gideon, Rin, Wischi, 
-Sam, Peggy, Tx-Oh, the older Lady passing by who asked for a beer and
-we ended up in a political discussion about imigrants, you all make 
-the time a good time.
+Thanks to Atze, Clemens, Anne, Tobi, Gideon, Rin,
+Peggy, Viki, the cool older Lady passing by who 
+asked for a beer, you all make the time a good time.

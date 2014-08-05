@@ -1,11 +1,3 @@
-<html>
-<head>
-<link rel="stylesheet" href="../style.css" type="text/css" />
-
-</head>
-
-<body>
-
 <!-- BEGIN: Two Click plugin for Facebook, G+ and Twitter - - - - - - - - - - - -->
 <div id="fb-root"></div>
 <script language="Javascript">
@@ -87,9 +79,3 @@ function dg_twitter_init() {
   you were here.
 </div>
 <!-- END: Two Click plugin for Facebook, G+ and Twitter - - - - - - - - - - - -->
-
-
-
-
-</body>
-</html>

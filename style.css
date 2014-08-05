@@ -327,8 +327,37 @@ td.gallery {
    blockers such as AdBlock Plus and/or Ghostery! */
 div#adv_footer {
     position:            absolute;
-    width:               1024px;
+    width:               1424px;
     left:                10px;
     top:                 1018px;
-    background-color:    #ff0000;
+    /* background-color:    #ff0000; */
+}
+
+div#adv_gallery {
+    position:            relative;
+    text-align:          center;
+    width:               800px;
+}
+
+div#dg_fb_placeholder {
+    margin:              2px;
+}
+
+div#dg_gplus_placeholder {
+    margin:              2px;
+}
+
+div#dg_twitter_placeholder {
+    margin:              2px;
+}
+
+button.social_two_click {
+    width:               160px;
+    height:              22px;
+    font-size:           8pt;
+    color:               #ffffff;
+    border:              1px solid;
+    border-color:        #686868;
+    border-radius:       4px;
+    /* margin:              2px; */
 }
