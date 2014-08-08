@@ -1142,6 +1142,12 @@ function setCurrentDildoID( dildoID, public_hash ) {
     return result;
 }
 
+function acquireOptimalBezierView() {
+    
+    // Optimize view:
+    this.bezierCanvasHandler.acquireOptimalView( new THREE.Vector2(25,25) );
+}
+
 /**
  * Sets the status bar message.
  * If there is currently no status bar defined this function does just nothing.

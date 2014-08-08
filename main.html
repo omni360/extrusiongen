@@ -132,13 +132,15 @@
     <table style="border: 0;">
       <tr>
 	<td>Zoom</td>
-	<td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);">-</button></td>
-	<td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);">+</button></td>
+	<td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button></td>
+	<td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button></td>
+	<td><button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button></td>
       </tr>
       <tr>
 	<td>Size</td>
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
 	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
+	<td></td>
       </tr>
     </table>
   </div>
@@ -150,7 +152,9 @@
     <button onclick="debug_B();">[TEST] Load from cookie</button>
     <button onclick="debug_C();">[TEST] Take screenshot</button>
     -->
-    <button onclick="debug_C();">[TEST] Take 2D screenshot</button>
+    <!--
+    <button onclick="acquireOptimalBezierView();">[TEST] Acquire Optimal Bezier View</button>
+    -->
   </div>
 </div>
 

@@ -295,7 +295,26 @@ IKRS.BezierPath.prototype.splitAt = function( curveIndex,
 
 
     return true;
-}
+};
+
+IKRS.BezierPath.prototype.translate = function( amount ) {  // Vector2
+					 
+    for( var i = 0; i < this.bezierCurves.length; i++ ) {
+
+	var curve = this.bezierCurves[ i ];
+	
+	curve.getStartPoint().add( amount );
+	curve.getStartControlPoint().add( amount );
+	curve.getEndControlPoint().add( amount );
+	
+    }
+    
+    // Don't forget to translate the last curve's last point
+    var curve = this.bezierCurves[ this.bezierCurves.length-1 ];
+    curve.getEndPoint().add( amount );
+
+    this.updateArcLengths();
+};
 
 IKRS.BezierPath.prototype.scale = function( anchor,  // Vector2
 					    scaling  // Vector2

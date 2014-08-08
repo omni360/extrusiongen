@@ -5,7 +5,7 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-05
-@version  0.3.5
+@version  0.3.6
 
 
 
@@ -30,6 +30,12 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-08-06]
+ - Added the function acquireOptimalBezierView() to the main.js
+ - Added the function acquireOptimalBezierView(...) to the IKRS.BezierCanvasHandler
+   class.
+ - Added the function translate(...) to the IKRS.BezierPath class.
 
 [2014-08-05]
  - Added social media integration (Two-Click!) for Facebook, G+ and 

@@ -361,3 +361,7 @@ button.social_two_click {
     border-radius:       4px;
     /* margin:              2px; */
 }
+
+button.zoom_button {
+    width:               40px;
+}

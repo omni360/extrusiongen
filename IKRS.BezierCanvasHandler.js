@@ -103,6 +103,58 @@ IKRS.BezierCanvasHandler.prototype.constructor = IKRS.BezierCanvasHandler;
 
 
 /**
+ * This function sets the zoom factor and draw offset to those values which
+ * let the bezier curve optimally to be drawn on the whole canvas area.
+ *
+ * The frameSize param is a THREE.Vector2. The x component defines the horizontal
+ * frame border width (left and right) and the y component defines the vertical
+ * frame border height (top and bottom).
+ *
+ * Note that the bezier polygon's center is moved to the coordinate origin (0,0) 
+ * for better zooming.
+ **/
+IKRS.BezierCanvasHandler.prototype.acquireOptimalView = function( frameSize ) {
+
+    if( typeof frameSize == "undefined" )
+	frameSize = new THREE.Vector2( 25, 25 );
+
+    // Compute the applicable canvas size, which leaves the passed frame untouched
+    var applicableCanvasWidth  = this.canvasWidth  - frameSize.x*2;
+    var applicableCanvasHeight = this.canvasHeight - frameSize.y*2;
+    
+    var bounds                 = this.getBezierPath().computeBoundingBox();
+
+    // Move center of bezier polygon to (0,0)
+    var bounds        = this.getBezierPath().computeBoundingBox();
+    var moveAmount    = new THREE.Vector2( bounds.getWidth()/2.0 - bounds.xMax, 
+					   bounds.getHeight()/2.0 - bounds.yMax 
+					 );
+    this.getBezierPath().translate( moveAmount );
+    
+    // Update bounds (values have changed now)
+    bounds.xMin += moveAmount.x;
+    bounds.xMax += moveAmount.x;
+    bounds.yMin += moveAmount.y;
+    bounds.yMax += moveAmount.y;
+
+    var ratioX        = bounds.getWidth()  / applicableCanvasWidth;  
+    var ratioY        = bounds.getHeight() / applicableCanvasHeight; 
+
+    // The minimal match (width or height) is our choice
+    this.zoomFactor   = Math.min( 1.0/ratioX, 1.0/ratioY );
+
+    // Set the draw offset position
+    this.drawOffset.x = applicableCanvasWidth/2.0  - bounds.xMin - bounds.getWidth()/2.0  + frameSize.x;
+    this.drawOffset.y = applicableCanvasHeight/2.0 - bounds.yMin - bounds.getHeight()/2.0 + frameSize.y;
+
+    // Don't forget to redraw
+    this.redraw();
+};
+
+
+
+
+/**
  * The passed listener must be a function with two arguments:
  *   function( source, event ) { ... }
  **/
@@ -170,6 +222,12 @@ IKRS.BezierCanvasHandler.prototype.increaseZoomFactor = function( redraw ) {
 
 IKRS.BezierCanvasHandler.prototype.decreaseZoomFactor = function( redraw ) {
     this.zoomFactor /= 1.2;
+    if( redraw )
+	this.redraw();
+};
+
+IKRS.BezierCanvasHandler.prototype.setZoomFactor = function( zoom, redraw ) {
+    this.zoomFactor = zoom;
     if( redraw )
 	this.redraw();
 };
@@ -242,6 +300,22 @@ IKRS.BezierCanvasHandler.prototype.setDrawCustomBackgroundImage = function( valu
 	this.redraw();
 };
 
+IKRS.BezierCanvasHandler.prototype._drawCoordinateSystem = function() {
+ 
+    this.context.strokeStyle = "#d0d0d0";
+    this.context.lineWidth   = 1;
+    
+    this.context.beginPath();
+    this.context.moveTo( this.drawOffset.x, 0 );
+    this.context.lineTo( this.drawOffset.x, this.canvasHeight );
+    this.context.stroke();
+    
+    this.context.beginPath();
+    this.context.moveTo( 0, this.drawOffset.y );
+    this.context.lineTo( this.canvasWidth, this.drawOffset.y );
+    this.context.stroke();
+}
+
 IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
 
     var contextWidth  = this.canvasWidth;  // 512;
@@ -252,7 +326,6 @@ IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
     this.context.fillRect( 0, 0, contextWidth, contextHeight );
                                               
     if( this.customBackgroundImage != null && this.drawCustomBackgroundImage ) {
-	//window.alert( "Drawing custom background image." );
 	this._drawAnonymousBackgroundImage( this.customBackgroundImage );
     }
     this._drawAnonymousBackgroundImage( this.backgroundImage );
@@ -303,18 +376,7 @@ IKRS.BezierCanvasHandler.prototype._drawWithoutBackgroundImages = function() {
 	document.forms["bezier_form"].elements["draw_coordinate_system"] &&
 	document.forms["bezier_form"].elements["draw_coordinate_system"].checked ) {
 
-	this.context.strokeStyle = "#d0d0d0";
-	this.context.lineWidth   = 1;
-	
-	this.context.beginPath();
-	this.context.moveTo( this.drawOffset.x, 0 );
-	this.context.lineTo( this.drawOffset.x, this.canvasHeight );
-	this.context.stroke();
-	
-	this.context.beginPath();
-	this.context.moveTo( 0, this.drawOffset.y );
-	this.context.lineTo( this.canvasWidth, this.drawOffset.y );
-	this.context.stroke();
+	this._drawCoordinateSystem();
 
     }
 
