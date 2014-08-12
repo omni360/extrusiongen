@@ -5,7 +5,7 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-05
-@version  0.3.6
+@version  0.3.7
 
 
 
@@ -31,13 +31,21 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
-[2014-08-06]
+[2014-08-12] v0.3.7
+ - Added a key handler class: IKRS.ExtrusiongenKeyHandler.
+ - Added an extended key event class: IKRS.KeyEvent.
+ - Added the function loadOptimalPrintingSettings() to the main.js.
+ - Added the function _applyParamsToMainForm() to the main.js.
+ - Added the function loadOptimalPrintingSettings() to the main.js.
+ - Press [Ctrl] + [Alt] + [P] to restore the optimal 3D printing settings.
+
+[2014-08-06] v0.3.6
  - Added the function acquireOptimalBezierView() to the main.js
  - Added the function acquireOptimalBezierView(...) to the IKRS.BezierCanvasHandler
    class.
  - Added the function translate(...) to the IKRS.BezierPath class.
 
-[2014-08-05]
+[2014-08-05] v0.3.4
  - Added social media integration (Two-Click!) for Facebook, G+ and 
    Twitter to the gallery.
  - Added the function IKRS.BezierCanvasHandler.drawCustomBackgroundImage(...).

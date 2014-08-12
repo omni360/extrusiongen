@@ -20,6 +20,9 @@
 
 <body>
 
+<!-- PLACEHOLDER for Google Adverts -->
+
+
 <h1>Dildo-Generator - Gallery</h1>
 <a href="../main.html">Back to the dildo generator</a><br/>
 <br/>
@@ -212,6 +215,12 @@ mysql_close( $mcon );
 
 
 ?>
+
+<br/>
+
+<!-- PLACEHOLDER for Piwik -->
+
+<!-- PLACEHOLDER for Google Adverts -->
 
 
 </body>

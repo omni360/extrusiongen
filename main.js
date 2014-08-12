@@ -17,6 +17,8 @@
 this.bezierCanvasHandler   = null;
 this.previewCanvasHandler  = null;
 
+this.keyHandler            = null;
+
 // Global constants (modifify when resizing the HTML5 canvas)
 var BEZIER_CANVAS_WIDTH    = 512;
 var BEZIER_CANVAS_HEIGHT   = 768;
@@ -47,17 +49,17 @@ function createHumanReadableTimestamp() {
     if( seconds < 10 ) seconds = "0" + seconds;
 
     var ts        = "" +
-	year +    // curDate.getFullYear() +
+	year +
 	"-" +
-	month +   // (curDate.getMonth()+1) +  // months start at 0
+	month +
 	"-" +
-	day +     // curDate.getDate() +
+	day +
 	"_" +
-	hours +   // curDate.getHours() + 
+	hours +
 	"." +
-	minutes + // curDate.getMinutes() +
+	minutes +
 	"." +
-	seconds   // curDate.getSeconds();
+	seconds
 	;
 
     return ts;
@@ -95,8 +97,6 @@ if( !Math.sign ) {
  *  IKRS.BezierPath.fromJSON( string ).
  **/
 function getDefaultBezierJSON() {
-    /*
-    return "[ { \"startPoint\" : [-122,77.80736634304651], \"endPoint\" : [-65.59022229786551,21.46778533702511], \"startControlPoint\": [-121.62058129515852,25.08908859418696], \"endControlPoint\" : [-79.33419353770395,48.71529293460728] }, { \"startPoint\" : [-65.59022229786551,21.46778533702511], \"endPoint\" : [-65.66917273472913,-149.23537680826058], \"startControlPoint\": [-52.448492057756646,-4.585775770903305], \"endControlPoint\" : [-86.1618869001374,-62.11613821618976] }, { \"startPoint\" : [-65.66917273472913,-149.23537680826058], \"endPoint\" : [-61.86203591980055,-243.8368165606738], \"startControlPoint\": [-53.701578771473564,-200.1123697454778], \"endControlPoint\" : [-69.80704300441666,-205.36451303641783] }, { \"startPoint\" : [-61.86203591980055,-243.8368165606738], \"endPoint\" : [-21.108966092052256,-323], \"startControlPoint\": [-54.08681426887413,-281.486963896856], \"endControlPoint\" : [-53.05779349623559,-323] } ]";*/
     return _DILDO_CONFIG.DEFAULT_BEZIER_JSON;
 }
 
@@ -109,6 +109,14 @@ function onloadHandler() {
     if( document.getElementById( "version_tag" ) )
 	document.getElementById( "version_tag" ).innerHTML = VERSION_STRING;
 
+    // Install the key handler
+    //this.keyHandler   = new IKRS.ExtrusiongenKeyHandler();
+    //window.onkeydown  = this.keyHandler.onKeyDown;
+    //window.onkeypress = this.keyHandler.onKeyPress;
+    //window.onkeyup    = this.keyHandler.onKeyUp;
+    _installKeyHandler();
+
+    // Try to init WebGL
     if( !initWebGL() ) {
 
 	// Show error message.
@@ -124,6 +132,7 @@ function onloadHandler() {
 
     }
 
+    
     // Fetch the GET params
     // Thanks to weltraumpirat
     //   http://stackoverflow.com/questions/5448545/how-to-retrieve-get-parameters-from-javascript
@@ -146,8 +155,9 @@ function onloadHandler() {
 	return params;
     }
 
+    _applyParamsToMainForm( getSearchParameters() );
 
-
+    /*
     // Now display the get params in the main form.
     var params = getSearchParameters();
     var inputs = document.getElementsByTagName( "input" );
@@ -188,6 +198,7 @@ function onloadHandler() {
 	    } // END for
 	} // END if
     } // END for
+*/
 
     // Try to load dildo design from last session cookie (if allowed)
     if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED )
@@ -203,10 +214,74 @@ function onloadHandler() {
     previewCanvasHandler.preview_rebuild_model();
     preview_render();
 
-
     // Finally set a timeout for auto-saving
     window.setInterval( "autosaveInCookie()", 1000*30 );
 
+}
+
+/**
+ * 'params' must be an object.
+ **/  
+function _applyParamsToMainForm( params ) {
+
+    // Now display the get params in the main form.
+    //var params = getSearchParameters();
+    var inputs = document.getElementsByTagName( "input" );
+    for( var i = 0; i < inputs.length; i++ ) {
+
+	for( var key in params ) {
+
+	    if( params.hasOwnProperty(key) ) {
+
+		//window.alert( key );
+
+		var value = params[ key ];
+		if( value == "" )
+	    	    continue;
+
+
+		var element = inputs[ i ];
+		if( element.type.toLowerCase() == "checkbox" ) {
+
+		    // This element is a checkbox. Set checked?		    
+		    if( element.name.toLowerCase() == key )
+			element.checked = (value != "0");
+
+
+		} else if( element.type.toLowerCase() == "radio" ) {
+		    
+		    // This element is a radio button. Set selected?
+		    if( element.name.toLowerCase() == key && element.value == value )
+			element.checked = true;
+
+		} else if( element.type.toLowerCase() == "text" || 
+			   element.type.toLowerCase() == "number" || 
+			   element.type.toLowerCase() == "range" ) {
+		    
+		    // This element is a text/number/range. Set value?
+		    if( element.name.toLowerCase() == key )
+			element.value = value;
+		}
+
+	    } // END for
+	} // END if
+    } // END for
+
+    toggleFormElementsEnabled();
+    preview_rebuild_model();
+}
+
+/**
+ * This function installs the key handler into the window object.
+ *
+ * The key handler itself is stored in this.keyHandler.
+ **/  
+function _installKeyHandler() {
+    // Install the key handler
+    this.keyHandler   = new IKRS.ExtrusiongenKeyHandler();
+    window.onkeydown  = this.keyHandler.onKeyDown;
+    window.onkeypress = this.keyHandler.onKeyPress;
+    window.onkeyup    = this.keyHandler.onKeyUp;
 }
 
 // IE < v9 does not support this function.
@@ -1146,6 +1221,30 @@ function acquireOptimalBezierView() {
     
     // Optimize view:
     this.bezierCanvasHandler.acquireOptimalView( new THREE.Vector2(25,25) );
+}
+
+/**
+ *
+ **/
+function loadOptimalPrintingSettings( display_tab ) {
+    //window.alert( "Loading optimal printing settings." );
+    _applyParamsToMainForm( {
+	build_negative_mesh:     1, // 'hollow'
+	mesh_close_path_begin:   0,
+	mesh_close_path_end:     1,
+	mesh_hull_strength:      6, // mm
+	triangulate:             1,
+	split_shape:             1,
+	parts:                   "both",
+	arrange_splits_on_plane: 1,
+	directions:              "zxy",
+	mesh_hull_type:          "prism"
+    } );
+
+    if( display_tab )
+	show_register_card( "print_controls" );
+    
+    
 }
 
 /**
