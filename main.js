@@ -313,6 +313,13 @@ function bezier_redo() {
     var hasMoreRedoteps = this.bezierCanvasHandler.redo();
 }
 
+/*
+function setBezierPathFromJSONString( bezierString ) {
+    //window.alert( bezierString );
+      
+}
+*/
+
 function setBezierPath( bezierPath ) {
 
     this.bezierCanvasHandler.setBezierPath( bezierPath );    
@@ -555,6 +562,7 @@ function setBezierPathFromJSON( bezier_json, bend_angle ) {
     toggleFormElementsEnabled();
 
     preview_rebuild_model();
+    return true;
 }
 
 function saveShape() {
@@ -1243,8 +1251,24 @@ function loadOptimalPrintingSettings( display_tab ) {
 
     if( display_tab )
 	show_register_card( "print_controls" );
-    
-    
+       
+}
+
+function show_bezier_input_dialog() {
+    var html = 
+	"<br/>\n" +
+	"Bezier String (JSON):<br/>\n" +
+	"<textarea id=\"bezier_input_area\" cols=\"70\" rows=\"22\">" + getDefaultBezierJSON() + "</textarea><br/>\n" +
+	"<button onclick=\"if( setBezierPathFromJSON(document.getElementById('bezier_input_area').value,0) ) messageBox.hide();\">Load</button>\n" +
+	"<button onclick=\"document.getElementById('bezier_input_area').value = '';\">Clear</button>\n" +
+	"<button onclick=\"messageBox.hide();\">Close</button>\n";
+
+    messageBox.show( html, 
+		     
+		     // Make this message box extra large
+		     IKRS.MessageBox.DEFAULT_WIDTH*2, 
+		     IKRS.MessageBox.DEFAULT_HEIGHT*2.5 
+		   );
 }
 
 /**
