@@ -5,7 +5,7 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-05
-@version  0.3.8
+@version  0.3.9
 
 
 
@@ -30,6 +30,9 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-08-15] v0.3.9
+ - Added an area reserved for donation buttons :)
 
 [2014-08-13] v0.3.8
  - Added the show_bezier_input_dialog() to the main.js file.
@@ -333,4 +336,4 @@ Special thanks to the YOUin3D team, particulary to
 
 Thanks to Atze, Clemens, Anne, Tobi, Gideon, Rin,
 Peggy, Viki, the cool older Lady passing by who 
-asked for a beer, you all make the time a good time.
+asked for a beer, you all make this a good time.
