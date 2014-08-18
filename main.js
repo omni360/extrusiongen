@@ -110,10 +110,6 @@ function onloadHandler() {
 	document.getElementById( "version_tag" ).innerHTML = VERSION_STRING;
 
     // Install the key handler
-    //this.keyHandler   = new IKRS.ExtrusiongenKeyHandler();
-    //window.onkeydown  = this.keyHandler.onKeyDown;
-    //window.onkeypress = this.keyHandler.onKeyPress;
-    //window.onkeyup    = this.keyHandler.onKeyUp;
     _installKeyHandler();
 
     // Try to init WebGL
@@ -155,7 +151,8 @@ function onloadHandler() {
 	return params;
     }
 
-    _applyParamsToMainForm( getSearchParameters() );
+    var params = getSearchParameters();
+    _applyParamsToMainForm( params );
 
     /*
     // Now display the get params in the main form.
@@ -200,14 +197,19 @@ function onloadHandler() {
     } // END for
 */
 
-    // Try to load dildo design from last session cookie (if allowed)
-    if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED )
+    // Try to load dildo design from last session cookie (if allowed and if no data is passed)
+    if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED && !params.rbdata )
 	loadFromCookie(true); // retainErrorStatus
+    if( params.ibdata )
+	_applyReducedBezierData( params.rbdata );
 	
 
     displayBendingValue();
     toggleFormElementsEnabled();
     updateBezierStatistics( null, null );
+
+    //if( params.ibdata )
+//	_applyReducedBezierData( params.rbdata );
     
     // Is the rendering engine available?
     // Does this browser support WebGL?
@@ -217,6 +219,7 @@ function onloadHandler() {
     // Finally set a timeout for auto-saving
     window.setInterval( "autosaveInCookie()", 1000*30 );
 
+    //window.alert( "dildoID=" + document.getElementById("dildoID").value + ",\ndildoHash=" + document.getElementById("publicDildoHash").value );
 }
 
 /**
@@ -256,11 +259,18 @@ function _applyParamsToMainForm( params ) {
 
 		} else if( element.type.toLowerCase() == "text" || 
 			   element.type.toLowerCase() == "number" || 
-			   element.type.toLowerCase() == "range" ) {
+			   element.type.toLowerCase() == "range" ||
+			   element.type.toLowerCase() == "hidden" 
+			 ) {
+		    
+		    //if( element.type.toLowerCase() == "hidden" )
+		//	window.alert( "element.name=" + element.name + ", passedKey=" + key + ", passedValue=" + value );
 		    
 		    // This element is a text/number/range. Set value?
-		    if( element.name.toLowerCase() == key )
+		    if( element.name.toLowerCase() == key.toLowerCase() ) {
+			//window.alert( "Setting element value: element.name=" + element.name + ", passedKey=" + key + ", passedValue=" + value );
 			element.value = value;
+		    }
 		}
 
 	    } // END for
@@ -269,6 +279,33 @@ function _applyParamsToMainForm( params ) {
 
     toggleFormElementsEnabled();
     preview_rebuild_model();
+}
+
+/**
+ * The JSON representation of a bezier path can be very long.
+ * This function loads the integer-bezier-representation into the current 
+ * bezier canvas handler.
+ * The integer-bezier-data is _much_ shorter than the JSON representation
+ * and should in most cases fit into the max-2048-character request URL 
+ * (GET param).
+ **/
+function _applyReducedBezierData( reducedBezierData ) {
+    
+    try {
+	// Parse the point data and convert it to a bezier curve
+	var bezierPath = IKRS.BezierPath.fromReducedListRepresentation( reducedBezierData );
+	
+	//window.alert( bezierPath );
+
+	// Set the created curve
+	setBezierPath( bezierPath );
+	return true;
+	
+    } catch( e ) {
+	console.log( "Failed to load bezier path from GET params: " + e );
+	setStatus( "Failed to load bezier path from GET params: " + e );
+	return false;
+    }
 }
 
 /**
@@ -600,13 +637,37 @@ function publishDildoDesign() {
 				"Silicone Redeemer",
 				"Love Machine",
 				"It's a fap!",
-				"Snoosnoo Enhancer"
+				"Snoosnoo Enhancer",
+				"Absolutely Fapulous",
+				"Mind The Fap",
+				
+				"Polygon Faprications",
+				"Faporatory",
+				"Faporizer",
+				"The Gender Bender",
+				"Large Hardon Collider",
+				"Captain Harrrrrdon",
+				"Oh Long Johnson",
+				"Cereal Port",
+				"Needle"
 			      );
     var userNames  = new Array( "Señor Pijo",
 				"Madame Laineux",
 				"Bernd",
 				"Navel Fluff",
-				"Sev"
+				"Sev",
+				"Fap Dancer",
+				"I.C. Weener",
+
+				"Dong Quixote",
+				"Master Baiter",
+				"Obi Wank Kenobi",
+				"The Nice King",
+				"Ygritte",
+				"Tank Girl",
+				"Booga",
+				"Shrub-Niggurath",
+				"Homer Sexual"				
 			      );
     var dongIndex        = Math.floor( Math.random() * dongNames.length );
     var userIndex        = Math.floor( Math.random() * userNames.length );
@@ -843,10 +904,13 @@ function getBezierScreenshotData() {
  * This function is called from the Help->Display_Bezier_String menu entry.
  * It is required by merchants to retrieve the bezier string for setting up presets.
  **/
-function debug_display_bezier_string() {
+/*
+function display_bezier_string() {
     //window.alert( this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "" ) );
-    window.alert( "\"" + this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) + "\"" );
+    //window.alert( "\"" + this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) + "\"" );
+    
 }
+*/
 
 
 function checkSizeBeforeSaving() {
@@ -1270,6 +1334,31 @@ function show_bezier_input_dialog() {
 		     IKRS.MessageBox.DEFAULT_HEIGHT*2.5 
 		   );
 }
+
+
+/**
+ * This function is called from the Help->Display_Bezier_String menu entry.
+ * It is required by merchants to retrieve the bezier string for setting up presets.
+ **/
+function display_bezier_string() {
+    //window.alert( "\"" + this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) + "\"" );
+    
+    var html = 
+	"<br/>\n" +
+	"Bezier String (JSON):<br/>\n" +
+	"<textarea id=\"bezier_input_area\" cols=\"70\" rows=\"22\" readonly=\"readonly\">" + this.bezierCanvasHandler.getBezierPath().toJSON() + "</textarea><br/>\n" +
+	//"<button onclick=\"if( setBezierPathFromJSON(document.getElementById('bezier_input_area').value,0) ) messageBox.hide();\">Load</button>\n" +
+	//"<button onclick=\"document.getElementById('bezier_input_area').value = '';\">Clear</button>\n" +
+	"<button onclick=\"messageBox.hide();\">Close</button>\n";
+
+    messageBox.show( html, 
+		     
+		     // Make this message box extra large
+		     IKRS.MessageBox.DEFAULT_WIDTH*2, 
+		     IKRS.MessageBox.DEFAULT_HEIGHT*2.5 
+		   );
+}
+
 
 /**
  * Sets the status bar message.

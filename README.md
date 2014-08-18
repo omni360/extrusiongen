@@ -31,6 +31,20 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-08-18] v0.3.10
+ - Added a IKRS.BezierPath.toReducedListRepresentation() function.
+ - Added a IKRS.BezierPath.fromReducedListRepresentation() function.
+ - Added a IKRS.BezierPath._roundToDigits() function (static class member).
+ - Added the display_bezier_string() function to the main.js file.
+ - Added the rdbata parameter to pass reduced bezier path data to the 
+   main.html file.
+ - Added a 'Load' button to the gallery; if a user allowed to download
+   his/her dildo model, it can now be restored in 3D directly from
+   the gallery.
+ - Moved the table_structure.sql file to the ./gallery/ directory.
+ - Moved the store_dildo.js file to the ./gallery/ directory.
+ - Added some more name presets to the publish dialog.
+
 [2014-08-15] v0.3.9
  - Added an area reserved for donation buttons :)
 

@@ -328,8 +328,10 @@ div#impressum {
 
 /* The gallery styles */
 td.gallery {
-    padding:             35px;
-    spacing:             25px;
+    padding-left:        35px;
+    padding-right:       35px;
+    spacing-left:        25px;
+    spacing-right:       25px;
     vertical-align:      top;
 }
 

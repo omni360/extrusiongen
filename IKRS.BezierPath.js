@@ -786,6 +786,108 @@ IKRS.BezierPath.fromArray = function( arr ) {
     return bPath;
 }
 
+/**
+ * This function converts the bezier path into a string containing
+ * integer values only.
+ * The points' float values are rounded to 1 digit after the comma.
+ *
+ * The returned string represents a JSON array (with leading '[' and
+ * trailing ']', the separator is ',').
+ **/
+IKRS.BezierPath.prototype.toReducedListRepresentation = function() {
+    var buffer = [];
+    var digits = 1;
+    buffer.push( "[" ); // array begin
+    for( var i = 0; i < this.bezierCurves.length; i++ ) {
+	
+	var curve = this.bezierCurves[i];
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().x,digits) );
+	buffer.push( "," );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().y,digits) );
+	buffer.push( "," );
+
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().x,digits) );
+	buffer.push( "," );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().y,digits) );
+	buffer.push( "," );
+	
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().x,digits) );
+	buffer.push( "," );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().y,digits) );
+	buffer.push( "," );		
+
+    }
+    if( this.bezierCurves.length != 0 ) {
+	var curve = this.bezierCurves[ this.bezierCurves.length-1 ];
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().x,digits) );
+	buffer.push( "," );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().y,digits) );
+    }
+    buffer.push( "]" ); // array end
+    
+    return buffer.join( "" ); // Convert to string, with empty separator.
+};
+
+
+/**
+ * The passed string must represent a JSON array containing numbers only.
+ **/
+IKRS.BezierPath.fromReducedListRepresentation = function( listJSON ) {
+
+    // Parse the array
+    var pointArray = JSON.parse( listJSON );
+
+    if( !pointArray.length ) {
+	console.log( "Cannot parse bezier path from non-array object nor from empty point list." );
+	throw "Cannot parse bezier path from non-array object nor from empty point list.";
+    }
+    
+    if( pointArray.length < 8 ) {
+	console.log( "Cannot build bezier path. The passed array must contain at least 8 elements (numbers)." );
+	throw "Cannot build bezier path. The passed array must contain at least 8 elements (numbers).";
+    }
+
+    //window.alert( typeof pointArray );
+
+
+    // Convert to object
+    var bezierPath = new IKRS.BezierPath( null ); // No points yet
+        
+    var startPoint        = null; // new THREE.Vector2( pointArray[i], pointArray[i+1] );
+    var startControlPoint = null; // new THREE.Vector2( pointArray[i+2], pointArray[i+3] );
+    var endControlPoint   = null; // new THREE.Vector2( pointArray[i+4], pointArray[i+5] );
+    var endPoint          = null; // new THREE.Vector2( pointArray[i+6], pointArray[i+7] );
+    var i = 0;
+
+    //for( var i = 0; i < pointArray.length; i+=3 ) {
+    do {
+	
+	if( i == 0 )
+	    startPoint        = new THREE.Vector2( pointArray[i], pointArray[i+1] );
+	startControlPoint = new THREE.Vector2( pointArray[i+2], pointArray[i+3] );
+	endControlPoint   = new THREE.Vector2( pointArray[i+4], pointArray[i+5] );
+	endPoint          = new THREE.Vector2( pointArray[i+6], pointArray[i+7] );
+
+	var bCurve =  new IKRS.CubicBezierCurve( startPoint,
+						 endPoint,
+						 startControlPoint,
+						 endControlPoint
+					       );
+	bezierPath.bezierCurves.push( bCurve );
+
+	startPoint = endPoint;
+	
+	i += 6;
+
+    } while( i+2 < pointArray.length );
+
+    bezierPath.updateArcLengths();
+
+
+    return bezierPath;
+};
+
+
 /*
 // Try JSON conversion
 var tmpPoints = [];
@@ -803,3 +905,19 @@ window.alert( "tmpBPath2=" + tmpBPath2.toJSON() );
 
 //window.alert( "IKRS.BezierPath.prototype=" + IKRS.BezierPath.prototype );
 
+IKRS.BezierPath._roundToDigits = function( number, digits, enforceInvisibleDigits ) {
+    var magnitude = Math.pow( 10, digits ); // This could be LARGE :/
+    number = Math.round( number * magnitude );
+    var result = "" + (number  /  magnitude);
+    var index = result.lastIndexOf(".");
+    if( index == -1 ) {	
+	//result += ".0";
+	index = result.length;
+    }
+    var digitsAfterPoint = result.length - index - 1;
+    var digitsMissing    = enforceInvisibleDigits - digitsAfterPoint;
+    while( digitsMissing-- > 0 )
+	result += "&nbsp;";
+    
+    return result;
+};

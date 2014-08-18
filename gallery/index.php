@@ -15,6 +15,40 @@
  margin:             35px; 
   }
 </style>
+<script language="Javascript" type="text/javascript" src="../three.js"></script>
+<script language="Javascript" type="text/javascript" src="../IKRS.js"></script>
+<script language="Javascript" type="text/javascript" src="../IKRS.Object.js"></script>
+<script language="Javascript" type="text/javascript" src="../IKRS.CubicBezierCurve.js"></script>
+<script language="Javascript" type="text/javascript" src="../IKRS.BezierPath.js"></script>
+<script language="Javascript">
+   function loadDildo( id, 
+		       public_hash, 
+		       bend, 
+		       bezier_JSON
+		       ) {
+   
+   // Replace ' by ".
+   // The parser function requires double quotes around the member names.
+   bezier_JSON = bezier_JSON.replace( /\'/g, "\"" );
+   
+   /*
+   window.alert( "dildoID=" + id + ",\n" +
+		 "publicDildoHash=" + public_hash + ",\n" +
+		 "bend=" + bend + ",\n" +
+		 "bezier_path=" + bezier_JSON
+		 );
+   */
+
+   // Parse JSON string to object
+   var bezierPath = IKRS.BezierPath.fromJSON( bezier_JSON.trim() );
+   
+   // Now convert to integer point representation
+   var ibdata = bezierPath.toReducedListRepresentation();
+   //window.alert( ibdata );
+
+   window.open( "../?bend=" + bend + "&dildoID=" + id + "&publicDildoHash=" + public_hash + "&rbdata=" + ibdata );
+ }
+</script>
 
 </head>
 
@@ -143,6 +177,19 @@ if( !$result ) {
   $i           = 0;
   echo "<table border=\"0\">\n";
   while( $row = mysql_fetch_assoc($result) ) {
+    
+    if( $public_hash && $i == 0 ) {
+      
+      echo "   <tr>\n";
+      echo "      <td colspan=\"2\" align=\"center\">";
+      if( $row["allow_download"] == "Y" )
+	echo "The creator of this dong model allows public download: <button onclick=\"loadDildo('" . $row["id"] . "','" . $row["public_hash"] . "','" . $row["bend"] . "', '" . str_replace(array("'","\""), array("\\'","\\'"),$row["bezier_path"]) . "');\">Load &#8663;</button>";
+      //else
+      //	echo "Unfortunately the creator of this dong model does not allow to download the mesh.";
+      echo "</td>\n";
+      echo "   </tr>\n";
+
+    }
 
     if( $i % $columnCount == 0 ) {
       if( $i > 0 )
