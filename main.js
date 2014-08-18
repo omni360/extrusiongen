@@ -200,7 +200,7 @@ function onloadHandler() {
     // Try to load dildo design from last session cookie (if allowed and if no data is passed)
     if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED && !params.rbdata )
 	loadFromCookie(true); // retainErrorStatus
-    if( params.ibdata )
+    if( params.rbdata )
 	_applyReducedBezierData( params.rbdata );
 	
 
