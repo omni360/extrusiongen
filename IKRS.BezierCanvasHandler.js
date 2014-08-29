@@ -333,6 +333,9 @@ IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
 };
 
 IKRS.BezierCanvasHandler.prototype._drawAnonymousBackgroundImage = function( image ) {
+    
+    if( !image || typeof image == "undefined" )
+	return;
 
     var contextWidth  = this.canvasWidth; // 512;
     var contextHeight = this.canvasHeight; // 768;

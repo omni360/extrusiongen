@@ -31,6 +31,17 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-08-28] v0.3.12
+ - Added the 'digits' parameter to the function 
+   IKRS.BezierPath.toReducedListRepresentation(...).
+ - Added the function setBezierPathFromReducedListRepresentation(...)
+   to the main.js file.
+ - It is now also possible to load the bezier path from reduced list 
+   representations (use the 'Load Bezier JSON ...' menu item).
+
+[2014-08-21] v0.3.11
+ - Fixed a typo in the main.js file. Object-Export works again now.
+
 [2014-08-18] v0.3.10
  - Added a IKRS.BezierPath.toReducedListRepresentation() function.
  - Added a IKRS.BezierPath.fromReducedListRepresentation() function.

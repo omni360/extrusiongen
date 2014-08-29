@@ -154,72 +154,37 @@ function onloadHandler() {
     var params = getSearchParameters();
     _applyParamsToMainForm( params );
 
-    /*
-    // Now display the get params in the main form.
-    var params = getSearchParameters();
-    var inputs = document.getElementsByTagName( "input" );
-    for( var i = 0; i < inputs.length; i++ ) {
-
-	for( var key in params ) {
-
-	    if( params.hasOwnProperty(key) ) {
-
-		var value = params[ key ];
-		if( value == "" )
-	    	    continue;
-
-
-		var element = inputs[ i ];
-		if( element.type.toLowerCase() == "checkbox" ) {
-
-		    // This element is a checkbox. Set checked?		    
-		    if( element.name.toLowerCase() == key )
-			element.checked = (value != "0");
-
-
-		} else if( element.type.toLowerCase() == "radio" ) {
-		    
-		    // This element is a radio button. Set selected?
-		    if( element.name.toLowerCase() == key && element.value == value )
-			element.checked = true;
-
-		} else if( element.type.toLowerCase() == "text" || 
-			   element.type.toLowerCase() == "number" || 
-			   element.type.toLowerCase() == "range" ) {
-		    
-		    // This element is a text/number/range. Set value?
-		    if( element.name.toLowerCase() == key )
-			element.value = value;
-		}
-
-	    } // END for
-	} // END if
-    } // END for
-*/
+ 
 
     // Try to load dildo design from last session cookie (if allowed and if no data is passed)
     if( _DILDO_CONFIG && _DILDO_CONFIG.AUTOLOAD_ENABLED && !params.rbdata )
 	loadFromCookie(true); // retainErrorStatus
     if( params.rbdata )
 	_applyReducedBezierData( params.rbdata );
-	
+    
 
     displayBendingValue();
     toggleFormElementsEnabled();
     updateBezierStatistics( null, null );
 
-    //if( params.ibdata )
-//	_applyReducedBezierData( params.rbdata );
+
+    // Scale to perfect screen fit?
+    if( params._screenfit && params._screenfit == "1" ) {
+	//window.alert( "Scale to screen fit." );
+	acquireOptimalBezierView();
+    }
+
     
     // Is the rendering engine available?
     // Does this browser support WebGL?
     previewCanvasHandler.preview_rebuild_model();
     preview_render();
 
+
     // Finally set a timeout for auto-saving
     window.setInterval( "autosaveInCookie()", 1000*30 );
 
-    //window.alert( "dildoID=" + document.getElementById("dildoID").value + ",\ndildoHash=" + document.getElementById("publicDildoHash").value );
+  
 }
 
 /**
@@ -360,7 +325,6 @@ function setBezierPathFromJSONString( bezierString ) {
 function setBezierPath( bezierPath ) {
 
     this.bezierCanvasHandler.setBezierPath( bezierPath );    
-    
     preview_rebuild_model();
 }
 
@@ -536,10 +500,8 @@ function preview_rebuild_model() {
 }
 
 
-
 function newScene() {
-    
-    
+      
     var defaultSettings = {
 	shapeSegments:     80,
 	pathSegments:      80,
@@ -583,12 +545,27 @@ function newScene() {
 
 function setBezierPathFromJSON( bezier_json, bend_angle ) {
 
-    // window.alert( bezier_json + ", bend_angle=" + bend_angle );
-
-    //var json = getDefaultBezierJSON();
     var bezierPath = null;
     try {
 	bezierPath = IKRS.BezierPath.fromJSON( bezier_json );		    
+    } catch( e ) {
+	window.alert( "Error: " + e );
+	return false;
+    }
+    setBezierPath( bezierPath );
+    setBendingValue( bend_angle );
+    updateBezierStatistics( null, null );
+    toggleFormElementsEnabled();
+
+    preview_rebuild_model();
+    return true;
+}
+
+function setBezierPathFromReducedListRepresentation( array_json, bend_angle ) {
+
+    var bezierPath = null;
+    try {
+	bezierPath = IKRS.BezierPath.fromReducedListRepresentation( array_json );		    
     } catch( e ) {
 	window.alert( "Error: " + e );
 	return false;
@@ -1057,7 +1034,7 @@ function exportOBJ() {
 	hideLoadingBar();
 	return;
 
-    }b
+    }
 
     //console.log( "Next chunk (" + divisibleSTLBuilder.chunkResults.length + ")." );
     displayProcessState( divisibleOBJBuilder.getProcessedChunkCount(),
@@ -1323,7 +1300,7 @@ function show_bezier_input_dialog() {
 	"<br/>\n" +
 	"Bezier String (JSON):<br/>\n" +
 	"<textarea id=\"bezier_input_area\" cols=\"70\" rows=\"22\">" + getDefaultBezierJSON() + "</textarea><br/>\n" +
-	"<button onclick=\"if( setBezierPathFromJSON(document.getElementById('bezier_input_area').value,0) ) messageBox.hide();\">Load</button>\n" +
+	"<button onclick=\"_load_bezier_input_dialog_data();\">Load</button>\n" +
 	"<button onclick=\"document.getElementById('bezier_input_area').value = '';\">Clear</button>\n" +
 	"<button onclick=\"messageBox.hide();\">Close</button>\n";
 
@@ -1335,6 +1312,21 @@ function show_bezier_input_dialog() {
 		   );
 }
 
+function _load_bezier_input_dialog_data() {
+    var input = document.getElementById('bezier_input_area').value;
+    if( input && input.indexOf("\"") != -1 ) {
+	// Input contains quotation marks, so it is probably a JSON bezier path
+	if( setBezierPathFromJSON(input,0) ) 
+	    messageBox.hide();
+    } else {
+
+	// Input contains to quotation marks, so it is probably a reduced list representation
+	if( setBezierPathFromReducedListRepresentation(input,0) )
+	    messageBox.hide();
+
+    }
+}
+
 
 /**
  * This function is called from the Help->Display_Bezier_String menu entry.
@@ -1342,11 +1334,14 @@ function show_bezier_input_dialog() {
  **/
 function display_bezier_string() {
     //window.alert( "\"" + this.bezierCanvasHandler.getBezierPath().toJSON().replace( /"/g, "\\\"" ) + "\"" );
-    
+
+    var bezierJSON = this.bezierCanvasHandler.getBezierPath().toJSON();
+    //var reducedBezierJSON = this.bezierCanvasHandler.getBezierPath().toReducedListRepresentation( 1 ); // one digit
+
     var html = 
 	"<br/>\n" +
 	"Bezier String (JSON):<br/>\n" +
-	"<textarea id=\"bezier_input_area\" cols=\"70\" rows=\"22\" readonly=\"readonly\">" + this.bezierCanvasHandler.getBezierPath().toJSON() + "</textarea><br/>\n" +
+	"<textarea id=\"bezier_input_area\" cols=\"70\" rows=\"22\" readonly=\"readonly\">" + bezierJSON + "</textarea><br/>\n" +
 	//"<button onclick=\"if( setBezierPathFromJSON(document.getElementById('bezier_input_area').value,0) ) messageBox.hide();\">Load</button>\n" +
 	//"<button onclick=\"document.getElementById('bezier_input_area').value = '';\">Clear</button>\n" +
 	"<button onclick=\"messageBox.hide();\">Close</button>\n";

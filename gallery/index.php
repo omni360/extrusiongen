@@ -58,7 +58,7 @@
 
 
 <h1>Dildo-Generator - Gallery</h1>
-<a href="../main.html">Back to the dildo generator</a><br/>
+<a href="../">Back to the dildo generator</a><br/>
 <br/>
 <?php
 
@@ -183,7 +183,7 @@ if( !$result ) {
       echo "   <tr>\n";
       echo "      <td colspan=\"2\" align=\"center\">";
       if( $row["allow_download"] == "Y" )
-	echo "The creator of this dong model allows public download: <button onclick=\"loadDildo('" . $row["id"] . "','" . $row["public_hash"] . "','" . $row["bend"] . "', '" . str_replace(array("'","\""), array("\\'","\\'"),$row["bezier_path"]) . "');\">Load &#8663;</button>";
+	echo "The maker of this dong model wants you to download or edit this precious thingy: <button onclick=\"loadDildo('" . $row["id"] . "','" . $row["public_hash"] . "','" . $row["bend"] . "', '" . str_replace(array("'","\""), array("\\'","\\'"),$row["bezier_path"]) . "');\">Load &#8663;</button>";
       //else
       //	echo "Unfortunately the creator of this dong model does not allow to download the mesh.";
       echo "</td>\n";

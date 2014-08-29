@@ -754,8 +754,8 @@ IKRS.BezierPath.fromArray = function( arr ) {
     if( !Array.isArray(arr) )
 	throw "[IKRS.BezierPath.fromArray] Passed object must be an array.";
     
-    if( arr.length < 2 )
-	throw "[IKRS.BezierPath.fromArray] Passed array must contain at least two bezier curves (has " + arr.length + ").";
+    if( arr.length < 1 )
+	throw "[IKRS.BezierPath.fromArray] Passed array must contain at least one bezier curve (has " + arr.length + ").";
     
     // Create an empty bezier path
     var bPath = new IKRS.BezierPath( null );
@@ -794,34 +794,38 @@ IKRS.BezierPath.fromArray = function( arr ) {
  * The returned string represents a JSON array (with leading '[' and
  * trailing ']', the separator is ',').
  **/
-IKRS.BezierPath.prototype.toReducedListRepresentation = function() {
+IKRS.BezierPath.prototype.toReducedListRepresentation = function( digits ) {
+    
+    if( typeof digits == "undefined" )
+	digits = 1;
+    
     var buffer = [];
-    var digits = 1;
+    //var digits = 1;
     buffer.push( "[" ); // array begin
     for( var i = 0; i < this.bezierCurves.length; i++ ) {
 	
 	var curve = this.bezierCurves[i];
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().x,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().x,digits,false) );
 	buffer.push( "," );
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().y,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartPoint().y,digits,false) );
 	buffer.push( "," );
 
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().x,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().x,digits,false) );
 	buffer.push( "," );
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().y,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getStartControlPoint().y,digits,false) );
 	buffer.push( "," );
 	
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().x,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().x,digits,false) );
 	buffer.push( "," );
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().y,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndControlPoint().y,digits,false) );
 	buffer.push( "," );		
 
     }
     if( this.bezierCurves.length != 0 ) {
 	var curve = this.bezierCurves[ this.bezierCurves.length-1 ];
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().x,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().x,digits,false) );
 	buffer.push( "," );
-	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().y,digits) );
+	buffer.push( IKRS.BezierPath._roundToDigits(curve.getEndPoint().y,digits,false) );
     }
     buffer.push( "]" ); // array end
     
@@ -906,6 +910,9 @@ window.alert( "tmpBPath2=" + tmpBPath2.toJSON() );
 //window.alert( "IKRS.BezierPath.prototype=" + IKRS.BezierPath.prototype );
 
 IKRS.BezierPath._roundToDigits = function( number, digits, enforceInvisibleDigits ) {
+    if( digits <= 0 )
+	return Math.round(number); 
+
     var magnitude = Math.pow( 10, digits ); // This could be LARGE :/
     number = Math.round( number * magnitude );
     var result = "" + (number  /  magnitude);
