@@ -921,10 +921,12 @@ IKRS.BezierPath._roundToDigits = function( number, digits, enforceInvisibleDigit
 	//result += ".0";
 	index = result.length;
     }
-    var digitsAfterPoint = result.length - index - 1;
-    var digitsMissing    = enforceInvisibleDigits - digitsAfterPoint;
-    while( digitsMissing-- > 0 )
-	result += "&nbsp;";
+    if( enforceInvisibleDigits ) {
+	var digitsAfterPoint = result.length - index - 1;
+	var digitsMissing    = enforceInvisibleDigits - digitsAfterPoint;
+	while( digitsMissing-- > 0 )
+	    result += "&nbsp;";
+    }
     
     return result;
 };

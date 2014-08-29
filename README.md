@@ -4,8 +4,8 @@ Path Extrusion Generator (Dildo Generator)
 
 @author   Ikaros Kappler
 @date     2013-09-11
-@modified 2014-08-05
-@version  0.3.9
+@modified 2014-08-29
+@version  0.3.13
 
 
 
@@ -30,6 +30,14 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-08-29] v0.3.13
+ - Fixed a bug in IKRS.BezierPath._roundToDigits(...); the  'enforceInvisibleDigits'
+   param was not recognized and caused an error in the reduced list representation.
+ - Fixed a bug in the IKRS.BezierPath.fromJSON(...) function; the conversion did fail
+   on paths with only one curve.
+ - All models from the gallery can now be loaded.
+ - Activated antialiasing :)
 
 [2014-08-28] v0.3.12
  - Added the 'digits' parameter to the function 
