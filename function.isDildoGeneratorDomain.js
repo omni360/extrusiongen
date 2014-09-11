@@ -10,6 +10,7 @@
 
 function isDildoGeneratorDomain() {
     return ( window.location.host.toLowerCase().indexOf("dildo-generator.com") != -1 ||
-             window.location.host.toLowerCase().indexOf("dildogenerator.com") != -1
+             window.location.host.toLowerCase().indexOf("dildogenerator.com") != -1 ||
+	     window.location.host.toLowerCase().indexOf("wenn-der-dödel-drei-mal-rödelt-dann.com") != -1
            );    
 }
