@@ -524,20 +524,6 @@ function newScene() {
     setBezierPathFromJSON( json,  // a JSON string containing the bezier data
 			   0      // bend_angle
 			 );
-    /*try {
-	bezierPath = IKRS.BezierPath.fromJSON( json );		    
-    } catch( e ) {
-	window.alert( "Error: " + e );
-	return false;
-    }
-    
-
-    setBezierPath( bezierPath );
-    updateBezierStatistics( null, null );
-    toggleFormElementsEnabled();
-
-    preview_rebuild_model();
-    */
     
     // Clear dildo ID (otherwise the new design cannot be published)
     setCurrentDildoID( -1, "" );
@@ -618,12 +604,10 @@ function publishDildoDesign() {
 				"Absolutely Fapulous",
 				"Mind The Fap",
 				
-				"Polygon Faprications",
 				"Faporatory",
 				"Faporizer",
 				"The Gender Bender",
-				"Large Hardon Collider",
-				"Captain Harrrrrdon",
+				"Large Hardon Collider",			
 				"Oh Long Johnson",
 				"Cereal Port",
 				"Needle"
@@ -636,6 +620,8 @@ function publishDildoDesign() {
 				"Fap Dancer",
 				"I.C. Weener",
 
+				"Captain Harrrrrdon",
+				"Polygon Faprications",
 				"Dong Quixote",
 				"Master Baiter",
 				"Obi Wank Kenobi",
@@ -644,7 +630,8 @@ function publishDildoDesign() {
 				"Tank Girl",
 				"Booga",
 				"Shrub-Niggurath",
-				"Homer Sexual"				
+				"Homer Sexual",
+				"King Dong"
 			      );
     var dongIndex        = Math.floor( Math.random() * dongNames.length );
     var userIndex        = Math.floor( Math.random() * userNames.length );
@@ -839,15 +826,6 @@ function getCookie(cname) {
 
 
 function debug() {
-    /*
-    window.alert( 
-	"camera.ikrsSettings.rotation=" + JSON.stringify(this.previewCanvasHandler.preview_camera.ikrsSettings.rotation) + ",\n" + 
-	    "camera.ikrsSettings.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.ikrsSettings.position) + ",\n" +
-	    "camera.rotation=" + JSON.stringify(this.previewCanvasHandler.preview_camera.rotation) + ",\n" +
-	    "camera.position=" + JSON.stringify(this.previewCanvasHandler.preview_camera.position) + "\n"
-    );
-    */
-    //window.open( get3DScreenshotData() );
     saveInCookie();
 }
 

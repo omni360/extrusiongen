@@ -24,6 +24,10 @@ function getSelectedMeshHullType() {
     return getSelectedRadioBoxValueByName( "mesh_form", "mesh_hull_type" );
 }
 
+function getSelectedMeshHullStyle() {
+    return getSelectedRadioBoxValueByName( "mesh_form", "mesh_hull_style" );
+}
+
 // Value must be "perpendicular" or "prism"
 function setSelectedMeshHullType( value ) {
     return setSelectedRadioBoxValueByName( "mesh_form", "mesh_hull_type", value );
@@ -47,6 +51,8 @@ function getSelectedBezierBackgroundType() {
 }
 
 function getSelectedRadioBoxValueByName( formName, radioName ) {
+    if( document.forms[formName] || !document.forms[formName].elements[radioName] )
+	return undefined;
     var radios = document.forms[ formName ].elements[ radioName ];
     for( var i = 0; i < radios.length; i++ ) {
         if( radios[i].checked )
@@ -114,6 +120,7 @@ function toggleFormElementsEnabled() {
     document.getElementById('mesh_hull_strength').disabled      = !document.getElementById('build_negative_mesh').checked;
     document.getElementById('arrange_splits_on_plane').disabled = !document.getElementById('split_shape').checked;
     toggleMeshDirectionEnabled();
+    toggleMeshHullStyleEnabled();
     togglePartsEnabled();
 }
 
@@ -132,6 +139,16 @@ function toggleMeshBaseEnabled() {
 	document.getElementById('mesh_hull_prism').disabled = 
 	( !document.getElementById('split_shape').checked || 
 	  !document.getElementById('arrange_splits_on_plane').checked );
+}
+
+function toggleMeshHullStyleEnabled() {
+    if( !document.getElementById('mesh_hull_style_continuous') || document.getElementById('mesh_hull_style_discrete') )
+	return;
+    document.getElementById('mesh_hull_style_continuous').disabled = 
+	document.getElementById('mesh_hull_style_discrete').disabled = 
+	( !document.getElementById('split_shape').checked 	  
+	  //!document.getElementById('arrange_splits_on_plane').checked 
+	);
 }
 
 function togglePartsEnabled() {

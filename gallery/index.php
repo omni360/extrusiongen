@@ -46,7 +46,7 @@
    var ibdata = bezierPath.toReducedListRepresentation();
    //window.alert( ibdata );
 
-   window.open( "../?bend=" + bend + "&dildoID=" + id + "&publicDildoHash=" + public_hash + "&rbdata=" + ibdata );
+   window.open( "../?preview_bend=" + bend + "&dildoID=" + id + "&publicDildoHash=" + public_hash + "&rbdata=" + ibdata );
  }
 </script>
 

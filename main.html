@@ -29,7 +29,7 @@
 <div id="version_tag"></div>
 
 <div id="gallery_links">
-  To the <a href="gallery/" target="_blank">Gallery</a>
+  To the <a href="gallery/" target="_blank"><img src="img/Icon_Gallery_A.png" width="24" height="23" alt="To the gallery" align="middle" />Gallery</a>
   <script language="Javascript">
      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU ) {
         document.write( "| <button onclick=\"publishDildoDesign()\">Publish ...</button>\n" );
@@ -47,6 +47,7 @@
   <!-- Insert PayPal donation button here -->
 
 </div>
+
 
 <div id="license">
   <br/>
@@ -247,6 +248,27 @@
 </tr>
 
 
+<tr>
+  <td></td>
+  <td style="text-align: center;">
+    <div style="margin-top: 55px; margin-left: 25px;">
+      <script language="Javascript">
+	if( isDildoGeneratorDomain() ) {
+	document.write( "Featured by:<br/>\n" );
+	document.write( "<a href=\"http://www.youin3d.com\" target=\"_blank\">" );
+	  document.write( "<img src=\"img/YOUin3D.com_C_75x64.png\" width=\"75\" height=\"64\" alt=\"YOUin3D.com\" /><br>\n" );
+	  document.write( "YOUin3D.com</a><br/><br/>\n ");
+	
+	document.write( "<a href=\"http://www.wamungo.com\" target=\"_blank\">" );
+	  document.write( "<img src=\"img/Wamungo-3D-Druck_freigestellt_125x36.png\" width=\"125\" height=\"36\" alt=\"Wamungo - 3D Druck - Alles f&uuml;r Alle\" /><br>\n" );
+	  document.write( "Wamungo.com</a><br/><br/>\n ");
+	}
+      </script>
+    </div>
+  </td>
+</tr>
+
+
 </table>
 </div>
 <!-- END - - - - - -  MESH CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
@@ -413,6 +435,21 @@
     </div>
   </td>                                                                                                   
 </tr>  
+
+<!--
+<tr>
+  <td>Hull style: </td> 
+  <td>
+    <div class="indent_1">
+    <input type="radio" name="mesh_hull_style" id="mesh_hull_style_continuous" value="continuous" checked="checked" onchange="preview_rebuild_model();" title="[Currently not in use]" />
+    <label for="mesh_hull_style_continuous">Continuous</label>
+
+    <input type="radio" name="mesh_hull_style" id="mesh_hull_style_discrete" value="discrete" onchange="preview_rebuild_model();" title="[Currently not in use]" />
+    <label for="mesh_hull_style_discrete">Discrete</label>
+    </div>
+  </td>                                                                                                   
+</tr>
+-->  
 
 <tr>
   <td></td>

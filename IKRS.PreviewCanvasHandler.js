@@ -279,6 +279,7 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     var pathBendAngle            = Math.max( document.getElementById( "preview_bend" ).value,
 					     0.01
 					   );
+  
     var shapeAxisDistance_pct    = 0.0;
     if( document.getElementById( "preview_axis_offset" ) )
 	shapeAxisDistance_pct = document.getElementById( "preview_axis_offset" ).value; // units? pixels? mm?
@@ -295,6 +296,9 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     var meshDirection            = getSelectedMeshDirection(); // "xyz" or "zxy"
     var hullType                 = getSelectedMeshHullType();  // "perpendicular" or "prism"
     var makeParts                = getSelectedMeshParts();     // "both" or "left" or "right"
+    
+    // !!! This value is NOT YET INTERPRETED !!!
+    var meshHullStyle            = getSelectedMeshHullStyle(); // "continuous" or "discrete"
     
 
     // "prism" hull type only allowed when split!
@@ -511,7 +515,8 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 								       mesh_offset,       // Vector3
 
 								       vectorFactory,
-								       meshHullType,      // "perpendicular" or "box"								       
+								       meshHullType,      // "perpendicular" or "box"
+								       
 								       shapeAxisDistance_pct, // float
 								       pathBendAngle,
 								       twistAngle,

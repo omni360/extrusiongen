@@ -30,6 +30,7 @@
  *                         - closeShape                 boolean
  *                         - shapeAxisOffset            float   (default=0)
  *                         - twistAngle                 float   (default=0)
+ *                         - hullStyle                  "perpendicular" or "
  *                          
  * @param vectorFactory  [optional]
  *                       If passed must have following function member:
