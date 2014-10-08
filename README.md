@@ -5,7 +5,7 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-29
-@version  0.3.13
+@version  0.3.15
 
 
 
@@ -30,6 +30,9 @@ no data had been saved anywhere. I switched to a new privacy policy.
 
 Changelog
 ---------
+
+[2014-10-08] v0.3.15
+ - Fixed a bug in the form_utils.
 
 [2014-08-29] v0.3.13
  - Fixed a bug in IKRS.BezierPath._roundToDigits(...); the  'enforceInvisibleDigits'

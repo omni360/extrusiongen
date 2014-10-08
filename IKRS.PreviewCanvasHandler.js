@@ -363,14 +363,14 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
 	    new THREE.Vector3(0, -50, 0)
 	];
     }
-    
+
 
     // Temp backup the mesh/view settings.
     var viewSettings = this._getViewSettings();
 
     // Remove all existing meshes.
     this._clearScene();
-    
+    //window.alert( "makeParts=" + makeParts );
 
     if( !split_shape ||
 	makeParts == "both" || 
@@ -408,7 +408,7 @@ IKRS.PreviewCanvasHandler.prototype.preview_rebuild_model = function() {
     if( split_shape && 
 	(makeParts == "both" || makeParts == "right")
       ) {
-
+	//window.alert( "right" );
 	var new_mesh_right = this._buildMeshFromSettings( shapedPath,
 							  circleSegmentCount,
 							  pathSegments,
@@ -527,7 +527,6 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
     var circleRadius         = shapedPathBounds.getWidth();
 
     var shapeAxisDistance    = shapedPathBounds.getHeight() * (shapeAxisDistance_pct/100.0);
-
     
     //var shapeStyle           = "oval";
     shapePoints              = this._createShapePoints( shapeStyle, split_shape, circleSegmentCount, circleRadius, shape_start_angle );
@@ -537,7 +536,8 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 						     shape_start_angle, // -Math.PI/2.0,                            // startAngle
 						     (split_shape ? Math.PI : Math.PI * 2.0)  // arc
 						   );
-    */					       
+    */	
+
     
 
     var extrusionShape = new THREE.Shape( shapePoints );
@@ -580,7 +580,7 @@ IKRS.PreviewCanvasHandler.prototype._buildMeshFromSettings = function( shapedPat
 
     }
 
-
+ 
     
     
     var extrusionPath = new THREE.Path( pathPoints );

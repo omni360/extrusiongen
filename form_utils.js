@@ -51,7 +51,7 @@ function getSelectedBezierBackgroundType() {
 }
 
 function getSelectedRadioBoxValueByName( formName, radioName ) {
-    if( document.forms[formName] || !document.forms[formName].elements[radioName] )
+    if( !document.forms[formName] || !document.forms[formName].elements[radioName] )
 	return undefined;
     var radios = document.forms[ formName ].elements[ radioName ];
     for( var i = 0; i < radios.length; i++ ) {

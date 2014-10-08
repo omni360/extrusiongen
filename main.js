@@ -70,19 +70,7 @@ function createHumanReadableTimestamp() {
  * Add Math.sign function if not present (Mozilla, ...).
  **/
 if( !Math.sign ) {
-    Math.sign = function( x ) {
-	// Bad:
-	/*
-	// TO DO ... THIS IS UGLY!
-	// Every mathematician would die if he/she sees this.
-	if( x < 0 )
-	    return -1;
-	else if( x > 0 )
-	    return 1;
-	else
-	    return 0;
-	*/
-	
+    Math.sign = function( x ) {	
 	// Better:
 	if( x == 0 )
 	    return 0;

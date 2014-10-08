@@ -46,8 +46,8 @@ IKRS.PathDirectedExtrudeGeometry = function( shape,
 
     // Call super 'constructor'
     THREE.Geometry.call( this );
- 
 
+ 
     if( options.hollow && !options.perpendicularHullStrength )
 	options.perpendicularHullStrength = 50;
     
