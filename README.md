@@ -31,6 +31,11 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-10-27] v0.3.16
+ - Changed the gallery upload scripts: images can now be strored inside 
+   the file system (to save database memory).
+ - Added the inc/config.inc.php file for server script settings.
+
 [2014-10-08] v0.3.15
  - Fixed a bug in the form_utils.
 
@@ -255,6 +260,10 @@ Changelog
 
 TODO
 ----
+[2014-10-27]
+ - Check if $_DILDO_SETTINGS["gallery_settings"]["DILDO_UPDATE_ALLOWED"] = TRUE
+   works (in the inc/config.inc.php file).
+
 [2013-10-15]
  - The 'Merge Meshes' STL option should be included into the settings 
    import/export.

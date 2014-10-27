@@ -110,7 +110,7 @@
    title="Double click onto the curve to add new control points. Press the [DEL] key to delete selected points."
    class="tooltip"
    id="bezier_canvas" 
-   width="512" 
+   width="512"
    height="768"
    onmouseover="setStatus('Double click onto the curve to add new control points. Press the [DEL] key to delete selected points.');"
    onmouseout="setStatus('');"
@@ -253,15 +253,27 @@
   <td style="text-align: center;">
     <div style="margin-top: 55px; margin-left: 25px;">
       <script language="Javascript">
-	if( isDildoGeneratorDomain() ) {
+	if( true || isDildoGeneratorDomain() ) {
 	document.write( "Featured by:<br/>\n" );
+	document.write( "<table border=\"0\">\n" );
+	document.write( "<tr><td style=\"padding: 10px;\">\n" );  
+	
 	document.write( "<a href=\"http://www.youin3d.com\" target=\"_blank\">" );
 	  document.write( "<img src=\"img/YOUin3D.com_C_75x64.png\" width=\"75\" height=\"64\" alt=\"YOUin3D.com\" /><br>\n" );
-	  document.write( "YOUin3D.com</a><br/><br/>\n ");
+	  document.write( "YOUin3D.com</a>\n ");
+
+	      document.write( "</td><td style=\"padding: 10px;\">\n" );
+	      document.write( "<a href=\"http://www.polygon-berlin.de\" target=\"_blank\">" );
+	  document.write( "<img src=\"img/logo_polygon_berlin_68x62.png\" width=\"70\" height=\"64\" alt=\"POLYGON Berlin\" /><br>\n" );
+	  document.write( "POLYGON Berlin</a>\n ");
+
+	      document.write( "</td></tr><tr><td colspan=\"2\" style=\"padding: 10px;\">\n" );
 	
 	document.write( "<a href=\"http://www.wamungo.com\" target=\"_blank\">" );
-	  document.write( "<img src=\"img/Wamungo-3D-Druck_freigestellt_125x36.png\" width=\"125\" height=\"36\" alt=\"Wamungo - 3D Druck - Alles f&uuml;r Alle\" /><br>\n" );
+	  document.write( "<img src=\"img/Wamungo-3D-Druck_freigestellt_125x36.png\" width=\"62\" height=\"18\" alt=\"Wamungo - 3D Druck - Alles f&uuml;r Alle\" /><br>\n" );
 	  document.write( "Wamungo.com</a><br/><br/>\n ");
+	      
+	      document.write( "</td></tr></table>\n" );
 	}
       </script>
     </div>

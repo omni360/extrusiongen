@@ -13,13 +13,25 @@
  * @modified 2014-07-16 Ikaros Kappler (added additional publishing data: user_name, email_address, ...).
  * @modified 2014-07-24 Ikaros Kappler (updating designs is now opt-out by $_DILDO_UPDATE_ALLOWED for security reasons).
  * @modified 2014-07-30 Ikaros Kappler (added gallery word check).
- * @version  1.0.3
+ * @modified 2014-10-27 Ikaros Kappler (added the file system image storage function).
+ * @version  1.0.4
  **/
 
 header( "Content-Type: text/plain; charset=utf-8" );
 
+
+// Load the configuration file
+require_once( "../inc/config.inc.php" );
+require_once( "../inc/function.store_base64_encoded_image_in_filesystem.inc.php" );
+
+
+
 $your_mail_address     = "published@dildo-generator.com";
-$_DILDO_UPDATE_ALLOWED = FALSE;
+
+/* @DEPRECATED since version 0.3.16 
+ *              See ../inc/config.inc.php instead.
+ */
+//$_DILDO_UPDATE_ALLOWED = FALSE;
 
 
 
@@ -58,8 +70,9 @@ $origin_decoded  = base64_decode( $originb64_clean,
 				  );
 
 if( $_SERVER["SERVER_ADDR"] != "127.0.0.1" && 
-    base64_decode($originb64_clean) != "www.dildo-generator.com" &&
-    base64_decode($originb64_clean) != "dildo-generator.com"
+    array_find($originb64_clean,$_DILDO_CONFIG["gallery_settings"]["ALLOWED_SERVER_NAMES"]) === FALSE
+    // base64_decode($originb64_clean) != "www.dildo-generator.com" &&
+    //base64_decode($originb64_clean) != "dildo-generator.com"
     ) {
 
   //die( "1 " . base64_decode($originb64_clean) );
@@ -123,7 +136,15 @@ if( !$id || $id == -1 || !$public_hash ) {
 
   $query =
     "INSERT INTO " . addslashes($db_name) . ".custom_dildos " .
-    "( bend, date_created, date_updated, bezier_path, user_id, name, user_name, email_address, hide_email_address, allow_download, allow_edit, preview_image, bezier_image, public_hash, disabled_by_moderator, keywords ) " .
+    "( bend, date_created, date_updated, bezier_path, user_id, name, user_name, email_address, hide_email_address, allow_download, allow_edit, ";
+  
+  if( !$_DILDO_CONFIG["gallery_settings"]["STORE_PREVIEW_IMAGES_IN_FILESYSTEM"] )
+    $query .= "preview_image, ";
+  
+  if( !$_DILDO_CONFIG["gallery_settings"]["STORE_BEZIER_IMAGES_IN_FILESYSTEM"] )
+    $query .= "bezier_image, ";
+  
+  $query .= "public_hash, disabled_by_moderator, keywords ) " .
     "VALUES ( " .
     "'" . addslashes($bend) . "', " .
     "'" . addslashes(time()) . "', " .
@@ -135,16 +156,23 @@ if( !$id || $id == -1 || !$public_hash ) {
     "'" . addslashes($email_address) . "', " .
     "'" . ($hide_email_address ? 'Y' : 'N') . "', " .
     "'" . ($allow_download ? 'Y' : 'N') . "', " .
-    "'" . ($allow_edit ? 'Y' : 'N') . "', " .
-    "'" . addslashes($image_data_clean) . "', " .
-    "'" . addslashes($bezier_image_data_clean) . "', " .
+    "'" . ($allow_edit ? 'Y' : 'N') . "', ";
+  
+  if( !$_DILDO_CONFIG["gallery_settings"]["STORE_PREVIEW_IMAGES_IN_FILESYSTEM"] )
+    $query .= "'" . addslashes($image_data_clean) . "', ";
+  
+  if( !$_DILDO_CONFIG["gallery_settings"]["STORE_BEZIER_IMAGES_IN_FILESYSTEM"] )
+    $query .= "'" . addslashes($bezier_image_data_clean) . "', ";
+
+  $query .=
     "'" . addslashes($public_hash) . "', " .
     "'N', " .  // disabled_by_moderator
     "'" . addslashes($keywords) . "' " .
     ");";
 
 } else {
-  if( !$_DILDO_UPDATE_ALLOWED ) {
+  //if( !$_DILDO_UPDATE_ALLOWED ) {
+  if( !$_DILDO_CONFIG["gallery_settings"]["DILDO_UPDATE_ALLOWED"] ) {
     header( "HTTP/1.1 500 Update not allowed.", TRUE ); 
     mysql_close( $mcon );
     die();
@@ -161,10 +189,16 @@ if( !$id || $id == -1 || !$public_hash ) {
       "hide_email_address    = '" . ($hide_email_address ? 'Y' : 'N') . "', " .
       "allow_download        = '" . ($allow_download ? 'Y' : 'N') . "', " .
       "allow_edit            = '" . ($allow_edit ? 'Y' : 'N') . "', " .
-      "keywords              = '" . addslashes($keywords) . "', " .
-      "preview_image         = '" . addslashes($image_data_clean) . "', " .
-      "bezier_image          = '" . addslashes($bezier_image_data_clean) . "' " .
-      //"disabled_by_mederator = 'N' " .
+      "keywords              = '" . addslashes($keywords) . "', ";
+    
+    if( !$_DILDO_CONFIG["gallery_settings"]["STORE_PREVIEW_IMAGES_IN_FILESYSTEM"] )
+      $query .= "preview_image         = '" . addslashes($image_data_clean) . "', ";
+    
+    if( !$_DILDO_CONFIG["gallery_settings"]["STORE_BEZIER_IMAGES_IN_FILESYSTEM"] )
+      $query .= "bezier_image          = '" . addslashes($bezier_image_data_clean) . "' ";
+
+    $query .=
+      //"disabled_by_moderator = 'N' " .
       "WHERE id              = '" . addslashes($id) . "' ".
       "AND   public_hash     = '" . addslashes($public_hash) . "' " .
       "AND   user_id         = '" . addslashes($user_id) . "' " .
@@ -198,7 +232,10 @@ $message =
   
 if( !mysql_query($query,$mcon) ) {
 
-  header( "HTTP/1.1 500 x " . mysql_error($mcon), TRUE ); 
+  $raw_error = mysql_error($mcon);
+  // DEBUG
+  //$raw_error .= $query;
+  header( "HTTP/1.1 500 x " . $raw_error, TRUE ); 
   $errmsg = "Error: " . substr(mysql_error($mcon),0,20) . "\n";
 
   echo $errmsg;
@@ -231,8 +268,56 @@ if( !mysql_query($query,$mcon) ) {
 }
 
 
-//echo $id . " " . $image_data; // $public_hash;
-echo $id . " " . $public_hash;
+$errors = 0;
+$errmsg = FALSE;
+
+// Last step: store images in the file system?
+if( $_DILDO_CONFIG["gallery_settings"]["STORE_PREVIEW_IMAGES_IN_FILESYSTEM"] ) {
+  // Cut off the 'data:image/png;base64,' part to get the pure base64 data
+  //$base64_raw = substr( $data_base64, 22 );
+  //echo $image_data_clean;
+  list( $rc,
+	$err ) = store_base64_encoded_image_in_filesystem( "images/" . $public_hash . ".preview.png",
+							   substr( $image_data_clean, 22 )
+							   );
+  if( $rc != 0 ) {
+    $errors++;
+    $errmsg .= "Failed to store preview image '" . $public_hash . "' in file system: " . $err . "\n";
+  }
+}
+
+if( $_DILDO_CONFIG["gallery_settings"]["STORE_BEZIER_IMAGES_IN_FILESYSTEM"] ) {
+  // Cut off the 'data:image/png;base64,' part to get the pure base64 data
+  //$base64_raw = substr( $data_base64, 22 );
+  list( $rc,
+	$err ) = store_base64_encoded_image_in_filesystem( "images/" . $public_hash . ".bezier.png",
+							   substr( $bezier_image_data_clean, 22 )
+							   );
+  if( $rc != 0 ) {
+     $errors++;
+     $errmsg .= "Failed to store bezier image '" . $public_hash . "' in file system: " . $err . "\n";
+  }
+}
+
+
+
+if( $errors == 0 ) {
+  //echo $id . " " . $image_data; // $public_hash;
+  echo $id . " " . $public_hash;
+
+} else {
+
+  header( "HTTP/1.1 500 " . $raw_error, TRUE ); 
+  $errmsg = "Error: " . $errmsg . "\n";
+
+  echo $errmsg;
+  
+  mail( $your_mail_address, 
+	"Failed to store dildo!", 
+	"Failed to store dildo\n" .
+	   $errmsg 
+	);
+}
 
 
 // Don't forget to close the connection!
