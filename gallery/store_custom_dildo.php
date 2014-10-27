@@ -70,8 +70,8 @@ $origin_decoded  = base64_decode( $originb64_clean,
 				  );
 
 if( $_SERVER["SERVER_ADDR"] != "127.0.0.1" && 
-    array_find($originb64_clean,$_DILDO_CONFIG["gallery_settings"]["ALLOWED_SERVER_NAMES"]) === FALSE
-    // base64_decode($originb64_clean) != "www.dildo-generator.com" &&
+    array_search(base64_decode($originb64_clean),$_DILDO_CONFIG["gallery_settings"]["ALLOWED_SERVER_NAMES"]) === FALSE
+    //base64_decode($originb64_clean) != "www.dildo-generator.com" &&
     //base64_decode($originb64_clean) != "dildo-generator.com"
     ) {
 
@@ -118,7 +118,7 @@ $bezier_image_data_clean = str_replace( array("-", "_"),
 					);
 
 require_once( "../inc/function.gallery_word_check.inc.php" );
-$hasIllegalWords = false; !( gallery_word_check($name) && gallery_word_check($user_name) );
+$hasIllegalWords = !( gallery_word_check($name) && gallery_word_check($user_name) );
 
 
 
