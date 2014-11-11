@@ -31,6 +31,23 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-11-10] v0.3.17
+ - Moved BEZIER_CANVAS_WIDTH/-HEIGHT and PREVIEW_CANVAS_WIDTH/-HEIGHT 
+   from the main.js file to the config.js file. They are now member
+   variables in the _DILDO_CONFIG object.
+ - Modified the IKRS.BezierCanvasHandler to match the new setting
+   locations.
+ - Added the getBezierCanvas() and getPreviewCanvas() functions to
+   the main.js file.
+ - Added the function getPreviewCanvas() to the main.js file.
+ - Added the function getBezierCanvas() to the main.js file.
+ - Added the function _resizeCanvasComponents() to the main.js file.
+ - Added the function _repositionComponentsBySize() to the main.js 
+   file.
+ - Added the 'keepRatio' parameter to 
+   IKRS.BezierCanvasHandler._drawAnonymousBackgroundImage(...).
+ - Added function isDefaultCanvasSize() to the ain.js file.
+
 [2014-10-27] v0.3.16
  - Changed the gallery upload scripts: images can now be strored inside 
    the file system (to save database memory).

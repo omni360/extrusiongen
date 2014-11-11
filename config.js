@@ -20,6 +20,14 @@ if( !_DILDO_CONFIG.IMAGES || typeof _DILDO_CONFIG.IMAGES === "undefined" )
     _DILDO_CONFIG.IMAGES = {};
 
 
+// Global constants (modifify when resizing the HTML5 canvas)
+_DILDO_CONFIG.BEZIER_CANVAS_WIDTH          = 400; // 384; // 512;
+_DILDO_CONFIG.BEZIER_CANVAS_HEIGHT         = 600; // 512; // 768;
+
+_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH         = 400, // 384; // 512;
+_DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT        = 600; // 512; // 768
+
+
 /**
  * Set this flag to true if you wish the Model->Publish item to be hidden.
  * Valid values: true|false

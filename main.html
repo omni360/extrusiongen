@@ -84,6 +84,8 @@
     </script>
 </div>
 
+<div id="preview_canvas_div"></div>
+<!--
 <canvas 
    title="Click, hold and drag to rotate the view."
    class="tooltip"
@@ -92,7 +94,9 @@
    onmouseout="setStatus('');"
    >
 </canvas>
+-->
 
+<!--
 <div style="position: absolute; left: 10px; top: 838px; width: 256px;">
   <div style="position: absolute; top: 0px; left: 256px; width: 256px; text-align: right;">
     Zoom
@@ -100,12 +104,15 @@
     <button onclick="increaseZoomFactor(true);">+</button>
   </div>
 </div>
+-->
 
 <!-- 
   ATTENTION: THE CANVAS SIZE MUST NOT BE SET USING CSS! 
   OTHERWISE LINES WILL BE DRAWN BLURRY AND UNCLEAR!
   -->
 
+<div id="bezier_canvas_div"></div>
+<!--
 <canvas 
    title="Double click onto the curve to add new control points. Press the [DEL] key to delete selected points."
    class="tooltip"
@@ -116,54 +123,81 @@
    onmouseout="setStatus('');"
    >
 </canvas>
+-->
 
 <div id="status_bar">Status</div>
 
-<div style="position: absolute; left: 532px; top: 838px; width: 256px;">
-  <div>
-  <form name="bezier_form">
-
-  <input type="checkbox" id="draw_perpendiculars" name="draw_perpendiculars" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="Draws a perpendicular hull that shows how the material thickness must be calculated." />
-  <label for="draw_perpendiculars">Draw perpendiculars</label>
-
-  <br/>
-  <input type="checkbox" id="draw_rulers" name="draw_rulers" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="Check if rulers should be painted." checked="checked" />
-  <label for="draw_rulers">Draw rulers</label>
-
-  <br/>
-  <input type="checkbox" id="draw_bounding_box" name="draw_bounding_box" checked="checked" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="The curve's bounding box is the minimal rectangular area around the bezier path that encloses the path itself." />
-  <label for="draw_bounding_box">Draw bounding box</label>
-  </form>
-  </div>
-
-  <div style="position: absolute; top: 0px; left: 356px; width: 256px; text-align: right;">
-    <table style="border: 0;">
-      <tr>
-	<td>Zoom</td>
-	<td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button></td>
-	<td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button></td>
-	<td><button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button></td>
-      </tr>
-      <tr>
-	<td>Size</td>
-	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
-	<td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
-	<td></td>
-      </tr>
-    </table>
-  </div>
+<div id="preview_controls" style="position: absolute; left: 532px; top: 838px; width: 256px;">
   
-  <div style="text-align: right;">
-    <br/>
-    <!--
-    <button onclick="debug();">[TEST] Save in cookie</button>
-    <button onclick="debug_B();">[TEST] Load from cookie</button>
-    <button onclick="debug_C();">[TEST] Take screenshot</button>
-    -->
-    <!--
-    <button onclick="acquireOptimalBezierView();">[TEST] Acquire Optimal Bezier View</button>
-    -->
-  </div>
+  <table border="0" width="100%">
+    <tr>
+      <td>
+
+	<form name="bezier_form">
+	  <input type="checkbox" id="draw_perpendiculars" name="draw_perpendiculars" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="Draws a perpendicular hull that shows how the material thickness must be calculated." />
+	  <label for="draw_perpendiculars">Draw perpendiculars</label>
+
+	  <br/>
+	  <input type="checkbox" id="draw_rulers" name="draw_rulers" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="Check if rulers should be painted." checked="checked" />
+	  <label for="draw_rulers">Draw rulers</label>
+
+	  <br/>
+	  <input type="checkbox" id="draw_bounding_box" name="draw_bounding_box" checked="checked" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="The curve's bounding box is the minimal rectangular area around the bezier path that encloses the path itself." />
+	  <label for="draw_bounding_box">Draw bounding box</label>
+	</form>
+      </td>
+      
+      
+      <td valign="top" align="right">
+	
+	Zoom
+	<button onclick="decreaseZoomFactor(true);">-</button>
+	<button onclick="increaseZoomFactor(true);">+</button>
+
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<div id="bezier_controls" style="position: absolute; top: 0px; left: 356px; width: 256px; text-align: right;">
+   Zoom
+      <button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button>
+      <button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button>
+      <button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button><br/>
+
+      Size</td>
+      <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button>
+      <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button><br/>
+  
+  <!--
+      <table style="border: 0;">
+    <tr>
+      <td>Zoom</td>
+      <td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button></td>
+      <td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button></td>
+      <td><button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button></td>
+    </tr>
+    <tr>
+      <td>Size</td>
+      <td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
+      <td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
+      <td></td>
+    </tr>
+  </table>
+      -->
+</div>
+
+<div style="text-align: right;">
+  <br/>
+  <!--
+      <button onclick="debug();">[TEST] Save in cookie</button>
+      <button onclick="debug_B();">[TEST] Load from cookie</button>
+      <button onclick="debug_C();">[TEST] Take screenshot</button>
+      -->
+  <!--
+      <button onclick="acquireOptimalBezierView();">[TEST] Acquire Optimal Bezier View</button>
+      -->
 </div>
 
 
@@ -513,10 +547,8 @@
   <script>
     function changeColor( c ) {
           document.forms["color_form"].elements["color"].value = c;
-          //preview_rebuild_model();
     
-          // Convert color string to R-G-B values         
-          //var color = parseHTMLColor(c);
+          // Convert color string to R-G-B values  
           previewCanvasHandler.setMaterialColorRGB( c,
                                                     true // redraw
                                                     );

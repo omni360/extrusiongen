@@ -20,11 +20,19 @@ this.previewCanvasHandler  = null;
 this.keyHandler            = null;
 
 // Global constants (modifify when resizing the HTML5 canvas)
-var BEZIER_CANVAS_WIDTH    = 512;
-var BEZIER_CANVAS_HEIGHT   = 768;
+/* DEPRECATED replaced by _DILDO_CONFIG.BEZIER_CANVAS_WIDTH 
+ * and _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT. 
+ * See file config.js
+ */
+//var BEZIER_CANVAS_WIDTH    = 512;
+//var BEZIER_CANVAS_HEIGHT   = 768;
 
-var PREVIEW_CANVAS_WIDTH   = 512;
-var PREVIEW_CANVAS_HEIGHT  = 768;
+/* DEPRECATED replaced by _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH 
+ * and _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT. 
+ * See file config.js
+ */
+//var PREVIEW_CANVAS_WIDTH   = 512;
+//var PREVIEW_CANVAS_HEIGHT  = 768;
 
 
 /**
@@ -89,6 +97,39 @@ function getDefaultBezierJSON() {
 }
 
 /**
+ * This function simply returns the "preview_canvas" DOM element (canvas).
+ **/
+function getPreviewCanvas() {
+    return document.getElementById( "preview_canvas" );
+}
+
+/**
+ * This function simply returns the "bezier_canvas" DOM element (canvas).
+ **/
+function getBezierCanvas() {
+    return document.getElementById( "bezier_canvas" );
+}
+
+/**
+ * This function simply eturns the "status_bar" DOM element (div).
+ **/
+function getStatusBar() {
+    return document.getElementById( "status_bar" );
+}
+
+/**
+ * Checks if the current canvas sizes are 512x768 pixels.
+ **/
+function isDefaultCanvasSize() {
+    return (
+	_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH == 512 &&
+	    _DILDO_CONFIG.BEZIER_CANVAS_WIDTH == 512 &&	
+	    _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT == 768 &&
+	    _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT == 768
+    )
+}
+
+/**
  * This function is called when the page was completely loaded.
  **/
 function onloadHandler() {
@@ -96,6 +137,11 @@ function onloadHandler() {
     // Display current version
     if( document.getElementById( "version_tag" ) )
 	document.getElementById( "version_tag" ).innerHTML = VERSION_STRING;
+
+    // Add the canvas components
+    _deployCanvasComponents();
+    _resizeCanvasComponents();
+    _repositionComponentsBySize();
 
     // Install the key handler
     _installKeyHandler();
@@ -166,6 +212,9 @@ function onloadHandler() {
     // Is the rendering engine available?
     // Does this browser support WebGL?
     previewCanvasHandler.preview_rebuild_model();
+    // Does the configured canvas size differ from the default (hard coded) bezier size?
+    if( !isDefaultCanvasSize() ) // _DILDO_CONFIG.BEZIER_CANVAS_WIDTH != 512 || _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT != 768 )
+	acquireOptimalBezierView();
     preview_render();
 
 
@@ -173,6 +222,155 @@ function onloadHandler() {
     window.setInterval( "autosaveInCookie()", 1000*30 );
 
   
+}
+
+function _deployCanvasComponents() {
+    _deployCanvasComponentWith( "bezier_canvas",
+				_DILDO_CONFIG.BEZIER_CANVAS_WIDTH,
+				_DILDO_CONFIG.BEZIER_CANVAS_HEIGHT,
+				"Double click onto the curve to add new control points. Press the [DEL] key to delete selected points.",
+				"setStatus('Double click onto the curve to add new control points. Press the [DEL] key to delete selected points.');",
+				"setStatus('');",
+				"bezier_canvas_div"
+			       );
+    // The default bezier canvas size was/is 512x768
+    // -> Adapt zoom and draw offset
+/*
+    var bezier_canvas = getBezierCanvas();
+    var minRatio      = Math.min( _DILDO_CONFIG.BEZIER_CANVAS_WIDTH/512,
+				  _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT/768 
+				);
+    bezier_canvas.setZoomFactor( minRatio, false ); // Do not (re)draw yet (not yet fully initialized here!)
+*/
+
+    _deployCanvasComponentWith( "preview_canvas",
+				_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH,
+				_DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT,
+				"Click, hold and drag to rotate the view.",
+				"setStatus('Click, hold and drag to rotate the view.');",
+				"setStatus('');",
+				"preview_canvas_div"
+			       );    
+} 
+
+function _deployCanvasComponentWith( id,
+				     width,
+				     height,
+				     title,
+				     mouseover,
+				     mouseout,
+				     div_id
+				   ) {
+
+    var canvas     = document.createElement( "canvas" );
+    canvas.setAttribute( "id",         id );
+    canvas.setAttribute( "width",      width );
+    canvas.setAttribute( "height",     height );
+    canvas.setAttribute( "title",      title );
+    canvas.setAttribute( "class",      "tooltip" );
+    canvas.setAttribute( "mouseover",  mouseover );
+    canvas.setAttribute( "mouseout",   mouseout );
+    var preview_canvas_div = document.getElementById( div_id );
+    //preview_canvas_div.appendChild( canvas );
+    document.body.appendChild( canvas );
+    
+}
+
+/**
+ * This function simply applies the dimension set in _DILDO_CONFIG to
+ * the canvas elements.
+ *  - _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH
+ *  - _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT
+ *  - _DILDO_CONFIG.BEZIER_CANVAS_WIDTH
+ *  - _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT
+ **/
+function _resizeCanvasComponents() {
+    var preview_canvas          = getPreviewCanvas(); 
+    var bezier_canvas           = getBezierCanvas();
+    
+    preview_canvas.style.width  = _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH   + "px";
+    preview_canvas.style.height = _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT  + "px";
+
+    bezier_canvas.style.width   = _DILDO_CONFIG.BEZIER_CANVAS_WIDTH    + "px";
+    bezier_canvas.style.height  = _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT   + "px";
+    
+}
+
+function _repositionComponentsBySize() {
+    var preview_canvas        = getPreviewCanvas(); 
+    var bezier_canvas         = getBezierCanvas(); 
+    
+    // Note: the members 'x' and 'y' somehow don't seem to work here.
+    preview_canvas.style.x    = preview_canvas.style.left = "10px";
+    preview_canvas.style.y    = preview_canvas.style.top  = "40px";
+    
+    var bezierLeft            = (10 + _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH + 10);
+    bezier_canvas.style.x     = bezier_canvas.style.left = bezierLeft + "px";
+    bezier_canvas.style.y     = bezier_canvas.style.top  = "40px";
+    
+    var maxCanvasHeight       = Math.max( _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT, 
+					  _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT
+					);
+    var status_bar            = getStatusBar();
+    status_bar.style.y        = status_bar.style.top = (40 + maxCanvasHeight + 10) + "px";
+    status_bar.style.width    = (_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH + 10 + _DILDO_CONFIG.BEZIER_CANVAS_WIDTH) + "px";
+    
+
+    //window.alert( bezier_canvas.style.x );
+    
+    // Re-align register-head
+    var registerHead          = document.getElementById( "register_head" );
+    var registerLeft          = ( 10 + 
+				  _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH + 
+				  10 + 
+				  _DILDO_CONFIG.BEZIER_CANVAS_WIDTH + 
+				  10 );
+    registerHead.style.x      = registerHead.style.left = registerLeft + "px";
+    
+    // Re-align register-cards
+    var divs = document.getElementsByTagName( "DIV" );
+    for( var i = 0; i < divs.length; i++ ) {
+
+	var entry = divs[i];
+	if( !entry.className || entry.className != "register_card" )
+	    continue;
+
+	entry.style.x        = entry.style.left =  registerLeft+ "px";
+
+    }
+
+    // Reposition the Gallery-Links
+    var galleryLinks            = document.getElementById( "gallery_links" );
+    gallery_links.style.x       = gallery_links.style.left = bezierLeft + "px";
+
+
+    // Reposition the 'informational' area (div)
+    var informational           = document.getElementById( "informational" );
+    informational.style.x       = informational.style.left = registerLeft + "px";
+    
+    // Reposition the 'license' area (div)
+    var license                 = document.getElementById( "license" );
+    license.style.x             = license.style.left       = registerLeft + "px";
+    
+    // Reposition the 'preview_controls' area (div)
+    var previewControls         = document.getElementById( "preview_controls" );
+    previewControls.style.width = _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH + "px";
+    // previewControls.style.backgroundColor = "#ff0000";
+    previewControls.style.x     = previewControls.style.left = "10px";
+    previewControls.style.y     = previewControls.style.top  = (40 + _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT + 10 + 16 + 10) + "px";
+
+    var bezierControls          = document.getElementById( "bezier_controls" );
+    bezierControls.style.width  = _DILDO_CONFIG.BEZIER_CANVAS_WIDTH + "px";
+    bezierControls.style.x      = bezierControls.style.left = bezierLeft + "px";
+    bezierControls.style.y      = bezierControls.style.top  = (40 + _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT + 10 + 16 + 10) + "px";
+
+    
+    var versionTag              = document.getElementById( "version_tag" );
+    // 400px is the _constant_ width of the control panel
+    versionTag.style.width      = "300px";
+    versionTag.style.x          = versionTag.style.left  = (bezierLeft + _DILDO_CONFIG.BEZIER_CANVAS_WIDTH + 280 + 10) + "px"; 
+    versionTag.style.y          = versionTag.style.top   = "200px";
+    //versionTag.style.backgroundColor = "#ff0000";
 }
 
 /**
@@ -326,8 +524,8 @@ function initWebGL() {
 	this.bezierCanvasHandler = new IKRS.BezierCanvasHandler();
 	this.bezierCanvasHandler.addChangeListener( updateBezierStatistics );  // A function
 	this.previewCanvasHandler = new IKRS.PreviewCanvasHandler( this.bezierCanvasHandler,
-								   PREVIEW_CANVAS_WIDTH,     // 512, 
-								   PREVIEW_CANVAS_HEIGHT     // 768 
+								   _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH,     // 512, 
+								   _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT     // 768 
 								 );
     
 	// Indicate success.
@@ -515,6 +713,9 @@ function newScene() {
     
     // Clear dildo ID (otherwise the new design cannot be published)
     setCurrentDildoID( -1, "" );
+    
+    if( !isDefaultCanvasSize() )
+	acquireOptimalBezierView();
 }
 
 function setBezierPathFromJSON( bezier_json, bend_angle ) {
@@ -1235,7 +1436,7 @@ function setCurrentDildoID( dildoID, public_hash ) {
 function acquireOptimalBezierView() {
     
     // Optimize view:
-    this.bezierCanvasHandler.acquireOptimalView( new THREE.Vector2(25,25) );
+    this.bezierCanvasHandler.acquireOptimalView( new THREE.Vector2(75,75) );
 }
 
 /**

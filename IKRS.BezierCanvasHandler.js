@@ -35,13 +35,11 @@ IKRS.BezierCanvasHandler = function() {
     var draggedCurveIndex      = -1;
     var draggedPointID         = -1;
 
-    //var canvas_width           = 512;
-    //var canvas_height          = 768;
 
     this.millimeterPerPixel    = 0.5
 
-    this.canvasWidth           = BEZIER_CANVAS_WIDTH;  // canvas_width;
-    this.canvasHeight          = BEZIER_CANVAS_HEIGHT; // canvas_height;
+    this.canvasWidth           = _DILDO_CONFIG.BEZIER_CANVAS_WIDTH;  // canvas_width;
+    this.canvasHeight          = _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT; // canvas_height;
 
     this.canvas                = document.getElementById("bezier_canvas");
     this.context               = this.canvas.getContext( "2d" );
@@ -332,13 +330,16 @@ IKRS.BezierCanvasHandler.prototype._drawWithBackgroundImages = function() {
     this._drawWithoutBackgroundImages();
 };
 
-IKRS.BezierCanvasHandler.prototype._drawAnonymousBackgroundImage = function( image ) {
+IKRS.BezierCanvasHandler.prototype._drawAnonymousBackgroundImage = function( image, keepRatio ) {
     
     if( !image || typeof image == "undefined" )
 	return;
+    if( typeof keepRatio == "undefined" )
+	keepRatio = false;
 
-    var contextWidth  = this.canvasWidth; // 512;
-    var contextHeight = this.canvasHeight; // 768;
+
+    var contextWidth  = _DILDO_CONFIG.BEZIER_CANVAS_WIDTH; // this.canvasWidth; // 512;
+    var contextHeight = _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT; // this.canvasHeight; // 768;
     
 
     var imageWidth  = image.width;
@@ -348,15 +349,20 @@ IKRS.BezierCanvasHandler.prototype._drawAnonymousBackgroundImage = function( ima
     var heightRatio = contextHeight / imageHeight;
     
     var drawWidth, drawHeight;
-    if( widthRatio < heightRatio ) {
-	// normalize width
-	drawWidth = imageWidth * widthRatio;
-	drawHeight = imageHeight * widthRatio;
+    if( keepRatio ) {
+	if( widthRatio < heightRatio ) {
+	    // normalize width
+	    drawWidth = imageWidth * widthRatio;
+	    drawHeight = imageHeight * widthRatio;
+	} else {
+	    // normalize height
+	    drawWidth = imageWidth * heightRatio;
+	    drawHeight = imageHeight * heightRatio;
+	}
     } else {
-	// normalize height
-	drawWidth = imageWidth * heightRatio;
-	drawHeight = imageHeight * heightRatio;
-    }	   
+	drawWidth  = contextWidth;
+	drawHeight = contextHeight;
+    }   
     
 
     this.context.drawImage( image,
