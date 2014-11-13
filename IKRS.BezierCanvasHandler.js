@@ -100,6 +100,15 @@ IKRS.BezierCanvasHandler.prototype = new IKRS.Object();
 IKRS.BezierCanvasHandler.prototype.constructor = IKRS.BezierCanvasHandler;
 
 
+IKRS.BezierCanvasHandler.prototype.setRendererSize = function( width, height, redraw ) {
+    this.canvasWidth           = width;
+    this.canvasHeight          = height;
+    this.canvas.setAttribute( "width",  width+"px" );
+    this.canvas.setAttribute( "height", height+"px" );
+    if( redraw )
+	this.redraw();
+};
+
 /**
  * This function sets the zoom factor and draw offset to those values which
  * let the bezier curve optimally to be drawn on the whole canvas area.

@@ -84,55 +84,30 @@
     </script>
 </div>
 
-<div id="preview_canvas_div"></div>
 <!--
-<canvas 
-   title="Click, hold and drag to rotate the view."
-   class="tooltip"
-   id="preview_canvas"
-   onmouseover="setStatus('Click, hold and drag to rotate the view.');"
-   onmouseout="setStatus('');"
-   >
-</canvas>
+<div id="preview_canvas_div"></div> 
 -->
 
 <!--
-<div style="position: absolute; left: 10px; top: 838px; width: 256px;">
-  <div style="position: absolute; top: 0px; left: 256px; width: 256px; text-align: right;">
-    Zoom
-    <button onclick="decreaseZoomFactor(true);">-</button>
-    <button onclick="increaseZoomFactor(true);">+</button>
-  </div>
-</div>
--->
-
-<!-- 
-  ATTENTION: THE CANVAS SIZE MUST NOT BE SET USING CSS! 
-  OTHERWISE LINES WILL BE DRAWN BLURRY AND UNCLEAR!
-  -->
-
 <div id="bezier_canvas_div"></div>
-<!--
-<canvas 
-   title="Double click onto the curve to add new control points. Press the [DEL] key to delete selected points."
-   class="tooltip"
-   id="bezier_canvas" 
-   width="512"
-   height="768"
-   onmouseover="setStatus('Double click onto the curve to add new control points. Press the [DEL] key to delete selected points.');"
-   onmouseout="setStatus('');"
-   >
-</canvas>
 -->
 
 <div id="status_bar">Status</div>
 
-<div id="preview_controls" style="position: absolute; left: 532px; top: 838px; width: 256px;">
+<div id="preview_controls" style="position: absolute; left: 532px; top: 838px; width: 256px; text-align: right;">
   
+  Zoom
+  <button onclick="decreaseZoomFactor(true);">-</button>
+  <button onclick="increaseZoomFactor(true);">+</button>
+
+  
+</div>
+
+
+<div id="bezier_controls" style="position: absolute; top: 0px; left: 356px; width: 256px;">
   <table border="0" width="100%">
     <tr>
       <td>
-
 	<form name="bezier_form">
 	  <input type="checkbox" id="draw_perpendiculars" name="draw_perpendiculars" onchange="javascript:bezierCanvasHandler.redraw();" class="tooltip" title="Draws a perpendicular hull that shows how the material thickness must be calculated." />
 	  <label for="draw_perpendiculars">Draw perpendiculars</label>
@@ -151,41 +126,17 @@
       <td valign="top" align="right">
 	
 	Zoom
-	<button onclick="decreaseZoomFactor(true);">-</button>
-	<button onclick="increaseZoomFactor(true);">+</button>
+	<button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button>
+	<button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button>
+	<button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button><br/>
 
+	Size
+	<button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button>
+	<button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button><br/>
+	
       </td>
     </tr>
   </table>
-</div>
-
-
-<div id="bezier_controls" style="position: absolute; top: 0px; left: 356px; width: 256px; text-align: right;">
-   Zoom
-      <button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button>
-      <button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button>
-      <button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button><br/>
-
-      Size</td>
-      <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button>
-      <button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button><br/>
-  
-  <!--
-      <table style="border: 0;">
-    <tr>
-      <td>Zoom</td>
-      <td><button onclick="bezierCanvasHandler.decreaseZoomFactor(true);" class="zoom_button">-</button></td>
-      <td><button onclick="bezierCanvasHandler.increaseZoomFactor(true);" class="zoom_button">+</button></td>
-      <td><button onclick="acquireOptimalBezierView();" class="zoom_button">&#10530;</button></td>
-    </tr>
-    <tr>
-      <td>Size</td>
-      <td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.05);">+5%</button></td>
-      <td><button onclick="bezierCanvasHandler.scaleBezierPathUniform(1.0/1.05);">-5%</button></td>
-      <td></td>
-    </tr>
-  </table>
-      -->
 </div>
 
 <div style="text-align: right;">
@@ -204,306 +155,306 @@
 
 <!-- BEGIN - - - - -  MESH CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
 <form name="mesh_form">
-<div class="register_card" id="mesh_controls">
-<h3>Mesh controls</h3>
-<table style="border: 0;">
-<tr>
-  <td style="vertical-align: top; width: 100px;">Bend (<span id="preview_bend_display">0</span>°):</td>
-  <td>
-					     <script>
-					     preview_bend_mousedown = false;
-                                             </script>
-					     <br/>
-					     0°<input type="range" id="preview_bend" name="preview_bend" min="0" max="180" value="0" 
-                                             style="width: 150px; margin-top: -12px;"
-					     onmousedown="preview_bend_mousedown=true;"
-					     onmouseup="preview_bend_mousedown=false;"
-					     onmousemove="if(preview_bend_mousedown) document.getElementById('preview_bend_display').innerHTML=document.getElementById('preview_bend').value;"
-					     onchange="displayBendingValue(); preview_rebuild_model();" />180°
-
-  </td>			     
-</tr>
-
-
-<!-- This field 'thickness' is currently not in use (invisible) -->
-<tr>
-  <td style="vertical-align: top; width: 100px; display: none;">Thickness (<span id="preview_axis_offset_display">0</span>%):</td>
-  <td style="display: none;">
-					     <script>
-					     preview_axis_offset_mousedown = false;
-                                             </script>
-					     <br/>
-					     0%<input type="range" id="preview_axis_offset" name="preview_axis_offset" min="0" max="50" value="0" 
-                                             style="width: 150px; margin-top: -12px;"
-					     onmousedown="preview_axis_offset_mousedown=true;"
-					     onmouseup="preview_axis_offset_mousedown=false;"
-					     onmousemove="if(preview_axis_offset_mousedown) document.getElementById('preview_axis_offset_display').innerHTML=document.getElementById('preview_axis_offset').value;"
-					     onchange="displayBendingValue(); preview_rebuild_model();" />50%
-
-  </td>			     
-</tr>
-
-
-<!-- This field 'Twist' is currently not in use as it breaks the mold models in some cases (self-intersecting mesh) -->
-<!--
-<tr>
-  <td style="vertical-align: top; width: 100px;">Twist* (<span id="preview_twist_display">0</span>%):</td>
-  <td style="">
-					     <script>
-					     preview_twist_mousedown = false;
-                                             </script>
-					     <br/>
-					     0%<input type="range" id="preview_twist" name="preview_twist" min="0" max="15" value="0" 
-                                             style="width: 150px; margin-top: -12px;"
-					     onmousedown="preview_twist_mousedown=true;"
-					     onmouseup="preview_twist_mousedown=false;"
-					     onmousemove="if(preview_twist_mousedown) displayTwistValue();"
-					     onchange="displayTwistValue(); preview_rebuild_model();" 
-						      disabled="disabled" />15%<br/>
-					     <div style="text-align: right; font-size: 8pt;">*experimental</div>
-
-  </td>			     
-</tr>
--->
-<input type="hidden" id="preview_twist" name="preview_twist" min="0" max="15" value="0" />
-
-
-
-<!-- This is new since 2014-07-04 (version 0.2.36) -->
-<tr>
-  <td style="vertical-align: top; width: 100px;">Shape Style:</td>
-  <td style="">
-    <input type="radio" name="shape_style" id="shape_style_circle" value="circle" checked="checked" onchange="preview_rebuild_model();" /> <label for="shape_style_circle">Circle</label>
-    <input type="radio" name="shape_style" id="shape_style_oval" value="oval" onchange="preview_rebuild_model();" /> <label for="shape_style_oval">Oval</label>
-    <br/>
-    <input type="radio" name="shape_style" id="shape_style_square" value="square" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_square" class="disabled">Square</label>
-    <input type="radio" name="shape_style" id="shape_style_triangle" value="triangle" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_triangle" class="disabled">Triangle</label>
-  </td>			     
-</tr>
-
-
-<tr>
-  <td></td>
-  <td style="text-align: center;">
-    <div style="margin-top: 55px; margin-left: 25px;">
-      <script language="Javascript">
-	if( true || isDildoGeneratorDomain() ) {
-	document.write( "Featured by:<br/>\n" );
-	document.write( "<table border=\"0\">\n" );
-	document.write( "<tr><td style=\"padding: 10px;\">\n" );  
-	
-	document.write( "<a href=\"http://www.youin3d.com\" target=\"_blank\">" );
-	  document.write( "<img src=\"img/YOUin3D.com_C_75x64.png\" width=\"75\" height=\"64\" alt=\"YOUin3D.com\" /><br>\n" );
-	  document.write( "YOUin3D.com</a>\n ");
-
-	      document.write( "</td><td style=\"padding: 10px;\">\n" );
-	      document.write( "<a href=\"http://www.polygon-berlin.de\" target=\"_blank\">" );
-	  document.write( "<img src=\"img/logo_polygon_berlin_68x62.png\" width=\"70\" height=\"64\" alt=\"POLYGON Berlin\" /><br>\n" );
-	  document.write( "POLYGON Berlin</a>\n ");
-
-	      document.write( "</td></tr><tr><td colspan=\"2\" style=\"padding: 10px;\">\n" );
-	
-	document.write( "<a href=\"http://www.wamungo.com\" target=\"_blank\">" );
-	  document.write( "<img src=\"img/Wamungo-3D-Druck_freigestellt_125x36.png\" width=\"62\" height=\"18\" alt=\"Wamungo - 3D Druck - Alles f&uuml;r Alle\" /><br>\n" );
-	  document.write( "Wamungo.com</a><br/><br/>\n ");
-	      
-	      document.write( "</td></tr></table>\n" );
-	}
-      </script>
-    </div>
-  </td>
-</tr>
-
-
-</table>
-</div>
-<!-- END - - - - - -  MESH CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
-
-
-
-<!-- BEGIN - - - - -  PRINT CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
-<div class="register_card" id="print_controls" style="display: none;">
-<h3>Advanced controls</h3>
-<table style="border: 0;">
-
-<tr>
-  <td style="vertical-align: top;">Segments:</td>
-  <td>
-    <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
+  <div class="register_card" id="mesh_controls">
+    <h3>Mesh controls</h3>
+    <table style="border: 0;">
       <tr>
-	<td style="align: left; vertical-align: top;">
-	  <input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
-	  <label for="shape_segments">Shape</label>
+	<td style="vertical-align: top; width: 100px;">Bend (<span id="preview_bend_display">0</span>°):</td>
+	<td>
+	  <script>
+	    preview_bend_mousedown = false;
+          </script>
 	  <br/>
-	  <input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
-	  <label for="path_segments">Path</label>
-	</td>
-	
-	<td style="vertical-align: middle;" rowspan="2">
-	  <input type="button" onclick="increase_mesh_details()" value="+" />
-	</td>
-	<td style="vertical-align: middle;">
-	  <input type="button" onclick="decrease_mesh_details()" value="-" />
+	  0°<input type="range" id="preview_bend" name="preview_bend" min="0" max="180" value="0" 
+                   style="width: 150px; margin-top: -12px;"
+		   onmousedown="preview_bend_mousedown=true;"
+		   onmouseup="preview_bend_mousedown=false;"
+		   onmousemove="if(preview_bend_mousedown) document.getElementById('preview_bend_display').innerHTML=document.getElementById('preview_bend').value;"
+		   onchange="displayBendingValue(); preview_rebuild_model();" />180°
+
+	</td>			     
+      </tr>
+
+
+      <!-- This field 'thickness' is currently not in use (invisible) -->
+      <tr>
+	<td style="vertical-align: top; width: 100px; display: none;">Thickness (<span id="preview_axis_offset_display">0</span>%):</td>
+	<td style="display: none;">
+	  <script>
+	    preview_axis_offset_mousedown = false;
+          </script>
+	  <br/>
+	  0%<input type="range" id="preview_axis_offset" name="preview_axis_offset" min="0" max="50" value="0" 
+                   style="width: 150px; margin-top: -12px;"
+		   onmousedown="preview_axis_offset_mousedown=true;"
+		   onmouseup="preview_axis_offset_mousedown=false;"
+		   onmousemove="if(preview_axis_offset_mousedown) document.getElementById('preview_axis_offset_display').innerHTML=document.getElementById('preview_axis_offset').value;"
+		   onchange="displayBendingValue(); preview_rebuild_model();" />50%
+
+	</td>			     
+      </tr>
+
+
+      <!-- This field 'Twist' is currently not in use as it breaks the mold models in some cases (self-intersecting mesh) -->
+      <!--
+	  <tr>
+	    <td style="vertical-align: top; width: 100px;">Twist* (<span id="preview_twist_display">0</span>%):</td>
+	    <td style="">
+	      <script>
+		preview_twist_mousedown = false;
+              </script>
+	      <br/>
+	      0%<input type="range" id="preview_twist" name="preview_twist" min="0" max="15" value="0" 
+                       style="width: 150px; margin-top: -12px;"
+		       onmousedown="preview_twist_mousedown=true;"
+		       onmouseup="preview_twist_mousedown=false;"
+		       onmousemove="if(preview_twist_mousedown) displayTwistValue();"
+		       onchange="displayTwistValue(); preview_rebuild_model();" 
+		       disabled="disabled" />15%<br/>
+	      <div style="text-align: right; font-size: 8pt;">*experimental</div>
+
+	    </td>			     
+	  </tr>
+	  -->
+      <input type="hidden" id="preview_twist" name="preview_twist" min="0" max="15" value="0" />
+
+
+
+      <!-- This is new since 2014-07-04 (version 0.2.36) -->
+      <tr>
+	<td style="vertical-align: top; width: 100px;">Shape Style:</td>
+	<td style="">
+	  <input type="radio" name="shape_style" id="shape_style_circle" value="circle" checked="checked" onchange="preview_rebuild_model();" /> <label for="shape_style_circle">Circle</label>
+	  <input type="radio" name="shape_style" id="shape_style_oval" value="oval" onchange="preview_rebuild_model();" /> <label for="shape_style_oval">Oval</label>
+	  <br/>
+	  <input type="radio" name="shape_style" id="shape_style_square" value="square" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_square" class="disabled">Square</label>
+	  <input type="radio" name="shape_style" id="shape_style_triangle" value="triangle" onchange="preview_rebuild_model();" disabled="disabled" /> <label for="shape_style_triangle" class="disabled">Triangle</label>
+	</td>			     
+      </tr>
+
+
+      <tr>
+	<td></td>
+	<td style="text-align: center;">
+	  <div style="margin-top: 55px; margin-left: 25px;">
+	    <script language="Javascript">
+	      if( true || isDildoGeneratorDomain() ) {
+	      document.write( "Featured by:<br/>\n" );
+	      document.write( "<table border=\"0\">\n" );
+		document.write( "<tr><td style=\"padding: 10px;\">\n" );  
+		    
+		    document.write( "<a href=\"http://www.youin3d.com\" target=\"_blank\">" );
+		      document.write( "<img src=\"img/YOUin3D.com_C_75x64.png\" width=\"75\" height=\"64\" alt=\"YOUin3D.com\" /><br>\n" );
+		      document.write( "YOUin3D.com</a>\n ");
+
+		    document.write( "</td><td style=\"padding: 10px;\">\n" );
+		    document.write( "<a href=\"http://www.polygon-berlin.de\" target=\"_blank\">" );
+		      document.write( "<img src=\"img/logo_polygon_berlin_68x62.png\" width=\"70\" height=\"64\" alt=\"POLYGON Berlin\" /><br>\n" );
+		      document.write( "POLYGON Berlin</a>\n ");
+
+		    document.write( "</td></tr><tr><td colspan=\"2\" style=\"padding: 10px;\">\n" );
+		    
+		    document.write( "<a href=\"http://www.wamungo.com\" target=\"_blank\">" );
+		      document.write( "<img src=\"img/Wamungo-3D-Druck_freigestellt_125x36.png\" width=\"62\" height=\"18\" alt=\"Wamungo - 3D Druck - Alles f&uuml;r Alle\" /><br>\n" );
+		      document.write( "Wamungo.com</a><br/><br/>\n ");
+		    
+		    document.write( "</td></tr></table>\n" );
+	      }
+	    </script>
+	  </div>
 	</td>
       </tr>
-    </table>
-	
-  </td>
-</tr>
 
-<tr>
-  <td></td>
-  <td>
-        <input type="checkbox" id="build_negative_mesh" name="build_negative_mesh" class="tooltip" title="Set this value if you want to have a hollow shape to be generated. The strength of the hollow hull is specified by the 'Mesh Hull Strength' setting." onchange="document.getElementById('mesh_hull_strength').disabled=(document.getElementById('build_negative_mesh').checked?'':'disabled'); preview_rebuild_model();"/>
+
+    </table>
+  </div>
+  <!-- END - - - - - -  MESH CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
+
+
+
+  <!-- BEGIN - - - - -  PRINT CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
+  <div class="register_card" id="print_controls" style="display: none;">
+    <h3>Advanced controls</h3>
+    <table style="border: 0;">
+
+      <tr>
+	<td style="vertical-align: top;">Segments:</td>
+	<td>
+	  <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
+	    <tr>
+	      <td style="align: left; vertical-align: top;">
+		<input type="number" id="shape_segments" name="shape_segments" value="80" class="tooltip" title="The number of vertices on the vertical shape (on the circle). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
+		<label for="shape_segments">Shape</label>
+		<br/>
+		<input type="number" id="path_segments" name="path_segments" value="80" class="tooltip" title="The number of vertices on the horizontal shape (on the outer path). More vertices make the mesh more accurate but it renders slower." style="width: 45px;" />
+		<label for="path_segments">Path</label>
+	      </td>
+	      
+	      <td style="vertical-align: middle;" rowspan="2">
+		<input type="button" onclick="increase_mesh_details()" value="+" />
+	      </td>
+	      <td style="vertical-align: middle;">
+		<input type="button" onclick="decrease_mesh_details()" value="-" />
+	      </td>
+	    </tr>
+	  </table>
+	  
+	</td>
+      </tr>
+
+      <tr>
+	<td></td>
+	<td>
+          <input type="checkbox" id="build_negative_mesh" name="build_negative_mesh" class="tooltip" title="Set this value if you want to have a hollow shape to be generated. The strength of the hollow hull is specified by the 'Mesh Hull Strength' setting." onchange="document.getElementById('mesh_hull_strength').disabled=(document.getElementById('build_negative_mesh').checked?'':'disabled'); preview_rebuild_model();"/>
           <label for="build_negative_mesh">Hollow</label>
-  </td>
-</tr>
+	</td>
+      </tr>
 
-<tr>
-  <td> <label for="mesh_hull_strength">Mesh&nbsp;Hull&nbsp;Strength:</label><br/>
-					     (only if hollow)
-  </td>
-  <td style="vertical-align: top;">
-        <input type="number" id="mesh_hull_strength" name="mesh_hull_strength" value="6" class="tooltip" title="..." onkeyup="bezierCanvasHandler.redraw();preview_rebuild_model();" style="width: 35px;" onchange="preview_rebuild_model();" disabled="disabled" />mm
-         
-  </td>
-</tr>
+      <tr>
+	<td> <label for="mesh_hull_strength">Mesh&nbsp;Hull&nbsp;Strength:</label><br/>
+	  (only if hollow)
+	</td>
+	<td style="vertical-align: top;">
+          <input type="number" id="mesh_hull_strength" name="mesh_hull_strength" value="6" class="tooltip" title="..." onkeyup="bezierCanvasHandler.redraw();preview_rebuild_model();" style="width: 35px;" onchange="if( typeof preview_rebuild_model != 'undefined' ) preview_rebuild_model();" disabled="disabled" />mm
+          
+	</td>
+      </tr>
 
-<tr>
-  <td>Close path at </td>
-  <td>
-    <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
-      <tr><td style="align: left;">
-        <input type="checkbox" id="mesh_close_path_begin" name="mesh_close_path_begin" onchange="preview_rebuild_model();" class="tooltip" title="The path begin is the top of the mesh. In some cases the top bezier point is not located at the right bound. The top shape can be closed with this option then." />
-          <label for="mesh_close_path_begin">begin</label>
-	  </td>
-          <td style="align: right;">
-	  <input type="checkbox" id="mesh_close_path_end" name="mesh_close_path_end" onchange="preview_rebuild_model();" class="tooltip" title="The path end is the bottom of the mesh." checked="checked" />
-          <label for="mesh_close_path_end">end</label>
-	  </td></tr>
-      </table>
-  </td>
-</tr>
+      <tr>
+	<td>Close path at </td>
+	<td>
+	  <table style="padding: 0px; spacing: 0px; border: 0; width: 100%;">
+	    <tr><td style="align: left;">
+		<input type="checkbox" id="mesh_close_path_begin" name="mesh_close_path_begin" onchange="preview_rebuild_model();" class="tooltip" title="The path begin is the top of the mesh. In some cases the top bezier point is not located at the right bound. The top shape can be closed with this option then." />
+		<label for="mesh_close_path_begin">begin</label>
+	      </td>
+              <td style="align: right;">
+		<input type="checkbox" id="mesh_close_path_end" name="mesh_close_path_end" onchange="preview_rebuild_model();" class="tooltip" title="The path end is the bottom of the mesh." checked="checked" />
+		<label for="mesh_close_path_end">end</label>
+	    </td></tr>
+	  </table>
+	</td>
+      </tr>
 
-<tr>
-  <td></td>
-  <td>
-        <input type="checkbox" id="wireframe" name="wireframe" onchange="preview_rebuild_model();" class="tooltip" title="Well, just toggles wireframe on/off." />
+      <tr>
+	<td></td>
+	<td>
+          <input type="checkbox" id="wireframe" name="wireframe" onchange="preview_rebuild_model();" class="tooltip" title="Well, just toggles wireframe on/off." />
           <label for="wireframe">Wireframe</label>
-  </td>
-</tr>
+	</td>
+      </tr>
 
-<tr>
-  <td></td>
-  <td>
-	<!-- <div style="position: relative; top: -12px; margin-bottom: -15px;"> -->
-        <input type="checkbox" id="triangulate" name="triangulate" onchange="preview_rebuild_model();" checked="checked" />
-	<label for="triangulate">Triangulate</label>
-	<span class="tooltip" title="Note: quad faces render faster but only triangulated meshes are STL compatible!">(!)</span><br/>
-	<!-- </div> -->
-      
-  </td>
-</tr>
+      <tr>
+	<td></td>
+	<td>
+	  <!-- <div style="position: relative; top: -12px; margin-bottom: -15px;"> -->
+          <input type="checkbox" id="triangulate" name="triangulate" onchange="preview_rebuild_model();" checked="checked" />
+	  <label for="triangulate">Triangulate</label>
+	  <span class="tooltip" title="Note: quad faces render faster but only triangulated meshes are STL compatible!">(!)</span><br/>
+	  <!-- </div> -->
+	  
+	</td>
+      </tr>
 
-<tr>
-  <td></td>
-  <td>
-        <input type="checkbox" id="split_shape" name="split_shape" onchange="toggleFormElementsEnabled(); preview_rebuild_model();" />
+      <tr>
+	<td></td>
+	<td>
+          <input type="checkbox" id="split_shape" name="split_shape" onchange="toggleFormElementsEnabled(); preview_rebuild_model();" />
           <label for="split_shape">Split shape/mesh</label>
-  </td>
-</tr>
-
-
-<tr>
-  <td>Parts:</td>
-  <td>
-    <div class="indent_1">
-    <table style="border: 0;">
-      <tr>
-	<td>
-	  <input type="radio" id="parts_both" name="parts" onchange="preview_rebuild_model();" value="both" checked="checked" disabled="disabled" />
-          <label for="parts_both">Both</label>
-	</td>
-	<td>
-	  <input type="radio" id="parts_left" name="parts" onchange="preview_rebuild_model();" value="left" disabled="disabled" />
-          <label for="parts_left">Left</label>
-	</td>
-	<td>
-	  <input type="radio" id="parts_right" name="parts" onchange="preview_rebuild_model();" value="right" disabled="disabled" />
-          <label for="parts_right">Right</label>
 	</td>
       </tr>
-    </table>
-    </div>
-  </td>
-</tr>
 
 
-<tr>
-  <td></td>
-  <td>
-    <div class="indent_1">
-        <input type="checkbox" id="arrange_splits_on_plane" name="arrange_splits_on_plane" onchange="toggleFormElementsEnabled(); preview_rebuild_model();" disabled="disabled" />
-        <label for="arrange_splits_on_plane">Arrange splits on plane</label>
-	</div>
-  </td>
-</tr>
-
-<tr>
-  <td>Directions:</td>
-  <td>
-    <div class="indent_2">
-    <table style="border: 0;">
       <tr>
+	<td>Parts:</td>
 	<td>
-	  <input type="radio" id="directions_xyz" name="directions" onchange="preview_rebuild_model();" value="xyz" checked="checked" disabled="disabled" />
-          <label for="directions_xyz">(x,y,z)</label>
-	</td>
-	<td>
-	  <input type="radio" id="directions_yxz" name="directions" onchange="preview_rebuild_model();" value="zxy" disabled="disabled" />
-          <label for="directions_yxz">(-z,x,-y)</label>
+	  <div class="indent_1">
+	    <table style="border: 0;">
+	      <tr>
+		<td>
+		  <input type="radio" id="parts_both" name="parts" onchange="preview_rebuild_model();" value="both" checked="checked" disabled="disabled" />
+		  <label for="parts_both">Both</label>
+		</td>
+		<td>
+		  <input type="radio" id="parts_left" name="parts" onchange="preview_rebuild_model();" value="left" disabled="disabled" />
+		  <label for="parts_left">Left</label>
+		</td>
+		<td>
+		  <input type="radio" id="parts_right" name="parts" onchange="preview_rebuild_model();" value="right" disabled="disabled" />
+		  <label for="parts_right">Right</label>
+		</td>
+	      </tr>
+	    </table>
+	  </div>
 	</td>
       </tr>
+
+
+      <tr>
+	<td></td>
+	<td>
+	  <div class="indent_1">
+            <input type="checkbox" id="arrange_splits_on_plane" name="arrange_splits_on_plane" onchange="toggleFormElementsEnabled(); preview_rebuild_model();" disabled="disabled" />
+            <label for="arrange_splits_on_plane">Arrange splits on plane</label>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td>Directions:</td>
+	<td>
+	  <div class="indent_2">
+	    <table style="border: 0;">
+	      <tr>
+		<td>
+		  <input type="radio" id="directions_xyz" name="directions" onchange="preview_rebuild_model();" value="xyz" checked="checked" disabled="disabled" />
+		  <label for="directions_xyz">(x,y,z)</label>
+		</td>
+		<td>
+		  <input type="radio" id="directions_yxz" name="directions" onchange="preview_rebuild_model();" value="zxy" disabled="disabled" />
+		  <label for="directions_yxz">(-z,x,-y)</label>
+		</td>
+	      </tr>
+	    </table>
+	  </div>
+	</td>
+      </tr>
+
+      <tr>
+	<td>Base type: </td> 
+	<td>
+	  <div class="indent_2">
+	    <input type="radio" name="mesh_hull_type" id="mesh_hull_perpendicular" value="perpendicular" checked="checked" disabled="disabled" onchange="preview_rebuild_model();" />
+	    <label for="mesh_hull_perpendicular">Perpendicular</label>
+
+	    <input type="radio" name="mesh_hull_type" id="mesh_hull_prism" value="prism" disabled="disabled" onchange="preview_rebuild_model();" />
+	    <label for="mesh_hull_prism">Prism</label>
+	  </div>
+	</td>                                                                                                   
+      </tr>  
+
+      <!--
+	  <tr>
+	    <td>Hull style: </td> 
+	    <td>
+	      <div class="indent_1">
+		<input type="radio" name="mesh_hull_style" id="mesh_hull_style_continuous" value="continuous" checked="checked" onchange="preview_rebuild_model();" title="[Currently not in use]" />
+		<label for="mesh_hull_style_continuous">Continuous</label>
+
+		<input type="radio" name="mesh_hull_style" id="mesh_hull_style_discrete" value="discrete" onchange="preview_rebuild_model();" title="[Currently not in use]" />
+		<label for="mesh_hull_style_discrete">Discrete</label>
+	      </div>
+	    </td>                                                                                                   
+	  </tr>
+	  -->  
+
+      <tr>
+	<td></td>
+	<td><input type="button" value="Rebuild" onclick="preview_rebuild_model();"></td>
+      </tr>
+
     </table>
-    </div>
-  </td>
-</tr>
-
-<tr>
-  <td>Base type: </td> 
-  <td>
-    <div class="indent_2">
-    <input type="radio" name="mesh_hull_type" id="mesh_hull_perpendicular" value="perpendicular" checked="checked" disabled="disabled" onchange="preview_rebuild_model();" />
-    <label for="mesh_hull_perpendicular">Perpendicular</label>
-
-    <input type="radio" name="mesh_hull_type" id="mesh_hull_prism" value="prism" disabled="disabled" onchange="preview_rebuild_model();" />
-    <label for="mesh_hull_prism">Prism</label>
-    </div>
-  </td>                                                                                                   
-</tr>  
-
-<!--
-<tr>
-  <td>Hull style: </td> 
-  <td>
-    <div class="indent_1">
-    <input type="radio" name="mesh_hull_style" id="mesh_hull_style_continuous" value="continuous" checked="checked" onchange="preview_rebuild_model();" title="[Currently not in use]" />
-    <label for="mesh_hull_style_continuous">Continuous</label>
-
-    <input type="radio" name="mesh_hull_style" id="mesh_hull_style_discrete" value="discrete" onchange="preview_rebuild_model();" title="[Currently not in use]" />
-    <label for="mesh_hull_style_discrete">Discrete</label>
-    </div>
-  </td>                                                                                                   
-</tr>
--->  
-
-<tr>
-  <td></td>
-  <td><input type="button" value="Rebuild" onclick="preview_rebuild_model();"></td>
-</tr>
-
-</table>
-</div>
+  </div>
 </form>
 <!-- END - - - - - -  PRINT CONTROLS REGISTER CARD - - - - - - - - - - - - - -->
 
@@ -533,10 +484,10 @@
 
 
 <div id="register_head">
-<span onclick="show_register_card('mesh_controls');"       id="regh_mesh_controls"       class="register_tab_selected">Mesh Settings</span>
-<span onclick="show_register_card('print_controls');"      id="regh_print_controls"      class="register_tab">Advanced Settings</span>
-<span onclick="show_register_card('background_settings');" id="regh_background_settings" class="register_tab">Background</span>
-<span onclick="show_register_card('color_settings');"      id="regh_color_settings"      class="register_tab">Color</span>
+  <span onclick="show_register_card('mesh_controls');"       id="regh_mesh_controls"       class="register_tab_selected">Mesh Settings</span>
+  <span onclick="show_register_card('print_controls');"      id="regh_print_controls"      class="register_tab">Advanced Settings</span>
+  <span onclick="show_register_card('background_settings');" id="regh_background_settings" class="register_tab">Background</span>
+  <span onclick="show_register_card('color_settings');"      id="regh_color_settings"      class="register_tab">Color</span>
 </div>
 
 
@@ -768,9 +719,15 @@
 	
 	<li class="heading"><a href="#">Help</a>
 	  <ul>
+	    <li>
+	      <a href="#" class="popout">Interface &gt;</a>
+	      <ul>
+		<li><a href="#" onclick="decreaseGUISize()">Smaller (-10%)</a></li>
+		<li><a href="#" onclick="increaseGUISize()">Bigger  (+10%)</a></li>
+	      </ul>
+	    </li>
 	    <li><a href="#" onclick="open_faqs();">FAQ</a></li>
 	    <li><a href="#" onclick="open_faqs('general_publish');">How to publish?</a></li>
-	    <!-- <li><a href="#" onclick="open_legal_notice();">Legal Notice</a></li> -->
 	    <li><a href="http://www.dildo-generator.com/resources/Dildo_Slides_re-publica_20140507.pdf" target="_blank">Making a Dildo (PDF)</a></li>
 	    <li><a href="#" onclick="display_bezier_string();">Display B&eacute;zier String</a></li>
 	    <li><a href="#" onclick="show_bezier_input_dialog();">Paste B&eacute;zier String ...</a></li>

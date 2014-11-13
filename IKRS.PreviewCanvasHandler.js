@@ -103,6 +103,12 @@ IKRS.PreviewCanvasHandler = function( bezierCanvasHandler,
 IKRS.PreviewCanvasHandler.prototype = new IKRS.Object();
 IKRS.PreviewCanvasHandler.prototype.constructor = IKRS.PreviewCanvasHandler;
 
+IKRS.PreviewCanvasHandler.prototype.setRendererSize = function( width, height ) {
+     this.preview_renderer.setSize( width, 
+				    height 
+				  ); 
+};
+
 IKRS.PreviewCanvasHandler.prototype.mouseWheelHandler = function( e ) {
 
     var delta = 0;

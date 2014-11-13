@@ -31,6 +31,19 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-11-13] v0.3.19
+ - Added function IKRS.BezierCanvasHandler.setRendererSize(int,int).
+ - Added function IKRS.PreviewCanvasHandler.setRendererSize(int,int).
+ - Added an auto-rescale function on document load.
+ 
+
+[2014-11-12] v0.3.18
+ - Added functions increaseGUISize() and decreaseGUISize() to the 
+   main.js file.
+ - Added two new menu items to the 'Help' menu:
+   	 + Interface/Smaller (-10%)
+	 + Interface/Bigger  (+10%)
+
 [2014-11-10] v0.3.17
  - Moved BEZIER_CANVAS_WIDTH/-HEIGHT and PREVIEW_CANVAS_WIDTH/-HEIGHT 
    from the main.js file to the config.js file. They are now member

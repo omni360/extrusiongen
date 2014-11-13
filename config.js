@@ -27,6 +27,12 @@ _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT         = 600; // 512; // 768;
 _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH         = 400, // 384; // 512;
 _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT        = 600; // 512; // 768
 
+/**
+ * If set to true the initialisation will resize the canvas elements
+ * so they fit into the available screen dimensions.
+ **/
+_DILDO_CONFIG.AUTO_RESIZE_ON_DOCUMENT_LOAD = true;
+
 
 /**
  * Set this flag to true if you wish the Model->Publish item to be hidden.
