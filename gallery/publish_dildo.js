@@ -17,10 +17,6 @@ function _publish_dildo_design() {
 
 
     // Fetch the dildoID (if already saved before)
-    /*var dildoID     = -1;
-    if( document.getElementById("dildoID") )
-	dildoID = document.getElementById("dildoID").value;
-    */
     var dildoID   = getCurrentDildoID();
     var dildoHash = getCurrentDildoHash();
     

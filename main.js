@@ -400,6 +400,8 @@ function _repositionComponentsBySize() {
     bezierControls.style.x      = bezierControls.style.left = bezierLeft + "px";
     bezierControls.style.y      = bezierControls.style.top  = (40 + _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT + 10 + 16 + 10) + "px";
 
+    var donations               = document.getElementById( "donations" );
+    donations.style.x           = donations.style.left   = (bezierLeft + _DILDO_CONFIG.BEZIER_CANVAS_WIDTH + 75) + "px";
     
     var versionTag              = document.getElementById( "version_tag" );
     // 400px is the _constant_ width of the control panel

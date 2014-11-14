@@ -31,6 +31,12 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2014-11-24] v0.3.20
+ - Finished the canvas autoreize function (the donation button still
+   needed to be moved to its dynamic position).
+ - Fixed the preview image issue on resized canvas sizes.
+
+
 [2014-11-13] v0.3.19
  - Added function IKRS.BezierCanvasHandler.setRendererSize(int,int).
  - Added function IKRS.PreviewCanvasHandler.setRendererSize(int,int).
