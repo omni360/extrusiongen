@@ -20,12 +20,17 @@ if( !_DILDO_CONFIG.IMAGES || typeof _DILDO_CONFIG.IMAGES === "undefined" )
     _DILDO_CONFIG.IMAGES = {};
 
 
-// Global constants (modifify when resizing the HTML5 canvas)
-_DILDO_CONFIG.BEZIER_CANVAS_WIDTH          = 400; // 384; // 512;
-_DILDO_CONFIG.BEZIER_CANVAS_HEIGHT         = 600; // 512; // 768;
+/**
+ * Some global constants that define the desired canvas sizes (modify when 
+ * resizing the HTML5 canvas).
+ * Note that these values might change in runtime if the AUTO_RESIZE_ON_DOCUMENT_LOAD
+ * is set to true.
+ **/
+_DILDO_CONFIG.BEZIER_CANVAS_WIDTH          = 400;
+_DILDO_CONFIG.BEZIER_CANVAS_HEIGHT         = 600;
 
-_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH         = 400, // 384; // 512;
-_DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT        = 600; // 512; // 768
+_DILDO_CONFIG.PREVIEW_CANVAS_WIDTH         = 400;
+_DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT        = 600;
 
 /**
  * If set to true the initialisation will resize the canvas elements
@@ -49,7 +54,19 @@ _DILDO_CONFIG.HIDE_PUBLISH_MESH_MENU       = false;
 _DILDO_CONFIG.HIDE_EXPORT_MESH_MENU       = false;  
 //_DILDO_CONFIG.HIDE_EXPORT_MESH_MENU       = true; 
 
+/**
+ * Set this flag to true if you wish the Model->Save (*.zip) sub menu to be
+ * hidden.
+ * Valid values: true|false
+ **/
+_DILDO_CONFIG.HIDE_SAVE_FILE_ITEM         = false; 
 
+/**
+ * Set this flag to true if you wish the Model->Load (*.zip) sub menu to be
+ * hidden.
+ * Valid values: true|false
+ **/
+_DILDO_CONFIG.HIDE_LOAD_FILE_ITEM         = false; 
 
 /**
  * Set this flag to true if you wish the whole Print menu to be hidden.
@@ -63,7 +80,6 @@ _DILDO_CONFIG.HIDE_PRINT_MENU             = !isDildoGeneratorDomain();
  *
  * This only takes effect if the _DILDO_CONFIG.HIDE_PRINT_MENU is set to false.
  **/
-//_DILDO_CONFIG.ORDER_PRINT_ACTION          = "_order_send_to_server('store_custom_dildo.php?bend=%bend%&bezier_path=%bezier_path%&id=%id%');";
 _DILDO_CONFIG.ORDER_PRINT_ACTION          = "order_print();";
 
 

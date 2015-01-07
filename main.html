@@ -37,11 +37,6 @@
   </script>
 </div>
 
-<!--
-<div id="beta_tag">
-  <img src="img/icon_beta_A_(50x25).png" alt="This is a beta version!" width="36" height="18" />
-</div>
--->
 
 <div id="donations">
   <!-- Insert PayPal donation button here -->
@@ -659,25 +654,52 @@
 	<li class="heading"><a href="#">Model</a>
 	  <ul>
 	    <li><a href="#" onclick="newScene()">New</a></li>
-	    <script>
+	    <script language="Javsscript">
 	      if( _DILDO_PRESETS )
 	          populate_dildo_presets_menu( _DILDO_PRESETS );
 	    </script>
+	    <script language="Javascript">
+	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_SAVE_FILE_ITEM ) {
+	      document.write( "<li>\n" +
+		"<a href=\"#\" onclick=\"exportZIP()\">Save (*.zip)</a>\n" +
+		"<form name=\"zip_form\">\n" +
+		  "<input type=\"hidden\" name=\"compress_zip\" value=\"0\" />\n" +
+		  "</form>\n" +
+		"</li>\n"
+	      );
+	      }
+	    </script>
+	    <!--
 	    <li>
 	      <a href="#" onclick="exportZIP()">Save (*.zip)</a>
 	      <form name="zip_form">
 		<input type="hidden" name="compress_zip" value="0" />
 	      </form>
 	    </li>
-	    <li>
-	      <!-- <a href="#" onclick="alert('no action assigned yet')">Load</a> -->
+	    -->
+	      <script language="Javascript">
+	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_LOAD_FILE_ITEM ) {
+	      document.write( "<li>\n" +
+		  "<form name=\"zip_import_form\">\n" +
+		    "<a href=\"#\">Load (*.zip)</a>\n" +
+		    "<div class=\"open_file_menu_div\">\n" +
+		      "<input type=\"file\" name=\"zip_upload_file\" accept=\"application/zip\" class=\"open_file_menu_input\" onchange=\"importZIP();\" />\n" +
+		    "</div>\n" +
+		  "</form>\n" +
+	      "</li>\n"
+	      );
+	      }
+	      </script>
+	      <!--
 	      <form name="zip_import_form">		
 		<a href="#">Load (*.zip)</a>
 		<div class="open_file_menu_div">
 		  <input type="file" name="zip_upload_file" accept="application/zip" class="open_file_menu_input" onchange="importZIP();" />
 		</div>
 	      </form>
+	      
 	    </li>
+	-->
 	    <script>
 	      if( _DILDO_CONFIG && !_DILDO_CONFIG.HIDE_EXPORT_MESH_MENU ) {
 	      document.write( "<li><a href=\"#\" class=\"popout\">Export Mesh &gt;</a>\n" +

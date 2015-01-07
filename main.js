@@ -19,21 +19,6 @@ this.previewCanvasHandler  = null;
 
 this.keyHandler            = null;
 
-// Global constants (modidify when resizing the HTML5 canvas)
-/* DEPRECATED replaced by _DILDO_CONFIG.BEZIER_CANVAS_WIDTH 
- * and _DILDO_CONFIG.BEZIER_CANVAS_HEIGHT. 
- * See file config.js
- */
-//var BEZIER_CANVAS_WIDTH    = 512;
-//var BEZIER_CANVAS_HEIGHT   = 768;
-
-/* DEPRECATED replaced by _DILDO_CONFIG.PREVIEW_CANVAS_WIDTH 
- * and _DILDO_CONFIG.PREVIEW_CANVAS_HEIGHT. 
- * See file config.js
- */
-//var PREVIEW_CANVAS_WIDTH   = 512;
-//var PREVIEW_CANVAS_HEIGHT  = 768;
-
 
 /**
  * This function creates a human-readable date/time string.

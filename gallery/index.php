@@ -15,6 +15,7 @@
  margin:             35px; 
   }
 </style>
+<script language="Javascript" type="text/javascript" src="../config.js"></script>
 <script language="Javascript" type="text/javascript" src="../three.js"></script>
 <script language="Javascript" type="text/javascript" src="../IKRS.js"></script>
 <script language="Javascript" type="text/javascript" src="../IKRS.Object.js"></script>
@@ -30,14 +31,6 @@
    // Replace ' by ".
    // The parser function requires double quotes around the member names.
    bezier_JSON = bezier_JSON.replace( /\'/g, "\"" );
-   
-   /*
-   window.alert( "dildoID=" + id + ",\n" +
-		 "publicDildoHash=" + public_hash + ",\n" +
-		 "bend=" + bend + ",\n" +
-		 "bezier_path=" + bezier_JSON
-		 );
-   */
 
    // Parse JSON string to object
    var bezierPath = IKRS.BezierPath.fromJSON( bezier_JSON.trim() );
@@ -203,7 +196,7 @@ if( !$result ) {
     if( $public_hash ) {
       echo
 	   
-	"         <img src=\"getPreviewImage.php?public_hash=" . $row["public_hash"] . "\" width=\"512\" height=\"768\" alt=\"dildo preview #" . $row["id"] . "\"/>\n";
+	"         <img src=\"getPreviewImage.php?public_hash=" . $row["public_hash"] . "\" width=\"400\" height=\"600\" alt=\"dildo preview #" . $row["id"] . "\"/>\n";
     } else {
       echo 
 	"         <a href=\"?public_hash=" . $row["public_hash"] . "\">" . 
@@ -233,7 +226,7 @@ if( !$result ) {
 
     // Also display bezier image?
     if( $public_hash ) {
-      echo "      <td class=\"gallery\"><img src=\"getBezierImage.php?public_hash=" . $row["public_hash"] . "\" width=\"512\" height=\"768\" alt=\"dildo bezier preview #" . $row["id"] . "\" /></td>\n";
+      echo "      <td class=\"gallery\"><img src=\"getBezierImage.php?public_hash=" . $row["public_hash"] . "\" width=\"400\" height=\"600\" alt=\"dildo bezier preview #" . $row["id"] . "\" /></td>\n";
     }
     
     

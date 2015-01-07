@@ -41,10 +41,10 @@ if( !$mcon ) {
 
 } else {
 
-  //$query =
-  //  "SELECT * FROM custom_dildos WHERE ";
+  $query_dump =
+    "SELECT * FROM custom_dildos WHERE ";
   
-  
+  $e = 0;
   foreach( $_GALLERY_FAVOURITES as $section_name => $hashes ) {
     
     $query =
@@ -59,17 +59,28 @@ if( !$mcon ) {
 	echo "</a><br/>\n";
       */
       
-      if( $i > 0 )
-      $query .= " OR";
+      if( $i > 0 ) {
+	$query .= " OR";
+      }
+      if( $e > 0 )
+	$query_dump .= " OR";
       
       $query .= " public_hash = '" . addslashes($h) . "'";
+      $query_dump .= " public_hash = '" . addslashes($h) . "'";
       
       $i++;
+      $e++;
       
     }
     
     $query .= ";";
-    
+    // $query_dump .= ";";
+    /*
+    echo "Dump:";
+    echo "<code>" . $query_dump . "</code>\n";
+    echo "<br/>\n";
+    */
+
     $result = mysql_query( $query, $mcon );
     if( !$result ) {
 
@@ -100,7 +111,11 @@ if( !$mcon ) {
 
 } // END else [db connection established]
 
-
+/*
+echo "Dump:<br>\n";                                                                                                                              
+echo "<code>" . $query_dump . "</code>\n";                                                                                                 
+echo "<br/>\n";   
+*/
 ?>
 </body>
 </html>
