@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dildo Generator - Integration Guide</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Dildo Generator - Integration Guide">
+  <meta name="author" content="Ikaros Kappler">
+  <link rel="stylesheet" href="../style.css" type="text/css" />
+</head>
+
+<body>
+<style>
+    html {
+    margin:                  35px;
+    /* background:           url('img/Screenshot_20140502_B_4_brighter.png') no-repeat center center fixed; */
+    background:              url('integration_guide_background.png') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size:    cover;
+    -o-background-size:      cover;
+    background-size:         cover;
+    }
+  </style>
+
+Date: 2014-11-14<br/>
+<!--
+<img src="img/Screenshot_20140425_overlapping_B_128x192.png" width="128" height="192" alt="Dildo Generator Image" align="right" />
+-->
+<a href="http://www.dildo-generator.com" target="_blank">
+  <img src="Twitter_Logo_B1.png" width="192" height="192" alt="Dildo Generator Image" align="right" style="border: 0;" />
+</a>
+<h1 class="integration">Dildo Generator - Integration Guide</h1>
+
+<p>
+  <div class="integration">        
+    <h2>Getting Started</h2>
+
+    If you just want to have some plain files 
+    download the <a href="https://github.com/IkarosKappler/extrusiongen/archive/master.zip">*.zip</a><br/>
+    <br/>
+    <br/>
+    If you are more into programming download the git repository from <a href="https://github.com/IkarosKappler/extrusiongen.git" target="_blank">https://github.com/IkarosKappler/extrusiongen.git</a>:<br/>
+    <div class="terminal">
+      <span class="terminal_mnemonic">git</span> 
+      <span class="terminal_argument">clone</span> 
+      https://github.com/IkarosKappler/extrusiongen.git
+    </div>
+
+    There is now a new subfolder called <code class="integration">extrusiongen</code>:<br/>
+
+    <pre>
+      extrusiongen/
+         .git/
+         gallery/
+         img/
+         inc/
+         moo_tools_drop_down_menu/
+         resources/
+         tests/
+         Base64.js
+         base64-binary.js
+         Blob.js
+         <b>config.js</b>
+         console_check.js
+         <i>[...]</i>
+	 version.js
+	 ZipFileExporter.js
+	 ZipFileImporter.js
+    </pre>
+      
+    Take a quick look at the <code class="integration">config.js</code> file and you will find
+    all basic configuration settings. There are currently only a few settings, less 
+    than 2<sup>4</sup>.
+
+    <br/>
+    <br/>
+
+    [...]
+  </div>
+  
+
+
+
+  <div class="integration">        
+    <h2>First Run</h2>
+    Open your web browser and load the <code class="integration">main.html</code>. You should see
+    the default Dildo-Generator front page now.<br/>
+    <br/>
+    If you see this, then you should enable WebGL inside you browser (or get a WebGL capable one):<br/>
+    <div style="margin-left: 25px;">
+      <img src="Screenshot_20141114_No_WebGL.png" width="495" height="297" alt="Warning 'No WebGL'" />
+    </div>
+    <br/>
+    <br/>
+    If your browser supports WebGL (what it hopefully does!) you should see something like this:<br/>
+    <div style="margin-left: 25px;">
+      <img src="Screenshot_20141114_full_view.png" width="800" height="560" alt="Dildo-Generator front page" />
+    </div>
+    <br/>
+    <br/>
+
+    
+    The Document Object Model (DOM) has following basic elements:<br/>
+    <div style="margin-left: 25px;">
+      <img src="Screenshot_20141114_full_view_Labeled.png" width="800" height="560" alt="Dildo-Generator front page (labeled)" />
+    </div>
+    <br/>
+    <br/>
+    
+    If you made everything correct you should see something like this:
+    
+      
+    The main.html cointains a set of elements:
+    <ul>
+      <li>preview_canvas (DIV)</li>
+      <li>bezier_canvas (DIV)</li>
+      <li>...</li>
+    </ul>
+    
+    <br/>
+   
+  </div>
+  
+</p>
+
+</body>
+</html>

@@ -7,9 +7,10 @@
  * The actual generator logic is located in the class files.
  *
  *
- * @author Ikaros Kappler
- * @date 2013-10-13
- * @version 1.0.0
+ * @author   Ikaros Kappler
+ * @date     2013-10-13
+ * @modified 2015-01-30 Ikaros Kappler (GET params handling: added decodeURI()).
+ * @version  1.0.1
  **/
 
 
@@ -188,6 +189,7 @@ function onloadHandler() {
 	    return {};
 
 	var prmstr = url.substr( index+1 );
+	prmstr     = decodeURI(prmstr);     // '[' and ']' might be encoded!
 	return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
     }
     function transformToAssocArray( prmstr ) {
@@ -201,6 +203,7 @@ function onloadHandler() {
     }
 
     var params = getSearchParameters();
+    //window.alert( "params=" + JSON.stringify(params) );
     _applyParamsToMainForm( params );
 
  

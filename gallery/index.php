@@ -258,10 +258,9 @@ mysql_close( $mcon );
 
 <br/>
 
-<!-- PLACEHOLDER for Piwik -->
+<!-- PIWIK PLACEHOLDER -->
 
-<!-- PLACEHOLDER for Google Adverts -->
-
+<!-- GOOGLE PLACEHOLDER -->
 
 </body>
 </html>
