@@ -31,6 +31,11 @@ no data had been saved anywhere. I switched to a new privacy policy.
 Changelog
 ---------
 
+[2015-01-30] v0.3.21
+ - Added decodeURI() to the GET params handling in the main.js file.
+   Even encoded URL strings can be handled now without any error 
+   messages popping up.
+
 [2014-11-24] v0.3.20
  - Finished the canvas autoreize function (the donation button still
    needed to be moved to its dynamic position).
