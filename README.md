@@ -5,7 +5,8 @@ Path Extrusion Generator (Dildo Generator)
 @author   Ikaros Kappler
 @date     2013-09-11
 @modified 2014-08-29
-@version  0.3.15
+@modified 2015-01-30
+@version  0.3.21
 
 
 
